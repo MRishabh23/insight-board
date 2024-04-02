@@ -28,7 +28,6 @@ import { AiOutlineLoading } from "react-icons/ai";
 
 interface SignUpProp {
   username: string;
-  email: string;
   password: string;
 }
 
@@ -36,10 +35,6 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  email: z
-    .string()
-    .min(1, { message: "This field has to be filled." })
-    .email("This is not a valid email."),
   password: z.string(),
 });
 
@@ -48,7 +43,6 @@ const SignUp = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
     },
   });
@@ -60,18 +54,15 @@ const SignUp = () => {
   const onSubmit = async (data: SignUpProp) => {
     try {
       setBtnLoad(true);
-      console.log(data);
       const response = await axios.post("/api/users/signup", data);
-      console.log("Sign up success", response.data);
       toast({
         description: "Sign up Successful.",
       });
       router.push("/signin");
     } catch (error: any) {
-      console.error("Something went wrong, Sign up failed", error.message);
       toast({
         title: "Uh oh! Something went wrong, Sign up failed.",
-        description: error.message,
+        description: error?.response?.data?.error,
         variant: "destructive",
       });
     } finally {
@@ -107,24 +98,6 @@ const SignUp = () => {
                         className={cn("")}
                         required
                         placeholder="Enter your username.."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={cn("text-lg")}>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        className={cn("")}
-                        required
-                        placeholder="Enter your email.."
                         {...field}
                       />
                     </FormControl>

@@ -4,6 +4,7 @@ import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
 import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from "@/components/ui/toaster";
 
 interface RootProps {
   children: React.ReactNode;
@@ -20,8 +21,11 @@ export default function RootLayout({ children }: Readonly<RootProps>) {
   return (
     <html lang="en">
       <body className={cn("w-full min-h-screen", inter.className)}>
-        <QueryProviderWrapper>{children}</QueryProviderWrapper>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <QueryProviderWrapper>
+          {children}
+          <Toaster/>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryProviderWrapper>
       </body>
     </html>
   );
