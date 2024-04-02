@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
+import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
 
 interface RootProps {
   children: React.ReactNode;
@@ -17,8 +18,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<RootProps>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className={cn("max-h-screen")}>{children}</div>
+      <body className={cn("w-full min-h-screen", inter.className)}>
+        <QueryProviderWrapper>{children}</QueryProviderWrapper>
       </body>
     </html>
   );
