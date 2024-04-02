@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
 import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 interface RootProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: Readonly<RootProps>) {
     <html lang="en">
       <body className={cn("w-full min-h-screen", inter.className)}>
         <QueryProviderWrapper>{children}</QueryProviderWrapper>
+        <ReactQueryDevtools initialIsOpen={false} />
       </body>
     </html>
   );
