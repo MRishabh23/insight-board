@@ -15,8 +15,12 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value || "";
 
   //conditions
+  if(path === "/" && token){
+    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
+  }
+
   if (isPublic && token) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
   }
 
   if (!isPublic && !token) {

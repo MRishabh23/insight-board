@@ -1,9 +1,20 @@
 "use client";
 
-import { DuelSplit, DuelSplitTitle, DuelSplitSection } from "@/components/duelSplit";
+import {
+  DuelSplit,
+  DuelSplitTitle,
+  DuelSplitSection,
+} from "@/components/duelSplit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import React from "react";
 import Link from "next/link";
@@ -16,12 +27,14 @@ import axios from "axios";
 import { AiOutlineLoading } from "react-icons/ai";
 
 interface SignInProp {
-  email: string;
+  username: string;
   password: string;
 }
 
 const formSchema = z.object({
-  email: z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email."),
+  username: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
   password: z.string(),
 });
 
@@ -29,7 +42,7 @@ const SignIn = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
@@ -46,12 +59,12 @@ const SignIn = () => {
       toast({
         description: "Sign in Successful.",
       });
-      router.push("/dashboard");
+      router.push("/");
     } catch (error: any) {
       console.error("Something went wrong, Sign in Failed", error.message);
       toast({
         title: "Uh oh! Something went wrong, Sign in Failed.",
-        description: error.message,
+        description: error?.response?.data?.error,
         variant: "destructive",
       });
     } finally {
@@ -72,16 +85,23 @@ const SignIn = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("mt-5 w-[340px] space-y-5 rounded-md border border-gray-200 p-3")}
+              className={cn(
+                "mt-5 w-[340px] space-y-5 rounded-md border border-gray-200 p-3"
+              )}
             >
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={cn("text-lg")}>Email</FormLabel>
+                    <FormLabel className={cn("text-lg")}>Username</FormLabel>
                     <FormControl>
-                      <Input className={cn("")} required placeholder="Enter your email.." {...field} />
+                      <Input
+                        className={cn("")}
+                        required
+                        placeholder="Enter your username.."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,10 +126,15 @@ const SignIn = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={btnLoad ? true : false} className={cn("w-full")}>
+              <Button
+                type="submit"
+                disabled={btnLoad ? true : false}
+                className={cn("w-full")}
+              >
                 {btnLoad ? (
                   <>
-                    <AiOutlineLoading className="mr-1 animate-spin text-lg" /> Sign In
+                    <AiOutlineLoading className="mr-1 animate-spin text-lg" />{" "}
+                    Sign In
                   </>
                 ) : (
                   "Sign In"
