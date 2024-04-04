@@ -8,7 +8,7 @@ export function middleware(request: NextRequest) {
 
   // public paths
   let isPublic = false;
-  if(path === "/signin" || path === "/signup" || path === "/demo"){
+  if(path === "/signin" || path === "/signup" || path === "/demo" || path === "/forgot") {
     isPublic = true;
   }
   // get token
@@ -30,5 +30,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/demo", "/erpa:path*", "/signin", "/signup"],
+  matcher: ["/", "/demo", "/erpa:path*", "/signin", "/signup", "/forgot"],
 };

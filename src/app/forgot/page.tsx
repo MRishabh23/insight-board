@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import AuthForm from "@/components/authForm";
 
-const SignUp = () => {
+const Forgot = () => {
   return (
     <DuelSplit>
       <DuelSplitSection className={cn("1lg:flex hidden bg-black")}>
@@ -17,10 +17,8 @@ const SignUp = () => {
       </DuelSplitSection>
       <DuelSplitSection>
         <AuthForm
-          title="Sign up"
-          switchTitle="SignIn"
-          switchRoute="signin"
-          postRoute="signup"
+          title="Reset password"
+          postRoute="forgot"
           pushRoute="/signin"
         />
       </DuelSplitSection>
@@ -28,4 +26,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Forgot;

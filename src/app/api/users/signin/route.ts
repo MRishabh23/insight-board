@@ -10,28 +10,6 @@ export async function POST(request: NextRequest){
         const {username, password} = reqBody;
 
         // find user
-        const checkUserObj = {
-            method: "post",
-            url: process.env.URL!,
-            auth: {
-                username: process.env.USERNAME!,
-                password: process.env.PASSWORD!,
-            },
-            data: {
-                type: "CHECK_USER",
-                username: username
-            },
-          };
-      
-        let checkUserRes: any = await axios(checkUserObj);
-
-        if(!checkUserRes?.data?.response?.success){
-            return NextResponse.json({
-                error: "User didn't exists."
-            }, {status: 400})
-        }
-        
-        // make api call to get user details
         const sendObj = {
             method: "post",
             url: process.env.URL!,
@@ -46,7 +24,12 @@ export async function POST(request: NextRequest){
           };
       
         const signInRes: any = await axios(sendObj);
-        console.log("sign in response", signInRes?.data?.response?.data);
+
+        if(!signInRes?.data?.response?.success){
+            return NextResponse.json({
+                error: "User doesn't exists. Please sign up."
+            }, {status: 400})
+        }
 
         // check if password matches
         const validPassword = await bcryptjs.compare(password, signInRes?.data?.response?.data?.password);
@@ -58,12 +41,12 @@ export async function POST(request: NextRequest){
 
         // create token data
         const tokenData = {
-            id: signInRes?.data?.userId,
-            username: signInRes?.data?.username,
+            id: signInRes?.data?.response?.data?.userId,
+            username: signInRes?.data?.response?.data?.username,
         };
 
         // create token
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1m"});
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1d"});
 
         // create next response
         const response = NextResponse.json({
@@ -72,7 +55,7 @@ export async function POST(request: NextRequest){
         });
 
         // generate cookies
-        response.cookies.set("token", token, {httpOnly: true});
+        response.cookies.set("token", token, {httpOnly: true, maxAge: 60*60*24});
         return response;
 
     } catch (error: any) {

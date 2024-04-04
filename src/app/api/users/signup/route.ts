@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import axios from "axios";
+import { randomUUID } from "crypto";
 
 
 export async function POST(request: NextRequest){
@@ -8,34 +9,11 @@ export async function POST(request: NextRequest){
         const reqBody = await request.json();
         const {username, password} = reqBody;
 
-        
-        // find user
-        const checkUserObj = {
-            method: "post",
-            url: process.env.URL!,
-            auth: {
-                username: process.env.USERNAME!,
-                password: process.env.PASSWORD!,
-            },
-            data: {
-                type: "CHECK_USER",
-                username: username
-            },
-          };
-      
-        let checkUserRes: any = await axios(checkUserObj);
-
-        if(checkUserRes?.data?.response?.success){
-            return NextResponse.json({
-                error: "User already exists."
-            }, {status: 400})
-        }
-
-        // hash password
+        // hashed password
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
-
-        // new user
+        
+        // find user
         const newUserObj = {
             method: "post",
             url: process.env.URL!,
@@ -45,6 +23,7 @@ export async function POST(request: NextRequest){
             },
             data: {
                 type: "SIGN_UP",
+                userId: randomUUID(),
                 username: username,
                 password: hashedPassword,
             },
@@ -54,7 +33,7 @@ export async function POST(request: NextRequest){
 
         if(!signUpRes?.data?.response?.success){
             return NextResponse.json({
-                error: signUpRes?.data?.response?.data
+                error: "User exists. Please sign in."
             }, {status: 400})
         }
 
