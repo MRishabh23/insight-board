@@ -8,15 +8,19 @@ export function middleware(request: NextRequest) {
 
   // public paths
   let isPublic = false;
-  if(path === "/signin" || path === "/signup" || path === "/demo"){
+  if(path === "/signin" || path === "/signup" || path === "/demo" || path === "/forgot") {
     isPublic = true;
   }
   // get token
   const token = request.cookies.get("token")?.value || "";
 
   //conditions
+  if(path === "/" && token){
+    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
+  }
+
   if (isPublic && token) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
   }
 
   if (!isPublic && !token) {
@@ -26,5 +30,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/demo", "/erpa:path*", "/signin", "/signup"],
+  matcher: ["/", "/demo", "/erpa:path*", "/signin", "/signup", "/forgot"],
 };
