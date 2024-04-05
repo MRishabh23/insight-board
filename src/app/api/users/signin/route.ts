@@ -41,8 +41,9 @@ export async function POST(request: NextRequest){
 
         // create token data
         const tokenData = {
-            id: signInRes?.data?.response?.data?.userId,
+            userId: signInRes?.data?.response?.data?.userId,
             username: signInRes?.data?.response?.data?.username,
+            createdAt: signInRes?.data?.response?.data?.createdAt
         };
 
         // create token

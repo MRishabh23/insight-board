@@ -16,11 +16,11 @@ export function middleware(request: NextRequest) {
 
   //conditions
   if(path === "/" && token){
-    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
   if (isPublic && token) {
-    return NextResponse.redirect(new URL("/erpa", request.nextUrl));
+    return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
   if (!isPublic && !token) {
@@ -30,5 +30,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/demo", "/erpa:path*", "/signin", "/signup", "/forgot"],
+  matcher: ["/", "/demo", "/dashboard:path*", "/signin", "/signup", "/forgot"],
 };

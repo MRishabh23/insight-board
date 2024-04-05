@@ -113,9 +113,10 @@ const AuthForm = ({
                 <FormControl id="username">
                   <Input
                     className={cn("")}
+                    type="text"
                     required
-                    autoComplete="on"
                     placeholder="Enter your username.."
+                    autoComplete="on"
                     {...field}
                   />
                 </FormControl>
@@ -208,4 +209,4 @@ const AuthForm = ({
   );
 };
 
-export default AuthForm;
+export default React.memo(AuthForm);
