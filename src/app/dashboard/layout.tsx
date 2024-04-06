@@ -6,7 +6,7 @@ interface DashboardProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({ children }: Readonly<DashboardProps>) {
+export default function DashboardLayout({ children }: Readonly<DashboardProps>) {
   return (
     <div className={cn("h-screen flex flex-col bg-primary text-primary-foreground")}>
       <Header />
