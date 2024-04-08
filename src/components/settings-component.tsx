@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -53,11 +53,13 @@ const SettingsComponent = () => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href="/dashboard/profile">Profile</Link>
-        </DropdownMenuItem>
+        <Link href="/dashboard/profile">
+          <DropdownMenuItem className={cn("cursor-pointer")}>Profile</DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={signOut} className={cn("cursor-pointer")}>Sign Out</DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut} className={cn("cursor-pointer")}>
+          Sign Out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
