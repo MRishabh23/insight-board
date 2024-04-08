@@ -5,16 +5,11 @@ interface TrackingProps {
   children: React.ReactNode;
 }
 
-export default function TrackingLayout({ children }: Readonly<TrackingProps>) {
+export default function TrackingLayout({ children}: Readonly<TrackingProps>) {
   return (
-    <div className={cn("h-full flex flex-col p-10")}>
+    <div className={cn("h-full flex flex-col p-4 sm:p-10")}>
       <TrackingHeader/>
-      <div className={cn("mt-10 flex gap-4")}>
-        <div>Env selection</div>
-        <div>Mode selection</div>
-        <div>dashboard selection</div>
-      </div>
-      <div className={cn("flex-1 mt-14")}>{children}</div>
+      <div className={cn("flex-1")}>{children}</div>
     </div>
   );
 }
