@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import axios from "axios";
-import { randomUUID } from "crypto";
 
 
 export async function POST(request: NextRequest){
@@ -23,7 +22,6 @@ export async function POST(request: NextRequest){
             },
             data: {
                 type: "SIGN_UP",
-                userId: randomUUID(),
                 username: username,
                 password: hashedPassword,
             },

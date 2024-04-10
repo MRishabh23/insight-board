@@ -58,16 +58,12 @@ const Profile = () => {
           </div>
         </CardHeader>
         <CardContent className={cn("space-y-5 pt-6")}>
-          <div className="flex flex-col sm:flex-row justify-between">
-            <p className={cn("font-semibold text-zinc-500")}>UserId: </p>
-            <p className={cn("text-blue-500")}>{data?.data?.user?.userId}</p>
-          </div>
-          <div className="flex flex-col sm:flex-row justify-between">
-            <p className={cn("font-semibold text-zinc-500")}>Username: </p>
+          <div className="flex  justify-between">
+            <p className={cn("font-semibold text-zinc-500")}>username: </p>
             <p className={cn("text-blue-500")}>{data?.data?.user?.username}</p>
           </div>
-          <div className="flex flex-col sm:flex-row justify-between">
-            <p className={cn("font-semibold text-zinc-500")}>CreatedAt: </p>
+          <div className="flex  justify-between">
+            <p className={cn("font-semibold text-zinc-500")}>created: </p>
             <p className={cn("text-blue-500")}>{data?.data?.user?.createdAt}</p>
           </div>
         </CardContent>

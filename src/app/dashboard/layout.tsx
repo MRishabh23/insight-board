@@ -6,11 +6,15 @@ interface DashboardProps {
   children: React.ReactNode;
 }
 
-export default function DashboardLayout({ children }: Readonly<DashboardProps>) {
+export default function DashboardLayout({
+  children,
+}: Readonly<DashboardProps>) {
   return (
-    <div className={cn("h-screen flex flex-col bg-sky-50 text-primary overflow-hidden")}>
+    <div className="h-full flex flex-col bg-primary text-primary-foreground">
       <Header />
-      <main className={cn("flex-1")}>{children}</main>
+      <>
+        <main className="flex-1">{children}</main>
+      </>
       <Footer />
     </div>
   );
