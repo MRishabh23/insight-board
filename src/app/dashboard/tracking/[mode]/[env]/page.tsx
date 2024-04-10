@@ -6,9 +6,9 @@ import TrackingStatus from "@/components/tracking-status";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-const SlugPage = ({ params }: { params: { env: string } }) => {
-  const searchParams = useSearchParams();
+const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [tabVal, setTabVal] = React.useState(
     searchParams.get("dash") || "status"
   );
@@ -48,12 +48,18 @@ const SlugPage = ({ params }: { params: { env: string } }) => {
             </TabsTrigger>
           </TabsList>
         </div>
-        <div className="ml-8 w-full">
+        <div className="mx-6 mb-6 w-full p-5 bg-white text-primary rounded-md">
           <TabsContent value="status">
             <TrackingStatus env={params.env} />
           </TabsContent>
           <TabsContent value="summary">
             <div>Summary</div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
+              quidem repudiandae cumque maxime rerum voluptatum aliquam ad
+              voluptate, id nemo expedita enim eius vel repellat, officiis
+              excepturi ipsa iure. Iste!
+            </p>
           </TabsContent>
           <TabsContent value="history">
             <div>History</div>

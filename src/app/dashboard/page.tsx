@@ -2,19 +2,55 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Link from "next/link";
+import {
+  LiaShipSolid,
+  LiaShippingFastSolid,
+  LiaLongArrowAltRightSolid,
+} from "react-icons/lia";
+import { PiAirplaneTilt } from "react-icons/pi";
 
 const Dashboard = () => {
+  const modeList = ["ocean", "air", "terminal"];
   return (
-    <div className={cn("h-full flex flex-col justify-center items-center")}>
-      <Link href="/dashboard/tracking/dev?dash=status">
-        <Card
-          className={cn("w-[220px] h-[150px] flex justify-center items-center hover:scale-105 bg-gradient-to-r from-blue-100 to-blue-200")}
-        >
-          <p className={cn("text-2xl tracking-widest font-medium")}>Tracking</p>
-        </Card>
-      </Link>
+    <div
+      className={cn("h-full px-6 flex flex-col justify-center items-center")}
+    >
+      <Card className="w-[350px]">
+        <CardHeader className="border-b">
+          <CardTitle>Tracking Dashboards</CardTitle>
+          <CardDescription>To view data insights/metrics.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-3 flex flex-col gap-4">
+          {modeList.map((item) => (
+            <Link
+              key={item}
+              href={`/dashboard/tracking/${item}/prod?dash=status`}
+            >
+              <div className="flex justify-between items-center border rounded-full p-4 hover:bg-primary hover:text-primary-foreground">
+                <div className="flex items-center">
+                  {item === "ocean" ? (
+                    <LiaShipSolid className="text-xl" />
+                  ) : item === "air" ? (
+                    <PiAirplaneTilt className="text-xl" />
+                  ) : (
+                    <LiaShippingFastSolid className="text-xl" />
+                  )}
+                  <p className="ml-2 text-lg">{item.toUpperCase()}</p>
+                </div>
+                <LiaLongArrowAltRightSolid className="text-2xl font-bold" />
+              </div>
+            </Link>
+          ))}
+        </CardContent>
+      </Card>
     </div>
   );
 };
