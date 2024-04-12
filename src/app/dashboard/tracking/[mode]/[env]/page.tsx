@@ -2,11 +2,13 @@
 
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TrackingStatus from "@/components/tracking-status";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { useGetUsername } from "@/hooks/get-username";
+import CarrierStatus from "@/components/tracking/status/carrier-status";
 
 const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
+  const { username } = useGetUsername("");
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [tabVal, setTabVal] = React.useState(
@@ -19,15 +21,15 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
       <Tabs
         //defaultValue={searchParams.get("dash") || "status"}
         value={tabVal}
-        className="mt-2 flex h-full"
+        //className="mt-2 flex h-full"
         onValueChange={(value) => {
           const params = new URLSearchParams(searchParams.toString());
           params.set("dash", value);
           setTabVal(value);
         }}
       >
-        <div className="h-[300px] w-[200px]">
-          <TabsList className="grid grid-rows-6 h-full">
+        <div className="w-full space-y-4">
+          <TabsList className="grid grid-cols-3">
             <TabsTrigger value="status">
               <Link href={pathname + "?dash=status"}>Status</Link>
             </TabsTrigger>
@@ -37,6 +39,8 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
             <TabsTrigger value="history">
               <Link href={pathname + "?dash=history"}>History</Link>
             </TabsTrigger>
+          </TabsList>
+          <TabsList className="grid grid-cols-3">
             <TabsTrigger value="references">
               <Link href={pathname + "?dash=references"}>References</Link>
             </TabsTrigger>
@@ -48,9 +52,23 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
             </TabsTrigger>
           </TabsList>
         </div>
-        <div className="mx-6 mb-6 w-full p-5 bg-white text-primary rounded-md">
+        <div className="w-full mt-4 p-5 bg-white text-primary rounded-md">
           <TabsContent value="status">
-            <TrackingStatus env={params.env} />
+            <div className="flex flex-col">
+              <div className="w-full">
+                <CarrierStatus params={params} username={username} />
+              </div>
+              <div className="mt-8">Hello</div>
+              <div className="mt-8">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                temporibus, facilis placeat accusantium, tenetur eos fugit
+                molestiae similique incidunt a dignissimos praesentium ullam
+                dolore voluptatem perspiciatis? Id, sequi magnam! Culpa quia
+                voluptatem cum, est dolorum non deleniti repudiandae quaerat
+                laboriosam cumque molestias voluptates, fugiat debitis rerum
+                nesciunt officiis tempora aspernatur vero.
+              </div>
+            </div>
           </TabsContent>
           <TabsContent value="summary">
             <div>Summary</div>

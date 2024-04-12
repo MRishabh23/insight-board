@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<RootProps>) {
   return (
-    <html className="max-w-[1400px] mx-auto min-h-screen" lang="en">
-      <body className={cn("h-screen", inter.className)}>
+    <html className="max-w-[1400px] mx-auto h-screen" lang="en">
+      <body className={cn("h-full", inter.className)}>
         <QueryProviderWrapper>
           {children}
           <Toaster/>

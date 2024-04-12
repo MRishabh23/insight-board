@@ -3,23 +3,16 @@
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { cn } from "@/lib/utils";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
   CardHeader,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useGetUsername } from "@/hooks/get-username";
 
 const Profile = () => {
-  const { isPending, data, isError, error } = useQuery({
-    queryKey: ["/dashboard/profile", "user-details"],
-    queryFn: async () => {
-      const response = await axios.get("/api/users/me");
-      return response;
-    },
-  });
+  const { isPending, data, isError, error } = useGetUsername("profile");
 
   if (isPending) {
     return (

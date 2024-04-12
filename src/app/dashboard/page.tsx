@@ -25,7 +25,7 @@ const Dashboard = () => {
     >
       <Card className="w-[350px]">
         <CardHeader className="border-b">
-          <CardTitle>Tracking Dashboards</CardTitle>
+          <CardTitle>Tracking</CardTitle>
           <CardDescription>To view data insights/metrics.</CardDescription>
         </CardHeader>
         <CardContent className="p-3 flex flex-col gap-4">
