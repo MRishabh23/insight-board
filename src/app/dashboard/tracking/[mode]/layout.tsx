@@ -13,9 +13,9 @@ export default function TrackingLayout({
   params,
 }: Readonly<TrackingProps>) {
   return (
-    <div className={cn("h-full flex flex-col p-4 sm:p-10")}>
+    <div className={cn("h-full flex flex-col")}>
       <TrackingHeader params={params} />
-      <div className={cn("flex-1")}>{children}</div>
+      <div className={cn("flex-1 pb-4 sm:pb-8")}>{children}</div>
     </div>
   );
 }
