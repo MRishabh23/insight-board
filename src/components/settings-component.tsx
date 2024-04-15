@@ -14,26 +14,21 @@ import { cn } from "@/lib/utils";
 import { CircleUser } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
-import { useToast } from "@/components/ui/use-toast";
+import {toast} from "sonner";
 import { useRouter } from "next/navigation";
 
 const SettingsComponent = () => {
-  const { toast } = useToast();
   const router = useRouter();
   const signOut = async () => {
     try {
       await axios.get("/api/users/signout");
-      toast({
-        description: "Sign out Successful.",
-      });
+      toast.success('Sign out successful');
       router.push("/signin");
     } catch (error: any) {
-      toast({
-        title: "Uh oh! Something went wrong, Sign out failed.",
+      toast.error('Uh oh! Something went wrong, Sign out failed.',{
         description: error?.response?.data?.error
           ? error?.response?.data?.error
-          : error.message,
-        variant: "destructive",
+          : error.message
       });
     }
   };

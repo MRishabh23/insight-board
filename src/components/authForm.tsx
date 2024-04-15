@@ -15,7 +15,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import axios from "axios";
 import { AiOutlineLoading } from "react-icons/ai";
 import { LuEye, LuEyeOff } from "react-icons/lu";
@@ -60,7 +60,6 @@ const AuthForm = ({
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-  const { toast } = useToast();
   const eyeCss = "h-5 w-5";
   const custDivCss = "text-white text-sm flex justify-between items-center";
   const custLinkCss =
@@ -70,15 +69,11 @@ const AuthForm = ({
     try {
       setBtnLoad(true);
       await axios.post(`/api/users/${postRoute}`, data);
-      toast({
-        description: `${title} Successful.`,
-      });
+      toast.success(`${title} Successful.`);
       router.push(pushRoute);
     } catch (error: any) {
-      toast({
-        title: `Uh oh! Something went wrong, ${title} failed.`,
-        description: error?.response?.data?.error ? error?.response?.data?.error : error.message,
-        variant: "destructive",
+      toast.error(`Uh oh! Something went wrong, ${title} failed.`,{
+        description: error?.response?.data?.error ? error?.response?.data?.error : error.message
       });
     } finally {
       setBtnLoad(false);

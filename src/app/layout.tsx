@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "../../styles/globals.css";
 import { cn } from "@/lib/utils";
 import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { Toaster } from "@/components/ui/toaster";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "@/components/ui/sonner";
 
 interface RootProps {
   children: React.ReactNode;
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<RootProps>) {
   return (
-    <html className="max-w-[1400px] mx-auto h-screen" lang="en">
-      <body className={cn("h-full", inter.className)}>
-        <QueryProviderWrapper>
+    <QueryProviderWrapper>
+      <html className="max-w-[1400px] mx-auto h-screen" lang="en">
+        <body className={cn("h-full", inter.className)}>
           {children}
-          <Toaster/>
+          <Toaster />
           <ReactQueryDevtools initialIsOpen={false} />
-        </QueryProviderWrapper>
-      </body>
-    </html>
+        </body>
+      </html>
+    </QueryProviderWrapper>
   );
 }
