@@ -6,14 +6,30 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useGetUsername } from "@/hooks/get-username";
 import CarrierStatus from "@/components/tracking/status/carrier-status";
+import { CgSpinnerAlt } from "react-icons/cg";
 
 const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
-  const { username } = useGetUsername("");
+  const { isPending, data, isError, error } = useGetUsername();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [tabVal, setTabVal] = React.useState(
     searchParams.get("dash") || "status"
   );
+
+  if (isPending) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center">
+        <CgSpinnerAlt className="animate-spin text-lg mr-2" />
+      </div>
+    );
+  }
+  if (isError || error) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center">
+        <p className="text-red-500">Error: {error?.message}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full">
@@ -56,7 +72,7 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
           <TabsContent value="status">
             <div className="flex flex-col">
               <div className="w-full">
-                <CarrierStatus params={params} username={username} />
+                <CarrierStatus params={params} username={data?.data?.user?.username} />
               </div>
               <div className="mt-8">Hello</div>
               <div className="mt-8">
