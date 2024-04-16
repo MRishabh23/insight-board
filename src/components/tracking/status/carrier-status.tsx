@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
+import { CarrierStatusTable } from "./carrier-status-table";
 
 type StatusProps = {
   params: {
@@ -13,9 +14,9 @@ type StatusProps = {
 
 const CarrierStatus = ({ params, username }: StatusProps) => {
   const { isPending, data, isError, error } = useQuery({
-    queryKey: ["carrier-status", params.env, params.mode],
+    queryKey: ["carrier-status", `/dashboard/tracking/${params.mode}/${params.env}`],
     queryFn: async () => {
-      const response = await axios({
+      const response = username !== "" && await axios({
         method: "post",
         url: "/api/tracking/status",
         data: {
@@ -46,7 +47,8 @@ const CarrierStatus = ({ params, username }: StatusProps) => {
   }
   return (
     <div>
-      <pre className="text-balance">${JSON.stringify(data)}</pre>
+      {/* <pre className="text-balance">${JSON.stringify(data)}</pre> */}
+      <CarrierStatusTable statusList={data || []}/>
     </div>
   );
 };

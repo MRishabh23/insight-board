@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -32,7 +30,10 @@ const Dashboard = () => {
           {modeList.map((item) => (
             <Link
               key={item}
-              href={`/dashboard/tracking/${item}/prod?dash=status`}
+              href={{
+                pathname: `/dashboard/tracking/${item}/prod`,
+                query: { dash: "status" },
+              }}
             >
               <div className="flex justify-between items-center border rounded-full p-4 hover:bg-primary hover:text-primary-foreground">
                 <div className="flex items-center">

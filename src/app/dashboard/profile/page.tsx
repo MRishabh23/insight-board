@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useGetUsername } from "@/hooks/get-username";
 
 const Profile = () => {
-  const { isPending, data, isError, error } = useGetUsername("profile");
+  const { isPending, data, isError, error } = useGetUsername();
 
   if (isPending) {
     return (
