@@ -13,13 +13,14 @@ type StatusProps = {
 };
 
 const CarrierStatus = ({ params, username }: StatusProps) => {
-  const { isPending, data, isError, error } = useQuery({
+  const carrierStatusQuery = useQuery({
     queryKey: ["carrier-status", `/dashboard/tracking/${params.mode}/${params.env}`],
     queryFn: async () => {
       const response = username !== "" && await axios({
         method: "post",
         url: "/api/tracking/status",
         data: {
+          type: "GET_CARRIER_STATUS",
           username: username,
           env: params.env.toUpperCase(),
           mode: params.mode.toUpperCase(),
@@ -31,24 +32,24 @@ const CarrierStatus = ({ params, username }: StatusProps) => {
     refetchInterval: 1000 * 60 * 60 * 8,
   });
 
-  if (isPending) {
+  if (carrierStatusQuery.isPending) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
         <CgSpinnerAlt className="animate-spin text-lg mr-2" />
       </div>
     );
   }
-  if (isError || error) {
+  if (carrierStatusQuery.isError || carrierStatusQuery.error) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
-        <p className="text-red-500">Error: {error?.message}</p>
+        <p className="text-red-500">Error: {carrierStatusQuery.error?.message}</p>
       </div>
     );
   }
   return (
     <div>
       {/* <pre className="text-balance">${JSON.stringify(data)}</pre> */}
-      <CarrierStatusTable statusList={data || []}/>
+      <CarrierStatusTable statusList={carrierStatusQuery.data || []} params={params} username={username}/>
     </div>
   );
 };

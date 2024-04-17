@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useGetUsername } from "@/hooks/get-username";
 import CarrierStatus from "@/components/tracking/status/carrier-status";
 import { CgSpinnerAlt } from "react-icons/cg";
+import MainStatusComponent from "@/components/tracking/status/main-status-component";
 
 const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
   const { isPending, data, isError, error } = useGetUsername();
@@ -70,21 +71,10 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
         </div>
         <div className="w-full mt-4 p-5 bg-white text-primary rounded-md">
           <TabsContent value="status">
-            <div className="flex flex-col">
-              <div className="w-full">
-                <CarrierStatus params={params} username={data?.data?.user?.username} />
-              </div>
-              <div className="mt-8">Hello</div>
-              <div className="mt-8">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
-                temporibus, facilis placeat accusantium, tenetur eos fugit
-                molestiae similique incidunt a dignissimos praesentium ullam
-                dolore voluptatem perspiciatis? Id, sequi magnam! Culpa quia
-                voluptatem cum, est dolorum non deleniti repudiandae quaerat
-                laboriosam cumque molestias voluptates, fugiat debitis rerum
-                nesciunt officiis tempora aspernatur vero.
-              </div>
-            </div>
+            <MainStatusComponent
+              params={params}
+              username={data?.data?.user?.username}
+            />
           </TabsContent>
           <TabsContent value="summary">
             <div>Summary</div>

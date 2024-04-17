@@ -16,13 +16,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -44,6 +41,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type StatusData = {
   carrier: string;
@@ -64,22 +62,46 @@ export function CarrierStatusTable({ ...props }) {
     },
   });
 
-  const onSubmit = async (data: StatusData) => {
-    try {
-      //setBtnLoad(true);
-      //await axios.post(`/api/tracking/status`, data);
-      console.log(data);
-      toast.success("Carrier status updated successfully!");
-    } catch (error: any) {
-      toast.error(`Uh oh! Something went wrong, while updating status.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
+  const queryClient = useQueryClient();
+
+  const mutateStatus = useMutation({
+    mutationFn: (data: StatusData) => {
+      return axios({
+        method: "post",
+        url: "/api/tracking/status",
+        data: {
+          type: "UPDATE_CARRIER_STATUS",
+          username: props.username,
+          env: props.params.env.toUpperCase(),
+          mode: props.params.mode.toUpperCase(),
+          carrier: data.carrier,
+          status: data.status,
+        },
       });
-    } finally {
-      //setBtnLoad(false);
+    },
+    
+    onSuccess: () => {
+      toast.success("Carrier status updated successfully!");
+    },
+    onSettled: async (_, error: any) => {
       form.reset({ carrier: "", status: "" });
-    }
+      if (error) {
+        toast.error(`Uh oh! Something went wrong, while updating status.`, {
+          description: error?.response?.data?.error ? error?.response?.data?.error : error.message,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: [
+            "carrier-status",
+            `/dashboard/tracking/${props.params.mode}/${props.params.env}`,
+          ],
+        });
+      }
+    },
+  });
+
+  const onSubmit = (data: StatusData) => {
+    mutateStatus.mutate(data);
   };
 
   return (
@@ -212,18 +234,16 @@ export function CarrierStatusTable({ ...props }) {
                                     </FormItem>
                                   )}
                                 />
-                                <DialogTrigger
-                                  className="w-full"
-                                  asChild={false}
+
+                                <Button
+                                  type="submit"
+                                  disabled={mutateStatus.isPending}
+                                  className={cn("w-full capitalize")}
                                 >
-                                  <Button
-                                    type="submit"
-                                    //disabled={btnLoad ? true : false}
-                                    className={cn("w-full capitalize")}
-                                  >
-                                    Save Changes
-                                  </Button>
-                                </DialogTrigger>
+                                  {mutateStatus.isPending
+                                    ? "Saving..."
+                                    : "Save Changes"}
+                                </Button>
                               </form>
                             </Form>
                           </div>
