@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useGetUsername } from "@/hooks/get-username";
-import CarrierStatus from "@/components/tracking/status/carrier-status";
 import { CgSpinnerAlt } from "react-icons/cg";
 import MainStatusComponent from "@/components/tracking/status/main-status-component";
+import MainSummaryComponent from "@/components/tracking/summary/main-summary-component";
 
 const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
   const { isPending, data, isError, error } = useGetUsername();
@@ -36,9 +36,7 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
     <div className="h-full">
       <p className="text-lg">Select a dashboard: </p>
       <Tabs
-        //defaultValue={searchParams.get("dash") || "status"}
         value={tabVal}
-        //className="mt-2 flex h-full"
         onValueChange={(value) => {
           const params = new URLSearchParams(searchParams.toString());
           params.set("dash", value);
@@ -48,24 +46,24 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
         <div className="w-full space-y-4">
           <TabsList className="grid grid-cols-3">
             <TabsTrigger value="status">
-              <Link href={pathname + "?dash=status"}>Status</Link>
+              <Link href={{pathname: pathname, query: {dash: "status"}}}>Status</Link>
             </TabsTrigger>
             <TabsTrigger value="summary">
-              <Link href={pathname + "?dash=summary"}>Summary</Link>
+              <Link href={{pathname: pathname, query: {dash: "summary"}}}>Summary</Link>
             </TabsTrigger>
             <TabsTrigger value="history">
-              <Link href={pathname + "?dash=history"}>History</Link>
+              <Link href={{pathname: pathname, query: {dash: "history"}}}>History</Link>
             </TabsTrigger>
           </TabsList>
           <TabsList className="grid grid-cols-3">
             <TabsTrigger value="references">
-              <Link href={pathname + "?dash=references"}>References</Link>
+              <Link href={{pathname: pathname, query: {dash: "references"}}}>References</Link>
             </TabsTrigger>
             <TabsTrigger value="latency">
-              <Link href={pathname + "?dash=latency"}>Latency</Link>
+              <Link href={{pathname: pathname, query: {dash: "latency"}}}>Latency</Link>
             </TabsTrigger>
             <TabsTrigger value="induced">
-              <Link href={pathname + "?dash=induced"}>Induced-Latency</Link>
+              <Link href={{pathname: pathname, query: {dash: "induced"}}}>Induced-Latency</Link>
             </TabsTrigger>
           </TabsList>
         </div>
@@ -77,13 +75,10 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
             />
           </TabsContent>
           <TabsContent value="summary">
-            <div>Summary</div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-              quidem repudiandae cumque maxime rerum voluptatum aliquam ad
-              voluptate, id nemo expedita enim eius vel repellat, officiis
-              excepturi ipsa iure. Iste!
-            </p>
+            <MainSummaryComponent
+              params={params}
+              username={data?.data?.user?.username}
+            />
           </TabsContent>
           <TabsContent value="history">
             <div>History</div>
@@ -94,7 +89,7 @@ const SlugPage = ({ params }: { params: { mode: string; env: string } }) => {
           <TabsContent value="latency">
             <div>Latency</div>
           </TabsContent>
-          <TabsContent value="Induced">
+          <TabsContent value="induced">
             <div>Induced</div>
           </TabsContent>
         </div>
