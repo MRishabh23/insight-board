@@ -1,7 +1,7 @@
 import React from "react";
 import { Select, SelectItem } from "@nextui-org/select";
-import {DateRangePicker} from "@nextui-org/date-picker";
-import {parseDate} from "@internationalized/date";
+import { DateRangePicker } from "@nextui-org/date-picker";
+import { parseDate } from "@internationalized/date";
 import {
   Form,
   FormControl,
@@ -14,48 +14,8 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-
-const carriers = [
-  {
-    label: "MAERSK",
-    value: "maersk",
-  },
-  {
-    label: "HAPAG",
-    value: "hapag",
-  },
-  {
-    label: "ZIM",
-    value: "zim",
-  },
-  {
-    label: "DHL",
-    value: "dhl",
-  },
-  {
-    label: "COSCO",
-    value: "cosco",
-  },
-  {
-    label: "HYUNDAI",
-    value: "hyundai",
-  },
-];
-
-const queue = [
-  {
-    label: "Normal",
-    value: "NORMAL",
-  },
-  {
-    label: "Adaptive",
-    value: "ADAPTIVE",
-  },
-  {
-    label: "Reference Not Found",
-    value: "RNF",
-  },
-];
+import { usePathname } from "next/navigation";
+import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
 
 const formSchema = z.object({
   carriers: z.set(z.string()).max(5, "Please select up to 5 carriers"),
@@ -63,36 +23,35 @@ const formSchema = z.object({
   range: z.object({}),
 });
 
-const SummaryForm = () => {
+const SummaryForm = ({ ...props }) => {
   const sD = new Date();
   sD.setDate(sD.getDate() - 1);
   const eD = new Date();
+
+  const carriers = getCarriersList(props.params.mode);
+  const queue = getQueueList();
+
+  const pathname = usePathname();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       carriers: new Set([]),
       queue: new Set([]),
-      range: {}
+      range: {},
     },
   });
 
   const onSubmit = (data: any) => {
     console.log(data);
-    console.log(data.carriers);
-    console.log(data.queue);
-    console.log(data.range);
   };
-
-  React.useEffect(() => {
-    console.log(form.getValues("carriers"));
-  },[form]);
 
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 space-y-4 rounded-md border border-gray-200 p-3"
+          className="mt-5 flex flex-row flex-wrap justify-around items-center gap-3 rounded-md border border-gray-200 p-3"
         >
           <FormField
             control={form.control}
@@ -103,13 +62,13 @@ const SummaryForm = () => {
                   label="Carriers"
                   placeholder="Select an carrier"
                   selectionMode="multiple"
-                  className="max-w-xs"
+                  className="max-w-xs w-[300px] sm:w-[400px]"
                   selectedKeys={field.value}
                   onSelectionChange={field.onChange}
                 >
                   {carriers.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
-                      {item.label}
+                      {item.value}
                     </SelectItem>
                   ))}
                 </Select>
@@ -126,7 +85,7 @@ const SummaryForm = () => {
                   label="Queue"
                   placeholder="Select an queue type"
                   selectionMode="single"
-                  className="max-w-xs"
+                  className="max-w-xs w-[300px] sm:w-[400px]"
                   selectedKeys={field.value}
                   onSelectionChange={field.onChange}
                 >
@@ -148,20 +107,22 @@ const SummaryForm = () => {
                 <DateRangePicker
                   label="Select a date range"
                   aria-label="Select a date range"
-                  isDisabled={form.getValues("carriers").size === 1 ? false : true}
+                  isDisabled={
+                    form.getValues("carriers").size === 1 ? false : true
+                  }
                   defaultValue={{
                     start: parseDate(sD.toISOString().substring(0, 10)),
                     end: parseDate(eD.toISOString().substring(0, 10)),
                   }}
                   onChange={field.onChange}
-                  className="max-w-xs"
+                  className="max-w-xs w-[300px] sm:w-[400px]"
                 />
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full capitalize">
+          <Button type="submit" className="w-[100px] capitalize">
             Submit
           </Button>
         </form>

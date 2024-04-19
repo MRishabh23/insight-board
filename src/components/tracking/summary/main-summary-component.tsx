@@ -5,7 +5,7 @@ const MainSummaryComponent = ({...props}) => {
     return (
         <div className="flex flex-col">
           summary goes here...
-          <SummaryForm/>
+          <SummaryForm params={props.params}/>
         </div>
       );
 }

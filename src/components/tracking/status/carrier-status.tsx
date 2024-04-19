@@ -8,6 +8,7 @@ type StatusProps = {
   params: {
     mode: string;
     env: string;
+    dash: string;
   };
   username: string;
 };
@@ -48,7 +49,6 @@ const CarrierStatus = ({ params, username }: StatusProps) => {
   }
   return (
     <div>
-      {/* <pre className="text-balance">${JSON.stringify(data)}</pre> */}
       <CarrierStatusTable statusList={carrierStatusQuery.data || []} params={params} username={username}/>
     </div>
   );
