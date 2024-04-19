@@ -11,18 +11,14 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { HiPencil } from "react-icons/hi2";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -44,44 +40,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Input } from "@/components/ui/input";
+import { PencilIcon } from "@/components/icons/pencil-icon";
 
 type StatusData = {
   carrier: string;
   status: string;
 };
 
-const formSchema = z.object({
-  carrier: z.string(),
-  status: z.string(),
-});
-
 export function CarrierStatusTable({ ...props }) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      carrier: "",
-      status: "",
-    },
-  });
-
-  const onSubmit = async (data: StatusData) => {
-    try {
-      //setBtnLoad(true);
-      //await axios.post(`/api/tracking/status`, data);
-      console.log(data);
-      toast.success("Carrier status updated successfully!");
-    } catch (error: any) {
-      toast.error(`Uh oh! Something went wrong, while updating status.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
-      });
-    } finally {
-      //setBtnLoad(false);
-      form.reset({ carrier: "", status: "" });
-    }
-  };
-
   return (
     <>
       {props.statusList.data?.data.includes("data not present") ? (
@@ -129,7 +97,7 @@ export function CarrierStatusTable({ ...props }) {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="outline">
-                            <HiPencil />
+                            <PencilIcon />
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
@@ -141,91 +109,11 @@ export function CarrierStatusTable({ ...props }) {
                             </DialogDescription>
                           </DialogHeader>
                           <div className="grid gap-4 py-4">
-                            <Form {...form}>
-                              <form
-                                onSubmit={form.handleSubmit(onSubmit)}
-                                className={cn(
-                                  "mt-5 space-y-5 rounded-md border border-gray-200 p-3"
-                                )}
-                              >
-                                <FormField
-                                  control={form.control}
-                                  name="carrier"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel htmlFor="carrier">
-                                        Carrier
-                                      </FormLabel>
-                                      <Select
-                                        onValueChange={field.onChange}
-                                        //defaultValue={item.carrier.toLowerCase()}
-                                      >
-                                        <FormControl id="carrier">
-                                          <SelectTrigger>
-                                            <SelectValue placeholder="Select carrier" />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          <SelectGroup>
-                                            <SelectItem value={item.carrier}>
-                                              {item.carrier}
-                                            </SelectItem>
-                                          </SelectGroup>
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="status"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel htmlFor="status">
-                                        Status
-                                      </FormLabel>
-                                      <Select onValueChange={field.onChange}>
-                                        <FormControl id="status">
-                                          <SelectTrigger>
-                                            <SelectValue placeholder="Select Status" />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          <SelectGroup>
-                                            <SelectItem value="operational">
-                                              OPERATIONAL
-                                            </SelectItem>
-                                            <SelectItem value="partial">
-                                              PARTIAL-OUTAGE
-                                            </SelectItem>
-                                            <SelectItem value="degraded">
-                                              DEGRADED-PERFORMANCE
-                                            </SelectItem>
-                                            <SelectItem value="outage">
-                                              OUTAGE
-                                            </SelectItem>
-                                          </SelectGroup>
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <DialogTrigger
-                                  className="w-full"
-                                  asChild={false}
-                                >
-                                  <Button
-                                    type="submit"
-                                    //disabled={btnLoad ? true : false}
-                                    className={cn("w-full capitalize")}
-                                  >
-                                    Save Changes
-                                  </Button>
-                                </DialogTrigger>
-                              </form>
-                            </Form>
+                            <TableStatusForm
+                              params={props.params}
+                              username={props.username}
+                              item={item}
+                            />
                           </div>
                         </DialogContent>
                       </Dialog>
@@ -239,3 +127,121 @@ export function CarrierStatusTable({ ...props }) {
     </>
   );
 }
+
+const formSchema = z.object({
+  carrier: z.string(),
+  status: z.string(),
+});
+
+const TableStatusForm = ({ ...props }) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      carrier: props.item.carrier,
+      status: props.item.status.toLowerCase(),
+    },
+  });
+
+  const queryClient = useQueryClient();
+
+  const mutateStatus = useMutation({
+    mutationFn: (data: StatusData) => {
+      return axios({
+        method: "post",
+        url: "/api/tracking/status",
+        data: {
+          type: "UPDATE_CARRIER_STATUS",
+          username: props.username,
+          env: props.params.env.toUpperCase(),
+          mode: props.params.mode.toUpperCase(),
+          carrier: data.carrier,
+          status: data.status,
+        },
+      });
+    },
+
+    onSuccess: () => {
+      toast.success("Carrier status updated successfully!");
+    },
+    onSettled: async (_, error: any) => {
+      if (error) {
+        toast.error(`Uh oh! Something went wrong, while updating status.`, {
+          description: error?.response?.data?.error
+            ? error?.response?.data?.error
+            : error.message,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: [
+            "carrier-status",
+            `/dashboard/tracking/${props.params.mode}/${props.params.env}`,
+          ],
+        });
+      }
+    },
+  });
+
+  const onSubmit = (data: StatusData) => {
+    mutateStatus.mutate(data);
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn("mt-5 space-y-5 rounded-md border border-gray-200 p-3")}
+      >
+        <FormField
+          control={form.control}
+          name="carrier"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="carrier">Carrier</FormLabel>
+              <FormControl id="carrier">
+                <Input type="text" disabled {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="status">Status</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl id="status">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="operational">OPERATIONAL</SelectItem>
+                    <SelectItem value="partial-outage">
+                      PARTIAL-OUTAGE
+                    </SelectItem>
+                    <SelectItem value="degraded-performance">
+                      DEGRADED-PERFORMANCE
+                    </SelectItem>
+                    <SelectItem value="outage">OUTAGE</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button
+          type="submit"
+          disabled={mutateStatus.isPending}
+          className={cn("w-full capitalize")}
+        >
+          {mutateStatus.isPending ? "Saving..." : "Save Changes"}
+        </Button>
+      </form>
+    </Form>
+  );
+};

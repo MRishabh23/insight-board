@@ -18,7 +18,7 @@ const Header = () => {
             JUSTRANSFORM
           </Link>
         </h2>
-        <NavigationMenuComponent/>
+        <NavigationMenuComponent />
       </div>
       <SettingsComponent />
     </header>

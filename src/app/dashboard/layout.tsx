@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
@@ -7,7 +6,7 @@ interface DashboardProps {
 }
 
 export default function DashboardLayout({
-  children,
+  children
 }: Readonly<DashboardProps>) {
   return (
     <div className="h-full flex flex-col bg-primary text-primary-foreground">

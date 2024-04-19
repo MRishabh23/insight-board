@@ -12,11 +12,6 @@ export const useGetUsername = () => {
     staleTime: 1000 * 60 * 60 * 24,
     refetchInterval: 1000 * 60 * 60 * 24,
   });
-
-  // if (path === "profile") {
-  //   return { isPending, data, isError, error };
-  // }
-
-  //const username = data?.data?.user?.username; 
+   
   return { isPending, data, isError, error };
 };

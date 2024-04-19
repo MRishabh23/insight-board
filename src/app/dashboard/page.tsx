@@ -31,8 +31,7 @@ const Dashboard = () => {
             <Link
               key={item}
               href={{
-                pathname: `/dashboard/tracking/${item}/prod`,
-                query: { dash: "status" },
+                pathname: `/dashboard/tracking/${item}/prod/status`
               }}
             >
               <div className="flex justify-between items-center border rounded-full p-4 hover:bg-primary hover:text-primary-foreground">
