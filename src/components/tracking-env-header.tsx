@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const TrackingEnvHeader = ({
   params,
@@ -11,6 +12,7 @@ const TrackingEnvHeader = ({
   params: { mode: string; env: string; dash: string };
 }) => {
   const row1 = ["PROD", "DEV"];
+  const searchParams = useSearchParams();
   const [tabVal, setTabVal] = React.useState(params.env);
 
   return (
@@ -33,7 +35,7 @@ const TrackingEnvHeader = ({
                 key={tab}
                 href={`/dashboard/tracking/${
                   params.mode
-                }/${tab.toLowerCase()}/${params.dash}`}
+                }/${tab.toLowerCase()}/${params.dash}?${searchParams.toString()}`}
               >
                 <TabsTrigger value={tab.toLowerCase()} className="w-full">
                   {tab}
