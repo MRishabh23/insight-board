@@ -15,7 +15,7 @@ type StatusProps = {
 
 const CarrierStatus = ({ params, username }: StatusProps) => {
   const carrierStatusQuery = useQuery({
-    queryKey: ["carrier-status", `/dashboard/tracking/${params.mode}/${params.env}`],
+    queryKey: ["carrier-status", `/dashboard/tracking/${params.mode}/${params.env}/status`],
     queryFn: async () => {
       const response = username !== "" && await axios({
         method: "post",

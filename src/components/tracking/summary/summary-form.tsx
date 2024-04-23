@@ -40,11 +40,17 @@ const optionSchema = z.object({
 const formSchema = z.object({
   carriers: z.array(optionSchema).max(5, "Please select up to 5 carriers"),
   queue: z.string(),
-  range: z.object({
-    from: z.date(),
-    to: z.date(),
-  }),
+  range: z
+    .object({
+      from: z.date(),
+      to: z.date(),
+    })
+    .optional(),
 });
+
+const sD = new Date();
+sD.setDate(sD.getDate() - 1);
+const eD = new Date();
 
 const SummaryForm = ({ ...props }) => {
   const carriersOptions = getCarriersList(props.params.mode);
@@ -71,10 +77,10 @@ const SummaryForm = ({ ...props }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       carriers: newCarrOpt,
-      queue: searchParams.get("queue") || "",
+      queue: searchParams.get("queue") || "NORMAL",
       range: {
-        from: new Date(searchParams.get("from")!),
-        to: new Date(searchParams.get("to")!),
+        from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
+        to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
       },
     },
   });
@@ -94,10 +100,14 @@ const SummaryForm = ({ ...props }) => {
         });
       }
       const params = new URLSearchParams(searchParams.toString());
-      params.set("carriers", str);
+      if (str !== "") {
+        params.set("carriers", str);
+      }
       params.set("queue", data.queue);
-      params.set("from", format(data.range.from, "yyyy-MM-dd"));
-      params.set("to", format(data.range.to, "yyyy-MM-dd"));
+      if (data.carriers.length === 1) {
+        params.set("from", format(data.range.from, "yyyy-MM-dd"));
+        params.set("to", format(data.range.to, "yyyy-MM-dd"));
+      }
 
       return params.toString();
     },
@@ -167,7 +177,13 @@ const SummaryForm = ({ ...props }) => {
             control={form.control}
             name="range"
             render={({ field }) => (
-              <FormItem className="flex flex-col mt-6">
+              <FormItem
+                className={cn(
+                  form.watch("carriers").length === 1
+                    ? "flex flex-col mt-6"
+                    : "hidden"
+                )}
+              >
                 <FormLabel htmlFor="dateRange">Date Range</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -180,7 +196,7 @@ const SummaryForm = ({ ...props }) => {
                           !field.value && "text-muted-foreground"
                         )}
                         disabled={
-                          form.getValues("carriers").length === 1 ? false : true
+                          form.watch("carriers").length === 1 ? false : true
                         }
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -203,7 +219,7 @@ const SummaryForm = ({ ...props }) => {
                     <Calendar
                       initialFocus
                       mode="range"
-                      max={40}
+                      max={15}
                       defaultMonth={field.value?.from}
                       toDate={field.value?.to}
                       selected={field.value}

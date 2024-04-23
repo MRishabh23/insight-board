@@ -3,16 +3,14 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-import { format } from "date-fns";
+//import { format } from "date-fns";
 
 const TrackingDashHeader = ({
   params,
 }: {
   params: { mode: string; env: string; dash: string };
 }) => {
-  const sD = new Date();
-  sD.setDate(sD.getDate() - 1);
-  const eD = new Date();
+  
   const tabsRow1 = [
     {
       name: "Status",
@@ -23,10 +21,7 @@ const TrackingDashHeader = ({
       name: "Summary",
       path: `/dashboard/tracking/${params.mode}/${params.env}/summary`,
       query: {
-        carriers: "",
-        queue: "",
-        from: format(sD, "yyyy-MM-dd"),
-        to: format(eD, "yyyy-MM-dd"),
+        queue: "NORMAL"
       },
     },
     {

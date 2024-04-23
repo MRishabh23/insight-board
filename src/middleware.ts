@@ -12,23 +12,24 @@ export function middleware(request: NextRequest) {
     isPublic = true;
   }
   // get token
-  const token = request.cookies.get("token")?.value || "";
+  //const token = request.cookies.get("token")?.value || "";
+  const token = request.cookies.has("token");
 
   //conditions
-  if(path === "/" && token){
+  if(token && path === "/"){
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
-  if (isPublic && token) {
+  if (token && isPublic) {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
-  if (!isPublic && !token) {
+  if (!token && !isPublic) {
     return NextResponse.redirect(new URL("/signin", request.nextUrl));
   }
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/demo", "/dashboard:path*", "/signin", "/signup", "/forgot"],
+  matcher: ["/", "/demo", "/dashboard/:path*", "/signin", "/signup", "/forgot"],
 };

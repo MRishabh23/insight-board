@@ -174,7 +174,7 @@ const TableStatusForm = ({ ...props }) => {
         await queryClient.invalidateQueries({
           queryKey: [
             "carrier-status",
-            `/dashboard/tracking/${props.params.mode}/${props.params.env}`,
+            `/dashboard/tracking/${props.params.mode}/${props.params.env}/status`,
           ],
         });
       }
