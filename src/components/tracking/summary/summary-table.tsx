@@ -1,312 +1,358 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import * as React from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { TableDataComponent } from "@/components/data-table";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
+import { CgSpinnerAlt } from "react-icons/cg";
+import { TableCellTooltip, TableHeadCustom } from "@/components/table-comp/table-collection";
+import { Badge } from "@/components/ui/badge";
+import { format, toDate } from "date-fns";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+export type SummaryType = {
+  key: React.Key;
+  jtCarrierCode: string;
+  total_shipments: number;
+  jtCrawledTotal: number;
+  successCount: number;
+  failCount: number;
+  getTotalDiffFound: number;
+  getTotalNODiffFound: number;
+  getSentToFK: number;
+  getNotSentToFK: number;
+  getReferenceNotFound: number;
+  getReferenceNotFoundPercentage: number;
+  skipped404: number;
+  successRatio: number;
+  failureRatio: number;
+  diffRatio: number;
+  start_time: string;
+  end_time: string;
+  durationToLaunch: number;
+  schedulerId: number;
+  timeDiffMinutes: number;
+  timeDiffInFk: string;
+  lastRunStartAt: string;
+  delayTime: number;
+  lastRunStartTime: string;
+  threadPoolSize: number;
+  deliverCount: number;
+  closeCount: number;
+  queueType: string;
+  hitRateCount: number;
+  hitRatePer: number;
+  toFKFailedScraping: number;
+  toFKFailedValidation: number;
+  toFKFailedNotSent: number;
+  toFKFailedMapping: number;
+  crawlFrequency: string;
+  referenceNotFound: number;
+  refPercentage: number;
+  diffRateCountWithInCron: number;
+  diffRateCountAboveCron: number;
+  diffHitRateCountWithInCron: number;
+  diffHitRateCountAboveCron: number;
+  AvgAge: number;
+};
 
-const data: Payment[] = [
+export const columns: ColumnDef<SummaryType>[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
+    id: "carrier",
+    accessorKey: "jtCarrierCode",
+    header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+    cell: ({ row }) => <div>{row.original.jtCarrierCode}</div>,
+    meta: {
+      className: "sticky left-0 bg-white",
+    },
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-]
+    id: "queue",
+    accessorKey: "queueType",
+    header: () => <TableHeadCustom>Queue</TableHeadCustom>,
+    cell: ({ row }) => {
+      const queue = row.original.queueType;
+      const qType = queue.includes("NORMAL")
+        ? "normal"
+        : queue.includes("ADAPTIVE")
+        ? "adaptive"
+        : queue.includes("RNF")
+        ? "rnf"
+        : "";
 
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
-
-export const columns: ColumnDef<Payment>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+      return <Badge className="capitalize bg-stone-500">{qType}</Badge>;
+    },
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    id: "active",
+    accessorKey: "jtCrawledTotal",
+    header: () => <TableHeadCustom>Active</TableHeadCustom>,
+    cell: ({ row }) => <div>{row.original.jtCrawledTotal}</div>,
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
+    id: "avg-age",
+    accessorKey: "AvgAge",
+    header: () => <TableHeadCustom>Avg Age</TableHeadCustom>,
+    cell: ({ row }) => {
+      const age = row.original.AvgAge;
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        <div className={`${age >= 90 ? "text-red-500" : "text-inherit"}`}>
+          {age} days
+        </div>
+      );
+    },
+  },
+  {
+    id: "last-run",
+    accessorKey: "lastRunStartAt",
+    header: () => <TableHeadCustom>Last Run</TableHeadCustom>,
+    cell: ({ row }) => <div>{row.original.lastRunStartAt} ago</div>,
+  },
+  {
+    id: "duration",
+    accessorKey: "timeDiffInFk",
+    header: () => <TableHeadCustom>Duration</TableHeadCustom>,
+    cell: ({ row }) => {
+      const durDiff = row.original.timeDiffMinutes;
+      return (
+        <div className={`${durDiff >= 90 ? "text-red-500" : "text-inherit"}`}>
+          {row.original.timeDiffInFk}
+        </div>
+      );
+    },
+  },
+  {
+    id: "success",
+    accessorKey: "successCount",
+    header: () => <TableHeadCustom>Success</TableHeadCustom>,
+    cell: ({ row }) => {
+      return (
+        <div className="">
+          {row.original.successCount} ({row.original.successRatio}%)
+        </div>
+      );
+    },
+  },
+  {
+    id: "rnf",
+    accessorKey: "getReferenceNotFound",
+    header: () => <TableHeadCustom>RNF (404)</TableHeadCustom>,
+    cell: ({ row }) => {
+      const rnfRatio = row.original.getReferenceNotFoundPercentage;
+      const queue = row.original.queueType;
+      return (
+        <div
+          className={`${
+            rnfRatio >= 20 && !queue.includes("RNF")
+              ? "text-red-500"
+              : "text-inherit"
+          }`}
         >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
+          {row.original.getReferenceNotFound}
+        </div>
+      );
     },
   },
   {
-    id: "actions",
-    enableHiding: false,
+    id: "fail",
+    accessorKey: "failCount",
+    header: () => <TableHeadCustom>Fail</TableHeadCustom>,
     cell: ({ row }) => {
-      const payment = row.original
-
+      const failRatio = row.original.failureRatio;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+        <TableCellTooltip
+          tip={
+            <div>
+              <p>Sending Failure: {row.original.toFKFailedNotSent}</p>
+              <p>API/Scraping Failure: {row.original.toFKFailedScraping}</p>
+              <p>Mapping Failure: {row.original.toFKFailedMapping}</p>
+              <p>Validation Failure: {row.original.toFKFailedValidation}</p>
+            </div>
+          }
+        >
+          <div
+            className={`${failRatio >= 3.0 ? "text-red-500" : "text-inherit"}`}
+          >
+            {row.original.failCount} ({failRatio}%)
+          </div>
+        </TableCellTooltip>
+      );
     },
   },
-]
-
-export function SummaryTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  })
-
-  return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+  {
+    id: "diff-rate",
+    accessorKey: "getTotalDiffFound",
+    header: () => <TableHeadCustom>DiffRate</TableHeadCustom>,
+    cell: ({ row }) => {
+      const diffRatio = row.original.diffRatio;
+      return (
+        <TableCellTooltip
+          tip={
+            <div>
+              <p>WithIn Cron: {row.original.diffRateCountWithInCron}</p>
+              <p>Above Cron: {row.original.diffRateCountAboveCron}</p>
+            </div>
           }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+        >
+          <div
+            className={`${diffRatio >= 10.0 ? "text-red-500" : "text-inherit"}`}
           >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            {row.original.getTotalDiffFound} ({diffRatio}%)
+          </div>
+        </TableCellTooltip>
+      );
+    },
+  },
+  {
+    id: "crawl-frequency",
+    accessorKey: "crawlFrequency",
+    header: () => <TableHeadCustom>Crawl Frequency</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.crawlFrequency}</div>;
+    },
+  },
+  {
+    id: "duration-to-launch",
+    accessorKey: "durationToLaunch",
+    header: () => <TableHeadCustom>Duration To Launch</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.durationToLaunch}</div>;
+    },
+  },
+  {
+    id: "deliver-count",
+    accessorKey: "deliverCount",
+    header: () => <TableHeadCustom>Deliver Count</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.deliverCount}</div>;
+    },
+  },
+  {
+    id: "close-count",
+    accessorKey: "closeCount",
+    header: () => <TableHeadCustom>Close Count</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.closeCount}</div>;
+    },
+  },
+  {
+    id: "fk-timeout",
+    accessorKey: "toFKFailedNotSent",
+    header: () => <TableHeadCustom>FK Timeout</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.toFKFailedNotSent}</div>;
+    },
+  },
+  {
+    id: "hit-rate",
+    accessorKey: "hitRateCount",
+    header: () => <TableHeadCustom>HitRate</TableHeadCustom>,
+    cell: ({ row }) => {
+      const hitPer = row.original.hitRatePer;
+      const queue = row.original.queueType;
+      return (
+        <TableCellTooltip
+          tip={
+            <div>
+              <p>WithIn Cron: {row.original.diffHitRateCountWithInCron}</p>
+              <p>Above Cron: {row.original.diffHitRateCountAboveCron}</p>
+            </div>
+          }
+        >
+          <div
+            className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}
           >
-            Next
-          </Button>
-        </div>
+            {queue.includes("ADAPTIVE") ? `${row.original.hitRateCount} (${hitPer}%)` : "NA"}
+          </div>
+        </TableCellTooltip>
+      );
+    },
+  },
+  {
+    id: "scheduler-id",
+    accessorKey: "schedulerId",
+    header: () => <TableHeadCustom>Scheduler Id</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{row.original.schedulerId}</div>;
+    },
+  },
+  {
+    id: "start-time",
+    accessorKey: "start_time",
+    header: () => <TableHeadCustom>Start Time</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}</div>;
+    },
+  },
+  {
+    id: "end-time",
+    accessorKey: "end_time",
+    header: () => <TableHeadCustom>End Time</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <div className="">{format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}</div>;
+    },
+  }
+];
+
+export function SummaryTable({ ...props }) {
+  const searchParams = useSearchParams();
+  const queryCarriers = searchParams.get("carriers")?.split(",") || [];
+  let newCarrOpt: any = [];
+
+  if (queryCarriers.length > 0) {
+    queryCarriers.map((carrier) => {
+      if (carrier) {
+        newCarrOpt.push(carrier);
+      }
+    });
+  }
+
+  const summaryQuery = useQuery({
+    queryKey: [
+      "summary",
+      `/dashboard/tracking/${props.params.mode}/${props.params.env}/summary`,
+      `${searchParams.get("carriers")}-${searchParams.get(
+        "queue"
+      )}-${searchParams.get("from")}-${searchParams.get("to")}`,
+    ],
+    queryFn: async () => {
+      const response =
+        props.username !== "" &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/summary",
+          data: {
+            type: "GET_SUMMARY",
+            username: props.username,
+            env: props.params.env.toUpperCase(),
+            mode: props.params.mode.toUpperCase(),
+            carriers: newCarrOpt,
+            queue: searchParams.get("queue"),
+            startTime: searchParams.get("from") || "",
+            endTime: searchParams.get("to") || "",
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  if (summaryQuery.isPending) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center mt-6">
+        <CgSpinnerAlt className="animate-spin text-lg mr-2" />
       </div>
-    </div>
-  )
+    );
+  }
+  if (summaryQuery.isError || summaryQuery.error) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center mt-6">
+        <p className="text-red-500">Error: {summaryQuery.error?.message}</p>
+      </div>
+    );
+  }
+
+  return <TableDataComponent data={summaryQuery.data} columns={columns} />;
 }

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/components/ui/sonner";
-import { NextUIProvider } from "@nextui-org/react";
+import { Suspense } from "react";
 
 interface RootProps {
   children: React.ReactNode;
@@ -23,11 +23,9 @@ export default function RootLayout({ children }: Readonly<RootProps>) {
     <QueryProviderWrapper>
       <html className="max-w-[1400px] mx-auto h-screen" lang="en">
         <body className={cn("h-full", inter.className)}>
-          <NextUIProvider style={{height: "100%"}}>
-            {children}
-            <Toaster />
-            <ReactQueryDevtools initialIsOpen={false} />
-          </NextUIProvider>
+          {children}
+          <Toaster />
+          <ReactQueryDevtools initialIsOpen={false} />
         </body>
       </html>
     </QueryProviderWrapper>
