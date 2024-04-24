@@ -13,20 +13,25 @@ type StatusProps = {
   username: string;
 };
 
-const CarrierStatus = ({ params, username }: StatusProps) => {
+export const CarrierStatus = ({ params, username }: StatusProps) => {
   const carrierStatusQuery = useQuery({
-    queryKey: ["carrier-status", `/dashboard/tracking/${params.mode}/${params.env}/status`],
+    queryKey: [
+      "carrier-status",
+      `/dashboard/tracking/${params.mode}/${params.env}/status`,
+    ],
     queryFn: async () => {
-      const response = username !== "" && await axios({
-        method: "post",
-        url: "/api/tracking/status",
-        data: {
-          type: "GET_CARRIER_STATUS",
-          username: username,
-          env: params.env.toUpperCase(),
-          mode: params.mode.toUpperCase(),
-        },
-      });
+      const response =
+        username !== "" &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/status",
+          data: {
+            type: "GET_CARRIER_STATUS",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+          },
+        }));
       return response;
     },
     staleTime: 1000 * 60 * 60 * 8,
@@ -43,15 +48,19 @@ const CarrierStatus = ({ params, username }: StatusProps) => {
   if (carrierStatusQuery.isError || carrierStatusQuery.error) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
-        <p className="text-red-500">Error: {carrierStatusQuery.error?.message}</p>
+        <p className="text-red-500">
+          Error: {carrierStatusQuery.error?.message}
+        </p>
       </div>
     );
   }
   return (
     <div>
-      <CarrierStatusTable statusList={carrierStatusQuery.data || []} params={params} username={username}/>
+      <CarrierStatusTable
+        statusList={carrierStatusQuery.data || []}
+        params={params}
+        username={username}
+      />
     </div>
   );
 };
-
-export default CarrierStatus;

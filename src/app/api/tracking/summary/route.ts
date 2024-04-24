@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
         mode: mode,
         carriers: carriers,
         queue: queue,
-        startTime: startTime + " 00:00:00",
-        endTime: endTime + " 23:59:59"
+        startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
+        endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
       };
     } else {
       reqData = {
@@ -41,6 +41,8 @@ export async function POST(request: NextRequest) {
       },
       data: reqData,
     };
+
+    //console.log("sendObj", sendObj);
 
     const carrierSummaryRes: any = await axios(sendObj);
 

@@ -97,7 +97,7 @@ export function CarrierStatusTable({ ...props }) {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="outline">
-                            <PencilIcon />
+                            <PencilIcon className="w-4 h-4 mr-2"/> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">

@@ -52,14 +52,13 @@ const TrackingDashHeader = ({
 
   return (
     <>
-      <p className="text-lg mt-4">Select a dashboard: </p>
       <Tabs
         value={tabVal}
         onValueChange={(value) => {
           setTabVal(value);
         }}
       >
-        <div className="w-full space-y-4">
+        <div className="w-full space-y-4 mt-6">
           <TabsList className="grid grid-cols-3">
             {tabsRow1.map((tab) => (
               <Link key={tab.name} href={{ pathname: tab.path, query: tab.query }}>

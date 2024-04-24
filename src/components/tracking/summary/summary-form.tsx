@@ -52,7 +52,7 @@ const sD = new Date();
 sD.setDate(sD.getDate() - 1);
 const eD = new Date();
 
-const SummaryForm = ({ ...props }) => {
+export const SummaryForm = ({ ...props }) => {
   const carriersOptions = getCarriersList(props.params.mode);
   const queueOptions = getQueueList();
   const pathname = usePathname();
@@ -86,7 +86,7 @@ const SummaryForm = ({ ...props }) => {
   });
 
   const onSubmit = (data: any) => {
-    console.log("submit data", data);
+    //console.log("submit data", data);
     const q = createQueryString(data);
     router.push(pathname + "?" + q);
   };
@@ -102,11 +102,16 @@ const SummaryForm = ({ ...props }) => {
       const params = new URLSearchParams(searchParams.toString());
       if (str !== "") {
         params.set("carriers", str);
+      } else {
+        params.set("carriers", "");
       }
       params.set("queue", data.queue);
       if (data.carriers.length === 1) {
         params.set("from", format(data.range.from, "yyyy-MM-dd"));
         params.set("to", format(data.range.to, "yyyy-MM-dd"));
+      } else {
+        params.set("from", "");
+        params.set("to", "");
       }
 
       return params.toString();
@@ -240,5 +245,3 @@ const SummaryForm = ({ ...props }) => {
     </>
   );
 };
-
-export default SummaryForm;

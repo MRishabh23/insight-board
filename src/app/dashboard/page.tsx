@@ -16,7 +16,20 @@ import {
 import { PiAirplaneTilt } from "react-icons/pi";
 
 const Dashboard = () => {
-  const modeList = ["ocean", "air", "terminal"];
+  const modeList = [
+    {
+      mode: "ocean",
+      env: "prod",
+    },
+    {
+      mode: "air",
+      env: "dev",
+    },
+    {
+      mode: "terminal",
+      env: "dev",
+    },
+  ];
   return (
     <div
       className={cn("h-full px-6 flex flex-col justify-center items-center")}
@@ -29,21 +42,21 @@ const Dashboard = () => {
         <CardContent className="p-3 flex flex-col gap-4">
           {modeList.map((item) => (
             <Link
-              key={item}
+              key={item.mode}
               href={{
-                pathname: `/dashboard/tracking/${item}/prod/status`
+                pathname: `/dashboard/tracking/${item.mode}/${item.env}/status`,
               }}
             >
               <div className="flex justify-between items-center border rounded-full p-4 hover:bg-primary hover:text-primary-foreground">
                 <div className="flex items-center">
-                  {item === "ocean" ? (
+                  {item.mode === "ocean" ? (
                     <LiaShipSolid className="text-xl" />
-                  ) : item === "air" ? (
+                  ) : item.mode === "air" ? (
                     <PiAirplaneTilt className="text-xl" />
                   ) : (
                     <LiaShippingFastSolid className="text-xl" />
                   )}
-                  <p className="ml-2 text-lg">{item.toUpperCase()}</p>
+                  <p className="ml-2 text-lg">{item.mode.toUpperCase()}</p>
                 </div>
                 <LiaLongArrowAltRightSolid className="text-2xl font-bold" />
               </div>
