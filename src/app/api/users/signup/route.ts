@@ -16,6 +16,7 @@ export async function POST(request: NextRequest){
         const newUserObj = {
             method: "post",
             url: process.env.URL!,
+            timeout: 60000,
             auth: {
                 username: process.env.USERNAME!,
                 password: process.env.PASSWORD!,
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest){
 
     } catch (error: any) {
         return NextResponse.json({
-            error: error.message
+            error: error.message.includes("timeout") ? "Request timed out. Please try again." : error.message
         }, {status: 500});
     }
 }

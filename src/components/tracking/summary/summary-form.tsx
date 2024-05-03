@@ -11,7 +11,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
 import {
   Select,
@@ -30,6 +30,7 @@ import {
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ParamType } from "@/utils/types/ParamType";
 
 const optionSchema = z.object({
   label: z.string(),
@@ -52,8 +53,9 @@ const sD = new Date();
 sD.setDate(sD.getDate() - 1);
 const eD = new Date();
 
-export const SummaryForm = ({ ...props }) => {
-  const carriersOptions = getCarriersList(props.params.mode);
+export const SummaryForm = () => {
+  const params = useParams<ParamType>();
+  const carriersOptions = getCarriersList(params.mode);
   const queueOptions = getQueueList();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -95,8 +97,12 @@ export const SummaryForm = ({ ...props }) => {
     (data: any) => {
       let str = "";
       if (data.carriers.length > 0) {
-        data.carriers.map((carrier: any) => {
-          str += carrier.value + ",";
+        data.carriers.map((carrier: any, index: number) => {
+          if (index === data.carriers.length - 1) {
+            str += carrier.value;
+          } else {
+            str += carrier.value + ",";
+          }
         });
       }
       const params = new URLSearchParams(searchParams.toString());
@@ -182,13 +188,7 @@ export const SummaryForm = ({ ...props }) => {
             control={form.control}
             name="range"
             render={({ field }) => (
-              <FormItem
-                className={cn(
-                  form.watch("carriers").length === 1
-                    ? "flex flex-col mt-6"
-                    : "hidden"
-                )}
-              >
+              <FormItem className="flex flex-col mt-6">
                 <FormLabel htmlFor="dateRange">Date Range</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -225,7 +225,7 @@ export const SummaryForm = ({ ...props }) => {
                       initialFocus
                       mode="range"
                       max={15}
-                      defaultMonth={field.value?.from}
+                      defaultMonth={field.value?.to}
                       toDate={field.value?.to}
                       selected={field.value}
                       onSelect={field.onChange}
