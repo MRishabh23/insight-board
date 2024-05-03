@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import QueryProviderWrapper from "@/custom-wrappers/queryProviderWrapper";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "@/components/ui/sonner";
-import { Suspense } from "react";
 
 interface RootProps {
   children: React.ReactNode;

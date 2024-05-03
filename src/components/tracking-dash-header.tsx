@@ -21,7 +21,10 @@ const TrackingDashHeader = ({
       name: "Summary",
       path: `/dashboard/tracking/${params.mode}/${params.env}/summary`,
       query: {
-        queue: "NORMAL"
+        carriers: "",
+        queue: "NORMAL",
+        from: "",
+        to: ""
       },
     },
     {

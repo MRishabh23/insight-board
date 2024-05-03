@@ -3,7 +3,7 @@ import { CarrierStatus } from "./carrier-status";
 import { Separator } from "@/components/ui/separator";
 import { CarrierIssueTab } from "./carrier-issue-tab";
 
-const MainStatusComponent = ({ ...props }) => {
+const MainStatusComponent = () => {
   return (
     <div className="flex flex-col">
       <div className="">
@@ -11,7 +11,7 @@ const MainStatusComponent = ({ ...props }) => {
       </div>
       <Separator className="my-6 bg-black" />
       <div className="w-full">
-        <CarrierStatus params={props.params} username={props.username} />
+        <CarrierStatus />
       </div>
     </div>
   );

@@ -3,17 +3,14 @@ import axios from "axios";
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { CarrierStatusTable } from "./carrier-status-table";
+import { UserContext } from "@/app/dashboard/tracking/[mode]/[env]/[dash]/page";
+import { useParams } from "next/navigation";
+import { ParamType } from "@/utils/types/ParamType";
 
-type StatusProps = {
-  params: {
-    mode: string;
-    env: string;
-    dash: string;
-  };
-  username: string;
-};
-
-export const CarrierStatus = ({ params, username }: StatusProps) => {
+export const CarrierStatus = () => {
+  const params = useParams<ParamType>();
+  const username = React.useContext(UserContext);
+  
   const carrierStatusQuery = useQuery({
     queryKey: [
       "carrier-status",
@@ -21,7 +18,7 @@ export const CarrierStatus = ({ params, username }: StatusProps) => {
     ],
     queryFn: async () => {
       const response =
-        username !== "" &&
+        username !== null && username !== "" &&
         (await axios({
           method: "post",
           url: "/api/tracking/status",
@@ -54,6 +51,7 @@ export const CarrierStatus = ({ params, username }: StatusProps) => {
       </div>
     );
   }
+
   return (
     <div>
       <CarrierStatusTable

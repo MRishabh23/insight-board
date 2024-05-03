@@ -4,58 +4,16 @@ import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableDataComponent } from "@/components/data-table";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellTooltip, TableHeadCustom } from "@/components/table-comp/table-collection";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
+import { ParamType } from "@/utils/types/ParamType";
+import { UserContext } from "@/app/dashboard/tracking/[mode]/[env]/[dash]/page";
+import { SummaryType } from "@/utils/types/DashboardType";
 
-export type SummaryType = {
-  key: React.Key;
-  jtCarrierCode: string;
-  total_shipments: number;
-  jtCrawledTotal: number;
-  successCount: number;
-  failCount: number;
-  getTotalDiffFound: number;
-  getTotalNODiffFound: number;
-  getSentToFK: number;
-  getNotSentToFK: number;
-  getReferenceNotFound: number;
-  getReferenceNotFoundPercentage: number;
-  skipped404: number;
-  successRatio: number;
-  failureRatio: number;
-  diffRatio: number;
-  start_time: string;
-  end_time: string;
-  durationToLaunch: number;
-  schedulerId: number;
-  timeDiffMinutes: number;
-  timeDiffInFk: string;
-  lastRunStartAt: string;
-  delayTime: number;
-  lastRunStartTime: string;
-  threadPoolSize: number;
-  deliverCount: number;
-  closeCount: number;
-  queueType: string;
-  hitRateCount: number;
-  hitRatePer: number;
-  toFKFailedScraping: number;
-  toFKFailedValidation: number;
-  toFKFailedNotSent: number;
-  toFKFailedMapping: number;
-  crawlFrequency: string;
-  referenceNotFound: number;
-  refPercentage: number;
-  diffRateCountWithInCron: number;
-  diffRateCountAboveCron: number;
-  diffHitRateCountWithInCron: number;
-  diffHitRateCountAboveCron: number;
-  AvgAge: number;
-};
 
 export const columns: ColumnDef<SummaryType>[] = [
   {
@@ -295,7 +253,9 @@ export const columns: ColumnDef<SummaryType>[] = [
   }
 ];
 
-export function SummaryTable({ ...props }) {
+export function SummaryTable() {
+  const username = React.useContext(UserContext);
+  const params = useParams<ParamType>();
   const searchParams = useSearchParams();
   const queryCarriers = searchParams.get("carriers")?.split(",") || [];
   let newCarrOpt: any = [];
@@ -311,22 +271,22 @@ export function SummaryTable({ ...props }) {
   const summaryQuery = useQuery({
     queryKey: [
       "summary",
-      `/dashboard/tracking/${props.params.mode}/${props.params.env}/summary`,
+      `/dashboard/tracking/${params.mode}/${params.env}/summary`,
       `${searchParams.get("carriers")}-${searchParams.get(
         "queue"
       )}-${searchParams.get("from")}-${searchParams.get("to")}`,
     ],
     queryFn: async () => {
       const response =
-        props.username !== "" &&
+        username !== null && username !== "" &&
         (await axios({
           method: "post",
           url: "/api/tracking/summary",
           data: {
             type: "GET_SUMMARY",
-            username: props.username,
-            env: props.params.env.toUpperCase(),
-            mode: props.params.mode.toUpperCase(),
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
             carriers: newCarrOpt,
             queue: searchParams.get("queue"),
             startTime: searchParams.get("from") || "",

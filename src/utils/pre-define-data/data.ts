@@ -104,7 +104,7 @@ const queue = [
   },
 ];
 
-const refType = [
+const oceanRefType = [
   {
     label: "Booking",
     value: "BOOKING",
@@ -119,6 +119,20 @@ const refType = [
   },
 ];
 
+const airRefType = [
+  {
+    label: "AWB",
+    value: "AWB",
+  }
+];
+
+const terminalRefType = [
+  {
+    label: "Container",
+    value: "CONTAINER",
+  }
+];
+
 export const getCarriersList = (mode: string) => {
   return mode === "air"
     ? airCarriers
@@ -129,4 +143,12 @@ export const getCarriersList = (mode: string) => {
 
 export const getQueueList = () => {
   return queue;
+};
+
+export const getRefList = (mode: string) => {
+  return mode === "air"
+    ? airRefType
+    : mode === "ocean"
+    ? oceanRefType
+    : terminalRefType;
 };
