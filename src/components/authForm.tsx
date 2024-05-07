@@ -11,34 +11,11 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { useMutation } from "@tanstack/react-query";
-
-interface AuthProp {
-  title: string;
-  switchTitle?: string;
-  switchRoute?: string;
-  postRoute: string;
-  pushRoute: string;
-}
-
-interface SubmitProp {
-  username: string;
-  password: string;
-}
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string(),
-});
+import { AuthType, SubmitType } from "@/utils/types/AuthType";
+import { useAuthForm } from "@/utils/schema";
+import { useAuthSubmitMutation } from "@/utils/mutation";
 
 const AuthForm = ({
   title,
@@ -46,45 +23,17 @@ const AuthForm = ({
   switchRoute,
   postRoute,
   pushRoute,
-}: AuthProp) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-  const router = useRouter();
+}: AuthType) => {
+  const form = useAuthForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const eyeCss = "h-5 w-5";
   const custDivCss = "text-white text-sm flex justify-between items-center";
   const custLinkCss =
     "bg-primary rounded-md flex justify-center items-center hover:bg-primary/90 h-10 px-4 py-2";
 
-  const mutateSubmit = useMutation({
-    mutationFn: (data: SubmitProp) => {
-      return axios({
-        method: "post",
-        url: `/api/users/${postRoute}`,
-        data: data,
-      });
-    },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, ${title} failed.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        toast.success(`${title} Successful.`);
-        form.reset({ username: "", password: "" });
-        router.push(pushRoute);
-      }
-    },
-  });
+  const mutateSubmit = useAuthSubmitMutation(form, title, postRoute, pushRoute);
 
-  const onSubmit = async (data: SubmitProp) => {
+  const onSubmit = async (data: SubmitType) => {
     mutateSubmit.mutate(data);
   };
 
