@@ -43,3 +43,8 @@ export type SummaryType = {
   diffHitRateCountAboveCron: number;
   AvgAge: number;
 };
+
+export type StatusType = {
+  carrier: string;
+  status: string;
+};
