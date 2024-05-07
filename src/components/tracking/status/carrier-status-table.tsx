@@ -35,19 +35,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { PencilIcon } from "@/components/icons/pencil-icon";
-
-type StatusData = {
-  carrier: string;
-  status: string;
-};
+import { StatusType } from "@/utils/types/DashboardType";
+import { useStatusForm } from "@/utils/schema";
+import { useStatusMutation } from "@/utils/mutation";
 
 export function CarrierStatusTable({ ...props }) {
   return (
@@ -70,7 +62,7 @@ export function CarrierStatusTable({ ...props }) {
             <TableBody>
               {Array.isArray(props.statusList.data?.data) &&
                 props.statusList.data?.data.length > 0 &&
-                props.statusList.data?.data.map((item: StatusData) => (
+                props.statusList.data?.data.map((item: StatusType) => (
                   <TableRow key={item.carrier}>
                     <TableCell className="font-semibold">
                       {item.carrier}
@@ -97,7 +89,7 @@ export function CarrierStatusTable({ ...props }) {
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button variant="outline">
-                            <PencilIcon className="w-4 h-4 mr-2"/> Edit
+                            <PencilIcon className="w-4 h-4 mr-2" /> Edit
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
@@ -128,60 +120,12 @@ export function CarrierStatusTable({ ...props }) {
   );
 }
 
-const formSchema = z.object({
-  carrier: z.string(),
-  status: z.string(),
-});
-
 const TableStatusForm = ({ ...props }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      carrier: props.item.carrier,
-      status: props.item.status.toLowerCase(),
-    },
-  });
+  const form = useStatusForm(props.item);
 
-  const queryClient = useQueryClient();
+  const mutateStatus = useStatusMutation(props.username, props.params);
 
-  const mutateStatus = useMutation({
-    mutationFn: (data: StatusData) => {
-      return axios({
-        method: "post",
-        url: "/api/tracking/status",
-        data: {
-          type: "UPDATE_CARRIER_STATUS",
-          username: props.username,
-          env: props.params.env.toUpperCase(),
-          mode: props.params.mode.toUpperCase(),
-          carrier: data.carrier,
-          status: data.status,
-        },
-      });
-    },
-
-    onSuccess: () => {
-      toast.success("Carrier status updated successfully!");
-    },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, while updating status.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        await queryClient.invalidateQueries({
-          queryKey: [
-            "carrier-status",
-            `/dashboard/tracking/${props.params.mode}/${props.params.env}/status`,
-          ],
-        });
-      }
-    },
-  });
-
-  const onSubmit = (data: StatusData) => {
+  const onSubmit = (data: StatusType) => {
     mutateStatus.mutate(data);
   };
 

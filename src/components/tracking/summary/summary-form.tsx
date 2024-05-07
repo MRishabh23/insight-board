@@ -7,11 +7,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
 import {
   Select,
@@ -31,27 +33,7 @@ import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ParamType } from "@/utils/types/ParamType";
-
-const optionSchema = z.object({
-  label: z.string(),
-  value: z.string(),
-  disable: z.boolean().optional(),
-});
-
-const formSchema = z.object({
-  carriers: z.array(optionSchema).max(5, "Please select up to 5 carriers"),
-  queue: z.string(),
-  range: z
-    .object({
-      from: z.date(),
-      to: z.date(),
-    })
-    .optional(),
-});
-
-const sD = new Date();
-sD.setDate(sD.getDate() - 1);
-const eD = new Date();
+import { useSummaryForm } from "@/utils/schema";
 
 export const SummaryForm = () => {
   const params = useParams<ParamType>();
@@ -60,10 +42,10 @@ export const SummaryForm = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryCarriers = searchParams.get("carriers")?.split(",") || [];
+  const queryCarriers = searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : [];
   let newCarrOpt: any = [];
 
-  if (queryCarriers.length > 0) {
+  if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
       if (carrier) {
         const carrObj = {
@@ -75,17 +57,7 @@ export const SummaryForm = () => {
     });
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      carriers: newCarrOpt,
-      queue: searchParams.get("queue") || "NORMAL",
-      range: {
-        from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
-        to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
-      },
-    },
-  });
+  const form = useSummaryForm(newCarrOpt, searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);

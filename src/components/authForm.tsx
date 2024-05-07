@@ -11,34 +11,11 @@ import {
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import axios from "axios";
-import { AiOutlineLoading } from "react-icons/ai";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-
-interface AuthProp {
-  title: string;
-  switchTitle?: string;
-  switchRoute?: string;
-  postRoute: string;
-  pushRoute: string;
-}
-
-interface SubmitProp {
-  username: string;
-  password: string;
-}
-
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string(),
-});
+import { AuthType, SubmitType } from "@/utils/types/AuthType";
+import { useAuthForm } from "@/utils/schema";
+import { useAuthSubmitMutation } from "@/utils/mutation";
 
 const AuthForm = ({
   title,
@@ -46,39 +23,18 @@ const AuthForm = ({
   switchRoute,
   postRoute,
   pushRoute,
-}: AuthProp) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-  const switchPara = switchTitle?.includes("SignIn")
-    ? "Already have an account ?"
-    : "Doesn't have an account ?";
-  const router = useRouter();
-  const [btnLoad, setBtnLoad] = React.useState(false);
+}: AuthType) => {
+  const form = useAuthForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const eyeCss = "h-5 w-5";
   const custDivCss = "text-white text-sm flex justify-between items-center";
   const custLinkCss =
     "bg-primary rounded-md flex justify-center items-center hover:bg-primary/90 h-10 px-4 py-2";
 
-  const onSubmit = async (data: SubmitProp) => {
-    try {
-      setBtnLoad(true);
-      await axios.post(`/api/users/${postRoute}`, data);
-      toast.success(`${title} Successful.`);
-      router.push(pushRoute);
-    } catch (error: any) {
-      toast.error(`Uh oh! Something went wrong, ${title} failed.`,{
-        description: error?.response?.data?.error ? error?.response?.data?.error : error.message
-      });
-    } finally {
-      setBtnLoad(false);
-      form.reset({ username: "", password: "" });
-    }
+  const mutateSubmit = useAuthSubmitMutation(form, title, postRoute, pushRoute);
+
+  const onSubmit = async (data: SubmitType) => {
+    mutateSubmit.mutate(data);
   };
 
   const togglePassword = () => {
@@ -88,7 +44,13 @@ const AuthForm = ({
   return (
     <div className="flex flex-col">
       <div>
-        <h3 className="text-2xl font-bold">{title} !!</h3>
+        <div className="1lg:hidden flex justify-between items-center font-bold">
+          <p className="text-lg">JUSTRANSFORM</p>
+          <span className="text-2xl">
+            {title === "Sign up" ? "SignUp" : "Reset"}
+          </span>
+        </div>
+        <p className="hidden 1lg:block text-2xl font-bold">{title}</p>
       </div>
       <Form {...form}>
         <form
@@ -162,25 +124,11 @@ const AuthForm = ({
           />
           <Button
             type="submit"
-            disabled={btnLoad ? true : false}
+            disabled={mutateSubmit.isPending}
             className={cn("w-full capitalize")}
           >
-            {btnLoad ? (
-              <>
-                <AiOutlineLoading className="mr-2 animate-spin text-lg" />{" "}
-                {title}
-              </>
-            ) : (
-              title
-            )}
+            {mutateSubmit.isPending ? "Processing..." : title}
           </Button>
-          {title === "Sign in" && (
-            <div className={cn(custDivCss)}>
-              <Link className={cn(custLinkCss, "w-full")} href={`/forgot`}>
-                Forgot Password
-              </Link>
-            </div>
-          )}
           {title.includes("Reset") ? (
             <div className={cn(custDivCss)}>
               <Link className={cn(custLinkCss, "w-[48%]")} href={`/signin`}>
@@ -192,8 +140,12 @@ const AuthForm = ({
             </div>
           ) : (
             <p>
-              {switchPara}{" "}
-              <span className={cn("text-blue-600 underline")}>
+              Already have an account?
+              <span
+                className={cn(
+                  "ml-2 text-blue-600 hover:text-blue-500 underline"
+                )}
+              >
                 <Link href={`/${switchRoute}`}>{switchTitle}</Link>
               </span>
             </p>

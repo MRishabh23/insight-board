@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<RootProps>) {
   return (
-    <QueryProviderWrapper>
-      <html className="max-w-[1400px] mx-auto h-screen" lang="en">
-        <body className={cn("h-full", inter.className)}>
+    <html className="max-w-[1400px] mx-auto h-screen" lang="en">
+      <body className={cn("h-full", inter.className)}>
+        <QueryProviderWrapper>
           {children}
           <Toaster />
           <ReactQueryDevtools initialIsOpen={false} />
-        </body>
-      </html>
-    </QueryProviderWrapper>
+        </QueryProviderWrapper>
+      </body>
+    </html>
   );
 }

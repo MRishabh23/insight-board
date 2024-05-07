@@ -3,17 +3,18 @@
 import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableDataComponent } from "@/components/data-table";
-import { useQuery } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "next/navigation";
-import axios from "axios";
 import { CgSpinnerAlt } from "react-icons/cg";
-import { TableCellTooltip, TableHeadCustom } from "@/components/table-comp/table-collection";
+import {
+  TableCellTooltip,
+  TableHeadCustom,
+} from "@/components/table-comp/table-collection";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType } from "@/utils/types/ParamType";
 import { UserContext } from "@/app/dashboard/tracking/[mode]/[env]/[dash]/page";
 import { SummaryType } from "@/utils/types/DashboardType";
-
+import { useSummaryQuery } from "@/utils/query";
 
 export const columns: ColumnDef<SummaryType>[] = [
   {
@@ -218,10 +219,10 @@ export const columns: ColumnDef<SummaryType>[] = [
             </div>
           }
         >
-          <div
-            className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}
-          >
-            {queue.includes("ADAPTIVE") ? `${row.original.hitRateCount} (${hitPer}%)` : "NA"}
+          <div className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}>
+            {queue.includes("ADAPTIVE")
+              ? `${row.original.hitRateCount} (${hitPer}%)`
+              : "NA"}
           </div>
         </TableCellTooltip>
       );
@@ -240,7 +241,11 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "start_time",
     header: () => <TableHeadCustom>Start Time</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}</div>;
+      return (
+        <div className="">
+          {format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}
+        </div>
+      );
     },
   },
   {
@@ -248,19 +253,25 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "end_time",
     header: () => <TableHeadCustom>End Time</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}</div>;
+      return (
+        <div className="">
+          {format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}
+        </div>
+      );
     },
-  }
+  },
 ];
 
 export function SummaryTable() {
   const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
-  const queryCarriers = searchParams.get("carriers")?.split(",") || [];
+  const queryCarriers = searchParams.get("carriers")
+    ? searchParams.get("carriers")?.split(",")
+    : [];
   let newCarrOpt: any = [];
 
-  if (queryCarriers.length > 0) {
+  if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
       if (carrier) {
         newCarrOpt.push(carrier);
@@ -268,36 +279,12 @@ export function SummaryTable() {
     });
   }
 
-  const summaryQuery = useQuery({
-    queryKey: [
-      "summary",
-      `/dashboard/tracking/${params.mode}/${params.env}/summary`,
-      `${searchParams.get("carriers")}-${searchParams.get(
-        "queue"
-      )}-${searchParams.get("from")}-${searchParams.get("to")}`,
-    ],
-    queryFn: async () => {
-      const response =
-        username !== null && username !== "" &&
-        (await axios({
-          method: "post",
-          url: "/api/tracking/summary",
-          data: {
-            type: "GET_SUMMARY",
-            username: username,
-            env: params.env.toUpperCase(),
-            mode: params.mode.toUpperCase(),
-            carriers: newCarrOpt,
-            queue: searchParams.get("queue"),
-            startTime: searchParams.get("from") || "",
-            endTime: searchParams.get("to") || "",
-          },
-        }));
-      return response;
-    },
-    staleTime: 1000 * 60 * 30,
-    refetchInterval: 1000 * 60 * 30,
-  });
+  const summaryQuery = useSummaryQuery(
+    username || "",
+    params,
+    newCarrOpt,
+    searchParams
+  );
 
   if (summaryQuery.isPending) {
     return (
@@ -306,6 +293,7 @@ export function SummaryTable() {
       </div>
     );
   }
+
   if (summaryQuery.isError || summaryQuery.error) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-6">
