@@ -30,7 +30,12 @@ const TrackingDashHeader = ({
     {
       name: "History",
       path: `/dashboard/tracking/${params.mode}/${params.env}/history`,
-      query: {}
+      query: {
+        subId: "",
+        historyType: "DIFF",
+        from: "",
+        to: ""
+      }
     },
   ];
 

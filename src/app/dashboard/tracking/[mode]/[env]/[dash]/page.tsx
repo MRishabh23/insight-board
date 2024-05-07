@@ -5,6 +5,7 @@ import { useGetUsername } from "@/hooks/get-username";
 import { CgSpinnerAlt } from "react-icons/cg";
 import MainStatusComponent from "@/components/tracking/status/main-status-component";
 import MainSummaryComponent from "@/components/tracking/summary/main-summary-component";
+import MainHistoryComponent from "@/components/tracking/history/main-history-component";
 
 export const UserContext = createContext(null);
 
@@ -37,6 +38,8 @@ const SlugPage = ({
           <MainStatusComponent />
         ) : params.dash === "summary" ? (
           <MainSummaryComponent />
+        ) : params.dash === "history" ? (
+          <MainHistoryComponent />
         ) : (
           <div>{params.dash}</div>
         )}

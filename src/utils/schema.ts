@@ -4,6 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { StatusType } from "./types/DashboardType";
 import { format } from "date-fns";
 
+// current and previous dates
+const sD = new Date();
+sD.setDate(sD.getDate() - 1);
+const eD = new Date();
+
+
 // auth schema
 
 // combine signUp and forgot/reset
@@ -122,16 +128,40 @@ const summaryFormSchema = z.object({
     .optional(),
 });
 
-const sD = new Date();
-sD.setDate(sD.getDate() - 1);
-const eD = new Date();
-
 export const useSummaryForm = (newCarrOpt: any, searchParams: any) => {
   const form = useForm<z.infer<typeof summaryFormSchema>>({
     resolver: zodResolver(summaryFormSchema),
     defaultValues: {
       carriers: newCarrOpt,
       queue: searchParams.get("queue") || "NORMAL",
+      range: {
+        from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
+        to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
+      },
+    },
+  });
+
+  return form;
+};
+
+// history schema
+const historyFormSchema = z.object({
+  subId: z.string(),
+  historyType: z.string(),
+  range: z
+    .object({
+      from: z.date(),
+      to: z.date(),
+    })
+    .optional(),
+});
+
+export const useHistoryForm = (searchParams: any) => {
+  const form = useForm<z.infer<typeof historyFormSchema>>({
+    resolver: zodResolver(historyFormSchema),
+    defaultValues: {
+      subId: searchParams.get("subId") || "",
+      historyType: searchParams.get("historyType") || "DIFF",
       range: {
         from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
         to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),

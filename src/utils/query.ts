@@ -75,3 +75,44 @@ export const useSummaryQuery = (
 
   return query;
 };
+
+// history query
+export const useHistoryQuery = (
+    username: string,
+    params: ParamType,
+    searchParams: any
+  ) => {
+    const query = useQuery({
+      queryKey: [
+        "summary",
+        `/dashboard/tracking/${params.mode}/${params.env}/history`,
+        `${searchParams.get("subId")}-${searchParams.get(
+          "historyType"
+        )}-${searchParams.get("from")}-${searchParams.get("to")}`,
+      ],
+      queryFn: async () => {
+        const response =
+          username !== null &&
+          username !== "" &&
+          (await axios({
+            method: "post",
+            url: "/api/tracking/history",
+            data: {
+              type: "GET_REFERENCE_HISTORY",
+              username: username,
+              env: params.env.toUpperCase(),
+              mode: params.mode.toUpperCase(),
+              subscriptionId: searchParams.get("subId").toUpperCase(),
+              historyType: searchParams.get("historyType"),
+              startTime: searchParams.get("from") || "",
+              endTime: searchParams.get("to") || "",
+            },
+          }));
+        return response;
+      },
+      staleTime: 1000 * 60 * 30,
+      refetchInterval: 1000 * 60 * 30,
+    });
+  
+    return query;
+  };
