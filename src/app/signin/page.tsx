@@ -25,70 +25,23 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import axios from "axios";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { useMutation } from "@tanstack/react-query";
-
-interface SignInProp {
-  role: string;
-  username: string;
-  password: string;
-}
-
-const formSchema = z.object({
-  role: z.string(),
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  password: z.string(),
-});
+import { useSignInForm } from "@/utils/schema";
+import { SignInType } from "@/utils/types/AuthType";
+import { useSignInSubmitMutation } from "@/utils/mutation";
 
 const SignIn = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      role: "user",
-      username: "",
-      password: "",
-    },
-  });
+  const form = useSignInForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showContinue, setShowContinue] = React.useState(true);
   const [continueLoad, setContinueLoad] = React.useState(false);
   const eyeCss = "h-5 w-5";
   const linkCss = "text-blue-600 hover:text-blue-500 underline text-sm";
 
-  const router = useRouter();
+  const mutateSignIn = useSignInSubmitMutation(form);
 
-  const mutateSignIn = useMutation({
-    mutationFn: (data: SignInProp) => {
-      return axios({
-        method: "post",
-        url: "/api/users/signin",
-        data: data,
-      });
-    },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, Sign in failed.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        toast.success("Sign In Successful.");
-        form.reset({ username: "", password: "" });
-        router.push("/dashboard");
-      }
-    },
-  });
-  
-  const onSubmit = async (data: SignInProp) => {
+  const onSubmit = async (data: SignInType) => {
     mutateSignIn.mutate(data);
   };
 

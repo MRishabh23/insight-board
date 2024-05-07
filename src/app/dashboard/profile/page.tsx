@@ -21,6 +21,7 @@ const Profile = () => {
       </div>
     );
   }
+
   if (isError || error) {
     return (
       <div className={cn("h-full flex flex-col justify-center items-center")}>
@@ -28,6 +29,7 @@ const Profile = () => {
       </div>
     );
   }
+  
   return (
     <div className={cn("h-full flex flex-col justify-center items-center")}>
       <Card className={cn("w-[360px] sm:w-[450px]")}>
