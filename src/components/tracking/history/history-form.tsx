@@ -27,7 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format, startOfDay, subDays } from "date-fns";
+import { format, millisecondsToHours, startOfDay, subDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHistoryForm } from "@/utils/schema";
@@ -44,8 +44,16 @@ export const HistoryForm = () => {
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
-    const q = createQueryString(data);
-    router.push(pathname + "?" + q);
+    const subTract = data.range.to - data.range.from;
+    if(millisecondsToHours(subTract) > 360){
+      form.setError("range", {
+        type: "custom",
+        message: "Date range should be less than or equal to 15 days.",
+      })
+    }else{
+      const q = createQueryString(data);
+      router.push(pathname + "?" + q);
+    }
   };
 
   const createQueryString = React.useCallback(
@@ -162,6 +170,7 @@ export const HistoryForm = () => {
                       initialFocus
                       mode="range"
                       max={90}
+                      defaultMonth={field.value?.from}
                       fromDate={startOfDay(subDays(new Date(), 89))}
                       toDate={new Date()}
                       selected={field.value}

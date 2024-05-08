@@ -198,7 +198,8 @@ export const SummaryForm = () => {
                       initialFocus
                       mode="range"
                       max={15}
-                      fromDate={startOfDay(subDays(new Date(), 15))}
+                      defaultMonth={field.value?.from}
+                      fromDate={startOfDay(subDays(new Date(), 14))}
                       toDate={new Date()}
                       selected={field.value}
                       onSelect={field.onChange}
