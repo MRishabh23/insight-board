@@ -71,6 +71,33 @@ export const useSignInSubmitMutation = (form: any) => {
   return submit;
 };
 
+// mutation for signOut
+export const useSignOutSubmitMutation = () => {
+  const router = useRouter();
+  const submit = useMutation({
+    mutationFn: () => {
+      return axios({
+        method: "get",
+        url: "/api/users/signout"
+      });
+    },
+    onSettled: async (_, error: any) => {
+      if (error) {
+        toast.error(`Uh oh! Something went wrong, Sign out failed.`, {
+          description: error?.response?.data?.error
+            ? error?.response?.data?.error
+            : error.message,
+        });
+      } else {
+        toast.success('Sign out successful');
+        router.push("/signin");
+      }
+    },
+  });
+
+  return submit;
+};
+
 // dashboard mutations
 
 // status mutation
