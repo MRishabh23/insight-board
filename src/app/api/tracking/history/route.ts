@@ -42,9 +42,9 @@ export async function POST(request: NextRequest) {
 
     //console.log("sendObj", sendObj);
 
-    const carrierSummaryRes: any = await axios(sendObj);
+    const carrierHistoryRes: any = await axios(sendObj);
 
-    if (!carrierSummaryRes?.data?.response?.success) {
+    if (!carrierHistoryRes?.data?.response?.success) {
       return NextResponse.json(
         {
           error: "Something went wrong while fetching history.",
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json({
       message: "Carrier History.",
       success: true,
-      data: carrierSummaryRes?.data?.response?.data,
+      data: carrierHistoryRes?.data?.response?.data,
     });
 
     return response;
