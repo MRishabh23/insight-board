@@ -79,3 +79,7 @@
         @apply bg-background text-foreground;
     }
 }
+
+.my-scroll{
+    height: calc(100% - 50px);
+}

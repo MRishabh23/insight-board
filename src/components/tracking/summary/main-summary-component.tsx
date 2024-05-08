@@ -1,4 +1,3 @@
-import React from "react";
 import { SummaryForm } from "./summary-form";
 import { SummaryTable } from "./summary-table";
 

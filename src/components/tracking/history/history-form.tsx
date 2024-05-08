@@ -9,12 +9,11 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import {
-  useParams,
   usePathname,
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
+import { getHistoryType } from "@/utils/pre-define-data/data";
 import {
   Select,
   SelectContent,
@@ -22,78 +21,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MultipleSelector from "@/components/multi-select";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format, startOfDay, subDays } from "date-fns";
+import { format, millisecondsToHours, startOfDay, subDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ParamType } from "@/utils/types/ParamType";
-import { useSummaryForm } from "@/utils/schema";
-import { SummaryFormType } from "@/utils/types/DashboardType";
+import { useHistoryForm } from "@/utils/schema";
+import { Input } from "@/components/ui/input";
+import { HistoryFormType } from "@/utils/types/DashboardType";
 
-export const SummaryForm = () => {
-  const params = useParams<ParamType>();
-  const carriersOptions = getCarriersList(params.mode);
-  const queueOptions = getQueueList();
+export const HistoryForm = () => {
+  const historyOptions = getHistoryType();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryCarriers = searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : [];
-  let newCarrOpt: any = [];
 
-  if (queryCarriers !== undefined && queryCarriers.length > 0) {
-    queryCarriers.map((carrier) => {
-      if (carrier) {
-        const carrObj = {
-          label: carrier,
-          value: carrier,
-        };
-        newCarrOpt.push(carrObj);
-      }
-    });
-  }
-
-  const form = useSummaryForm(newCarrOpt, searchParams);
+  const form = useHistoryForm(searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
-    const q = createQueryString(data);
-    router.push(pathname + "?" + q);
+    const subTract = data.range.to - data.range.from;
+    if(millisecondsToHours(subTract) > 360){
+      form.setError("range", {
+        type: "custom",
+        message: "Date range should be less than or equal to 15 days.",
+      })
+    }else{
+      const q = createQueryString(data);
+      router.push(pathname + "?" + q);
+    }
   };
 
   const createQueryString = React.useCallback(
-    (data: SummaryFormType) => {
-      let str = "";
-      if (data.carriers.length > 0) {
-        data.carriers.map((carrier: any, index: number) => {
-          if (index === data.carriers.length - 1) {
-            str += carrier.value;
-          } else {
-            str += carrier.value + ",";
-          }
-        });
-      }
-      const summaryParams = new URLSearchParams(searchParams.toString());
-      if (str !== "") {
-        summaryParams.set("carriers", str);
+    (data: HistoryFormType) => {
+
+      const historyParams = new URLSearchParams(searchParams.toString());
+      historyParams.set("subId", data.subId);
+      historyParams.set("historyType", data.historyType);
+      if (data.subId.length > 1) {
+        historyParams.set("from", format(data.range.from, "yyyy-MM-dd"));
+        historyParams.set("to", format(data.range.to, "yyyy-MM-dd"));
       } else {
-        summaryParams.set("carriers", "");
-      }
-      summaryParams.set("queue", data.queue);
-      if (data.carriers.length === 1) {
-        summaryParams.set("from", format(data.range.from, "yyyy-MM-dd"));
-        summaryParams.set("to", format(data.range.to, "yyyy-MM-dd"));
-      } else {
-        summaryParams.set("from", "");
-        summaryParams.set("to", "");
+        historyParams.set("from", "");
+        historyParams.set("to", "");
       }
 
-      return summaryParams.toString();
+      return historyParams.toString();
     },
     [searchParams]
   );
@@ -107,23 +84,18 @@ export const SummaryForm = () => {
         >
           <FormField
             control={form.control}
-            name="carriers"
+            name="subId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="carriers">Carriers</FormLabel>
-                <FormControl id="carriers">
-                  <MultipleSelector
-                    value={field.value}
-                    onChange={field.onChange}
-                    defaultOptions={carriersOptions}
-                    placeholder="Select Carriers you like..."
-                    hidePlaceholderWhenSelected
-                    maxSelected={5}
-                    emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                        no results found.
-                      </p>
-                    }
+                <FormLabel htmlFor="subId">
+                  Subscription Id
+                </FormLabel>
+                <FormControl id="subId">
+                  <Input
+                    type="text"
+                    required
+                    placeholder="Enter subscription id..."
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -132,23 +104,23 @@ export const SummaryForm = () => {
           />
           <FormField
             control={form.control}
-            name="queue"
+            name="historyType"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel htmlFor="queue">Queue</FormLabel>
+                <FormLabel htmlFor="historyType">Crawl Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl id="queue">
+                  <FormControl id="historyType">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a queue..." />
+                      <SelectValue placeholder="Select a history type..." />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {queueOptions.map((option) => (
+                    {historyOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        {option.label} HISTORY
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -174,7 +146,7 @@ export const SummaryForm = () => {
                           !field.value && "text-muted-foreground"
                         )}
                         disabled={
-                          form.watch("carriers").length === 1 ? false : true
+                          form.watch("subId").length > 0 ? false : true
                         }
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -197,9 +169,9 @@ export const SummaryForm = () => {
                     <Calendar
                       initialFocus
                       mode="range"
-                      max={15}
+                      max={90}
                       defaultMonth={field.value?.from}
-                      fromDate={startOfDay(subDays(new Date(), 14))}
+                      fromDate={startOfDay(subDays(new Date(), 89))}
                       toDate={new Date()}
                       selected={field.value}
                       onSelect={field.onChange}

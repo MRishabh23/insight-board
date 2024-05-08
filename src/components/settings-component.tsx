@@ -13,24 +13,12 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { cn } from "@/lib/utils";
 import { CircleUser } from "lucide-react";
 import Link from "next/link";
-import axios from "axios";
-import {toast} from "sonner";
-import { useRouter } from "next/navigation";
+import { useSignOutSubmitMutation } from "@/utils/mutation";
 
 const SettingsComponent = () => {
-  const router = useRouter();
+  const signOutMutate = useSignOutSubmitMutation();
   const signOut = async () => {
-    try {
-      await axios.get("/api/users/signout");
-      toast.success('Sign out successful');
-      router.push("/signin");
-    } catch (error: any) {
-      toast.error('Uh oh! Something went wrong, Sign out failed.',{
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message
-      });
-    }
+    signOutMutate.mutate();
   };
 
   return (

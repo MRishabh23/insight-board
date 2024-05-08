@@ -133,6 +133,17 @@ const terminalRefType = [
   }
 ];
 
+const historyType = [
+  {
+    label: "ALL",
+    value: "ALL",
+  },
+  {
+    label: "DIFF",
+    value: "DIFF",
+  }
+]
+
 export const getCarriersList = (mode: string) => {
   return mode === "air"
     ? airCarriers
@@ -143,6 +154,10 @@ export const getCarriersList = (mode: string) => {
 
 export const getQueueList = () => {
   return queue;
+};
+
+export const getHistoryType = () => {
+  return historyType;
 };
 
 export const getRefList = (mode: string) => {

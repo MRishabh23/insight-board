@@ -1,3 +1,12 @@
+// status related types
+
+export type StatusType = {
+  carrier: string;
+  status: string;
+};
+
+// summary related types
+
 export type SummaryType = {
   key: React.Key;
   jtCarrierCode: string;
@@ -44,7 +53,42 @@ export type SummaryType = {
   AvgAge: number;
 };
 
-export type StatusType = {
-  carrier: string;
-  status: string;
-};
+export type SummaryFormType = {
+  carriers: string[];
+  queue: string;
+  range: {
+    from: Date;
+    to: Date;
+  }
+}
+
+// history related types
+
+export type HistoryType = {
+  k: string;
+  v: InnerValue;
+}
+
+type InnerValue = {
+  error:                        string;
+  errorMsg:                     string;
+  failures:                     string;
+  errorCode:                    string;
+  apiHitCount:                  string;
+  crawl_status:                 string;
+  insertion_time:               string;
+  jtLatencyInMinutes:           string;
+  ageDifferenceInDays:          string;
+  crawledJsonResourceId:        string;
+  fkMappedJsonResourceId:       string;
+  latestFKMappedJsonResourceId: string;
+}
+
+export type HistoryFormType = {
+  subId: string;
+  historyType: string;
+  range: {
+    from: Date;
+    to: Date;
+  }
+}
