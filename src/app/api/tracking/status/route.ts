@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
 
     const sendObj = {
       method: "post",
-      url: process.env.URL!,
+      url: process.env.REST_URL!,
       timeout: 120000,
       auth: {
-        username: process.env.USERNAME!,
-        password: process.env.PASSWORD!,
+        username: process.env.REST_USERNAME!,
+        password: process.env.REST_PASSWORD!,
       },
       data: reqData,
     };
