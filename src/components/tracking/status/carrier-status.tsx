@@ -3,10 +3,10 @@ import axios from "axios";
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { CarrierStatusTable } from "./carrier-status-table";
-import { UserContext } from "@/app/dashboard/tracking/[mode]/[env]/[dash]/page";
 import { useParams } from "next/navigation";
 import { ParamType } from "@/utils/types/ParamType";
 import { useStatusQuery } from "@/utils/query";
+import { UserContext } from "@/app/dashboard/layout";
 
 export const CarrierStatus = () => {
   const params = useParams<ParamType>();
