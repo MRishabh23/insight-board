@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType } from "@/utils/types/ParamType";
-import { UserContext } from "@/app/dashboard/layout";
+import { UserContext } from "@/components/dashboard-layout-component";
 import { HistoryType } from "@/utils/types/DashboardType";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
