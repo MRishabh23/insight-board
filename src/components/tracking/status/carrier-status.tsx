@@ -6,7 +6,7 @@ import { CarrierStatusTable } from "./carrier-status-table";
 import { useParams } from "next/navigation";
 import { ParamType } from "@/utils/types/ParamType";
 import { useStatusQuery } from "@/utils/query";
-import { UserContext } from "@/app/dashboard/layout";
+import { UserContext } from "@/components/dashboard-layout-component";
 
 export const CarrierStatus = () => {
   const params = useParams<ParamType>();
