@@ -86,29 +86,11 @@ export function CarrierStatusTable({ ...props }) {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline">
-                            <PencilIcon className="w-4 h-4 mr-2" /> Edit
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Edit Carrier Status</DialogTitle>
-                            <DialogDescription>
-                              Make changes to carrier status here. Click save
-                              when you&apos;re done.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <TableStatusForm
-                              params={props.params}
-                              username={props.username}
-                              item={item}
-                            />
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                      <TableStatusForm
+                        params={props.params}
+                        username={props.username}
+                        item={item}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -121,71 +103,101 @@ export function CarrierStatusTable({ ...props }) {
 }
 
 const TableStatusForm = ({ ...props }) => {
+  const [open, setOpen] = React.useState(false);
   const form = useStatusForm(props.item);
 
-  const mutateStatus = useStatusMutation(props.username, props.params);
+  const mutateStatus = useStatusMutation(props.username, props.params, setOpen);
 
   const onSubmit = (data: StatusType) => {
     mutateStatus.mutate(data);
   };
 
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn("mt-5 space-y-5 rounded-md border border-gray-200 p-3")}
-      >
-        <FormField
-          control={form.control}
-          name="carrier"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="carrier">Carrier</FormLabel>
-              <FormControl id="carrier">
-                <Input type="text" disabled {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="status">Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl id="status">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Status" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="operational">OPERATIONAL</SelectItem>
-                    <SelectItem value="partial-outage">
-                      PARTIAL-OUTAGE
-                    </SelectItem>
-                    <SelectItem value="degraded-performance">
-                      DEGRADED-PERFORMANCE
-                    </SelectItem>
-                    <SelectItem value="outage">OUTAGE</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+  const handleOpen = () => {
+    setOpen(!open);
+  };
 
-        <Button
-          type="submit"
-          disabled={mutateStatus.isPending}
-          className={cn("w-full capitalize")}
-        >
-          {mutateStatus.isPending ? "Saving..." : "Save Changes"}
+  return (
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <PencilIcon className="w-4 h-4 mr-2" /> Edit
         </Button>
-      </form>
-    </Form>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Carrier Status</DialogTitle>
+          <DialogDescription>
+            Make changes to carrier status here. Click save when you&apos;re
+            done.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className={cn(
+                "mt-5 space-y-5 rounded-md border border-gray-200 p-3"
+              )}
+            >
+              <FormField
+                control={form.control}
+                name="carrier"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="carrier">Carrier</FormLabel>
+                    <FormControl id="carrier">
+                      <Input type="text" disabled {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="status">Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl id="status">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="operational">
+                            OPERATIONAL
+                          </SelectItem>
+                          <SelectItem value="partial-outage">
+                            PARTIAL-OUTAGE
+                          </SelectItem>
+                          <SelectItem value="degraded-performance">
+                            DEGRADED-PERFORMANCE
+                          </SelectItem>
+                          <SelectItem value="outage">OUTAGE</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                disabled={mutateStatus.isPending}
+                className={cn("w-full capitalize")}
+              >
+                {mutateStatus.isPending ? "Saving..." : "Save Changes"}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

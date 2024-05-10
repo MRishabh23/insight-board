@@ -22,18 +22,17 @@ export const useAuthSubmitMutation = (
         data: data,
       });
     },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, ${title} failed.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        toast.success(`${title} Successful.`);
-        form.reset({ username: "", password: "" });
-        router.push(pushRoute);
-      }
+    onSuccess: () => {
+      toast.success(`${title} Successful.`);
+      form.reset({ username: "", password: "" });
+      router.push(pushRoute);
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong, ${title} failed.`, {
+        description: error?.response?.data?.error
+          ? error?.response?.data?.error
+          : error.message,
+      });
     },
   });
 
@@ -51,18 +50,17 @@ export const useSignInSubmitMutation = (form: any) => {
         data: data,
       });
     },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, Sign in failed.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        toast.success("Sign In Successful.");
-        form.reset({ role: "user", username: "", password: "" });
-        router.push("/dashboard");
-      }
+    onSuccess: () => {
+      toast.success("Sign In Successful.");
+      form.reset({ role: "user", username: "", password: "" });
+      router.push("/dashboard");
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong, Sign in failed.`, {
+        description: error?.response?.data?.error
+          ? error?.response?.data?.error
+          : error.message,
+      });
     },
   });
 
@@ -76,20 +74,19 @@ export const useSignOutSubmitMutation = () => {
     mutationFn: () => {
       return axios({
         method: "get",
-        url: "/api/users/signout"
+        url: "/api/users/signout",
       });
     },
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, Sign out failed.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        toast.success('Sign out successful');
-        router.push("/signin");
-      }
+    onSuccess: () => {
+      toast.success("Sign out successful");
+      router.push("/signin");
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong, Sign out failed.`, {
+        description: error?.response?.data?.error
+          ? error?.response?.data?.error
+          : error.message,
+      });
     },
   });
 
@@ -99,7 +96,7 @@ export const useSignOutSubmitMutation = () => {
 // dashboard mutations
 
 // status mutation
-export const useStatusMutation = (username: string, params: ParamType) => {
+export const useStatusMutation = (username: string, params: ParamType, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: (data: StatusType) => {
@@ -116,23 +113,22 @@ export const useStatusMutation = (username: string, params: ParamType) => {
         },
       });
     },
-
-    onSettled: async (_, error: any) => {
-      if (error) {
-        toast.error(`Uh oh! Something went wrong, while updating status.`, {
-          description: error?.response?.data?.error
-            ? error?.response?.data?.error
-            : error.message,
-        });
-      } else {
-        await queryClient.invalidateQueries({
-          queryKey: [
-            "carrier-status",
-            `/dashboard/tracking/${params.mode}/${params.env}/status`,
-          ],
-        });
-        toast.success("Carrier status updated successfully!");
-      }
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "carrier-status",
+          `/dashboard/tracking/${params.mode}/${params.env}/status`,
+        ],
+      });
+      toast.success("Carrier status updated successfully!");
+      setOpen(false);
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong, while updating status.`, {
+        description: error?.response?.data?.error
+          ? error?.response?.data?.error
+          : error.message,
+      });
     },
   });
 

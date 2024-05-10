@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const DuelSplit = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn("flex h-screen xl:border xl:border-black/70 xl:rounded-md xl:overflow-hidden", className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("flex h-screen", className)} {...props} />,
 );
 DuelSplit.displayName = "DuelSplit";
 
