@@ -9,6 +9,11 @@ export async function GET() {
     const user = jwt.decode(`${data?.value}`);
     return NextResponse.json({ message: "Got user.", success: true, user });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error.message,
+      },
+      { status: 500 }
+    );
   }
 }

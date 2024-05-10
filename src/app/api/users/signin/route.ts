@@ -13,7 +13,7 @@ export async function POST(request: NextRequest){
         const sendObj = {
             method: "post",
             url: process.env.REST_URL!,
-            timeout: 60000,
+            timeout: 60000, // 60000 (1 minute)
             auth: {
                 username: process.env.REST_USERNAME!,
                 password: process.env.REST_PASSWORD!,
