@@ -4,7 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { InfoCircle } from "@/components/icons/info-circle";
+import { InfoCircle } from "@/components/icons/common";
 
 export const TableCellTooltip = ({ ...props }) => {
   return (

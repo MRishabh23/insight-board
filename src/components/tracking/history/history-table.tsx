@@ -8,15 +8,14 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import {
   TableCellTooltip,
   TableHeadCustom,
-} from "@/components/table-comp/table-collection";
+} from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
-import { ParamType } from "@/utils/types/ParamType";
+import { ParamType, HistoryType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
-import { HistoryType } from "@/utils/types/DashboardType";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
-import { CustomDrawer } from "@/components/drawer-cust";
+import { CustomDrawer } from "@/components/drawer-component";
 
 export function HistoryTable() {
   const username = React.useContext(UserContext);
@@ -143,7 +142,7 @@ const HistoryData = ({ ...props }) => {
         ) {
           return (
             <CustomDrawer
-            variant="success"
+              variant="success"
               buttonTitle="New events found"
               title="Response Sent"
               username={props.username || ""}
@@ -186,7 +185,7 @@ const HistoryData = ({ ...props }) => {
         ) {
           return (
             <CustomDrawer
-            variant="warning"
+              variant="warning"
               buttonTitle="Same as before"
               title="Crawled Output"
               username={props.username || ""}
@@ -203,7 +202,7 @@ const HistoryData = ({ ...props }) => {
         ) {
           return (
             <CustomDrawer
-            variant="normal"
+              variant="normal"
               buttonTitle="Crawled JSON"
               title="Crawled Output"
               username={props.username || ""}
@@ -222,7 +221,7 @@ const HistoryData = ({ ...props }) => {
         ) {
           return (
             <CustomDrawer
-            variant="success"
+              variant="success"
               buttonTitle="New events found"
               title="Crawled Output"
               username={props.username || ""}

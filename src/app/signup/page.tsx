@@ -4,10 +4,10 @@ import {
   DuelSplit,
   DuelSplitTitle,
   DuelSplitSection,
-} from "@/components/duelSplit";
+} from "@/components/duel-split";
 import { cn } from "@/lib/utils";
 import React from "react";
-import AuthForm from "@/components/authForm";
+import AuthForm from "@/components/auth-form";
 
 const SignUp = () => {
   return (

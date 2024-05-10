@@ -32,9 +32,8 @@ import {
 import { format, startOfDay, subDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ParamType } from "@/utils/types/ParamType";
+import { ParamType, SummaryFormType } from "@/utils/types/common";
 import { useSummaryForm } from "@/utils/schema";
-import { SummaryFormType } from "@/utils/types/DashboardType";
 
 export const SummaryForm = () => {
   const params = useParams<ParamType>();

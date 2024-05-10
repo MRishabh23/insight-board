@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LuEye, LuEyeOff } from "react-icons/lu";
-import { AuthType, SubmitType } from "@/utils/types/AuthType";
+import { AuthType, SubmitType } from "@/utils/types/common";
 import { useAuthForm } from "@/utils/schema";
 import { useAuthSubmitMutation } from "@/utils/mutation";
 

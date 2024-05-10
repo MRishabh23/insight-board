@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SignInType, SubmitType } from "./types/AuthType";
+import { SignInType, SubmitType, StatusType, ParamType } from "./types/common";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { StatusType } from "./types/DashboardType";
-import { ParamType } from "./types/ParamType";
 
 // auth mutations
 

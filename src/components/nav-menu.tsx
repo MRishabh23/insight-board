@@ -27,7 +27,7 @@ export function NavigationMenuComponent() {
     },
     {
       title: "AIR",
-      path: "/dashboard/tracking/air/dev/status",
+      path: "/dashboard/tracking/air/prod/status",
       description: "Visit air dashboard to view metrics.",
     },
     {

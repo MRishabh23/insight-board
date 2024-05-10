@@ -1,8 +1,24 @@
 // dashboard queries
 
 import { useQuery } from "@tanstack/react-query";
-import { ParamType } from "./types/ParamType";
+import { ParamType } from "./types/common";
 import axios from "axios";
+
+// user query
+
+export const useGetUsername = () => {
+  const query = useQuery({
+    queryKey: ["all-routes", "user-details"],
+    queryFn: async () => {
+      const response = await axios.get("/api/users/me");
+      return response;
+    },
+    staleTime: 1000 * 60 * 60 * 24,
+    refetchInterval: 1000 * 60 * 60 * 24,
+  });
+
+  return query;
+};
 
 // status query
 export const useStatusQuery = (username: string, params: ParamType) => {
