@@ -12,10 +12,10 @@ const TrackingEnvHeader = ({
   params: { mode: string; env: string; dash: string };
 }) => {
   let row1 = [];
-  if (params.mode === "ocean") {
-    row1 = ["PROD", "DEV"];
-  } else {
+  if (params.mode === "terminal") {
     row1 = ["DEV"];
+  } else {
+    row1 = ["PROD", "DEV"];
   }
   const searchParams = useSearchParams();
   const [tabVal, setTabVal] = React.useState(params.env);

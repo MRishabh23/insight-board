@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetUsername } from "@/hooks/get-username";
+import { useGetUsername } from "@/utils/query";
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import Header from "@/components/header";

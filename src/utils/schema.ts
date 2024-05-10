@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StatusType } from "./types/DashboardType";
+import { StatusType } from "./types/common";
 import { format } from "date-fns";
 
 // current and previous dates

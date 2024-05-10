@@ -4,7 +4,7 @@ import {
   DuelSplit,
   DuelSplitTitle,
   DuelSplitSection,
-} from "@/components/duelSplit";
+} from "@/components/duel-split";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useSignInForm } from "@/utils/schema";
-import { SignInType } from "@/utils/types/AuthType";
+import { SignInType } from "@/utils/types/common";
 import { useSignInSubmitMutation } from "@/utils/mutation";
 
 const SignIn = () => {

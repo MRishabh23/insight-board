@@ -36,8 +36,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PencilIcon } from "@/components/icons/pencil-icon";
-import { StatusType } from "@/utils/types/DashboardType";
+import { PencilIcon } from "@/components/icons/common";
+import { StatusType } from "@/utils/types/common";
 import { useStatusForm } from "@/utils/schema";
 import { useStatusMutation } from "@/utils/mutation";
 

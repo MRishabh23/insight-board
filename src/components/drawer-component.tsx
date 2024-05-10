@@ -10,7 +10,6 @@ import { useHistoryFetchQuery } from "@/utils/query";
 import JsonView from "@uiw/react-json-view";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { ScrollArea } from "./ui/scroll-area";
-import { cn } from "@/lib/utils";
 
 export function CustomDrawer({ ...props }) {
   return (

@@ -23,7 +23,7 @@ const Dashboard = () => {
     },
     {
       mode: "air",
-      env: "dev",
+      env: "prod",
     },
     {
       mode: "terminal",

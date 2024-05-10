@@ -8,12 +8,11 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import {
   TableCellTooltip,
   TableHeadCustom,
-} from "@/components/table-comp/table-collection";
+} from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
-import { ParamType } from "@/utils/types/ParamType";
+import { ParamType, SummaryType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
-import { SummaryType } from "@/utils/types/DashboardType";
 import { useSummaryQuery } from "@/utils/query";
 
 export const columns: ColumnDef<SummaryType>[] = [

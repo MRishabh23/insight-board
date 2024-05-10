@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CarrierIssueComponent } from "./carrier-issues";
+import { CarrierIssueComponent } from "./carrier-issue";
 
 export function CarrierIssueTab() {
   return (
@@ -9,10 +9,10 @@ export function CarrierIssueTab() {
         <TabsTrigger value="past">Past Issues</TabsTrigger>
       </TabsList>
       <TabsContent value="current">
-        <CarrierIssueComponent issue="current"/>
+        <CarrierIssueComponent issue="current" />
       </TabsContent>
       <TabsContent value="past">
-      <CarrierIssueComponent issue="past"/>
+        <CarrierIssueComponent issue="past" />
       </TabsContent>
     </Tabs>
   );

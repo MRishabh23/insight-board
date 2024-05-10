@@ -9,7 +9,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useGetUsername } from "@/hooks/get-username";
+import { useGetUsername } from "@/utils/query";
 
 const Profile = () => {
   const { isPending, data, isError, error } = useGetUsername();

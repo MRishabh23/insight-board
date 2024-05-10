@@ -32,7 +32,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useHistoryForm } from "@/utils/schema";
 import { Input } from "@/components/ui/input";
-import { HistoryFormType } from "@/utils/types/DashboardType";
+import { HistoryFormType } from "@/utils/types/common";
 
 export const HistoryForm = () => {
   const historyOptions = getHistoryType();

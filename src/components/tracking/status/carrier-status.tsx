@@ -1,17 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { CarrierStatusTable } from "./carrier-status-table";
 import { useParams } from "next/navigation";
-import { ParamType } from "@/utils/types/ParamType";
+import { ParamType } from "@/utils/types/common";
 import { useStatusQuery } from "@/utils/query";
 import { UserContext } from "@/components/dashboard-layout-component";
 
 export const CarrierStatus = () => {
   const params = useParams<ParamType>();
   const username = React.useContext(UserContext);
-  
+
   const carrierStatusQuery = useStatusQuery(username || "", params);
 
   if (carrierStatusQuery.isPending) {
