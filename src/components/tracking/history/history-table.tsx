@@ -6,7 +6,9 @@ import { TableDataComponent } from "@/components/data-table";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
 import {
+  TableCellCustom,
   TableCellTooltip,
+  TableCellTooltipScroll,
   TableHeadCustom,
 } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +53,9 @@ const HistoryData = ({ ...props }) => {
       id: "subscription-id",
       accessorKey: "subId",
       header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-      cell: () => <div>{props.searchParams.get("subId")}</div>,
+      cell: () => (
+        <TableCellCustom>{props.searchParams.get("subId")}</TableCellCustom>
+      ),
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -62,12 +66,12 @@ const HistoryData = ({ ...props }) => {
       header: () => <TableHeadCustom>Created At</TableHeadCustom>,
       cell: ({ row }) => {
         return (
-          <div>
+          <TableCellCustom>
             {format(
               toDate(row.original.v.insertion_time),
               "do MMM yyyy, HH:mm:ss"
             )}
-          </div>
+          </TableCellCustom>
         );
       },
     },
@@ -83,15 +87,17 @@ const HistoryData = ({ ...props }) => {
         const tip =
           row.original.v.error === "" ? "No error" : row.original.v.error;
         return (
-          <TableCellTooltip tip={tip}>
-            <Badge
-              className={cn(
-                status === "SUCCESS" ? "bg-green-400" : "bg-red-500"
-              )}
-            >
-              {status}
-            </Badge>
-          </TableCellTooltip>
+          <TableCellCustom>
+            <TableCellTooltip tip={tip}>
+              <Badge
+                className={cn(
+                  status === "SUCCESS" ? "bg-green-400" : "bg-red-500"
+                )}
+              >
+                {status}
+              </Badge>
+            </TableCellTooltip>
+          </TableCellCustom>
         );
       },
     },
@@ -99,7 +105,7 @@ const HistoryData = ({ ...props }) => {
       id: "scheduler-id",
       accessorKey: "schedulerId",
       header: () => <TableHeadCustom>Scheduler Id</TableHeadCustom>,
-      cell: ({ row }) => <div>{row.original.k}</div>,
+      cell: ({ row }) => <TableCellCustom>{row.original.k}</TableCellCustom>,
     },
     {
       id: "response-sent",
@@ -114,7 +120,13 @@ const HistoryData = ({ ...props }) => {
           : "No data";
         const error = row.original.v.error;
         if (error) {
-          return <div>{error}</div>;
+          return (
+            <TableCellCustom>
+              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>
+                {error}
+              </TableCellTooltipScroll>
+            </TableCellCustom>
+          );
         }
         if (
           response !== "No data" &&
@@ -158,9 +170,9 @@ const HistoryData = ({ ...props }) => {
           response === "SAME_PAYLOAD" &&
           latestRes === ""
         ) {
-          return <div>SAME PAYLOAD</div>;
+          return <TableCellCustom>SAME PAYLOAD</TableCellCustom>;
         }
-        return <div>Unhandled</div>;
+        return <TableCellCustom>Unhandled</TableCellCustom>;
       },
     },
     {
@@ -176,7 +188,13 @@ const HistoryData = ({ ...props }) => {
           : "No data";
         const error = row.original.v.error;
         if (error) {
-          return <div>{error}</div>;
+          return (
+            <TableCellCustom>
+              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>
+                {error}
+              </TableCellTooltipScroll>
+            </TableCellCustom>
+          );
         }
         if (
           crawledRes !== "No data" &&
@@ -231,7 +249,7 @@ const HistoryData = ({ ...props }) => {
             />
           );
         }
-        return <div>Unhandled</div>;
+        return <TableCellCustom>Unhandled</TableCellCustom>;
       },
     },
   ];

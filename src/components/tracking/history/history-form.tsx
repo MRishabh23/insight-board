@@ -39,20 +39,26 @@ export const HistoryForm = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [btnLoad, setBtnLoad] = React.useState(false);
 
   const form = useHistoryForm(searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
+    setBtnLoad(true);
     const subTract = data.range.to - data.range.from;
     if(millisecondsToHours(subTract) > 360){
       form.setError("range", {
         type: "custom",
         message: "Date range should be less than or equal to 15 days.",
-      })
+      });
+      setBtnLoad(false);
     }else{
-      const q = createQueryString(data);
-      router.push(pathname + "?" + q);
+      setTimeout(() => {
+        const q = createQueryString(data);
+        router.push(pathname + "?" + q);
+        setBtnLoad(false);
+      }, 1000);
     }
   };
 
@@ -183,8 +189,8 @@ export const HistoryForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[100px] mt-4 capitalize">
-            Submit
+          <Button type="submit" className="w-[120px] mt-4 capitalize" disabled={btnLoad}>
+            {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </Form>

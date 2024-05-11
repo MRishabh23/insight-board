@@ -6,6 +6,7 @@ import { TableDataComponent } from "@/components/data-table";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
 import {
+  TableCellCustom,
   TableCellTooltip,
   TableHeadCustom,
 } from "@/components/table/common";
@@ -14,13 +15,16 @@ import { format, toDate } from "date-fns";
 import { ParamType, SummaryType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useSummaryQuery } from "@/utils/query";
+import { ArrowUpDown } from "lucide-react";
 
 export const columns: ColumnDef<SummaryType>[] = [
   {
     id: "carrier",
     accessorKey: "jtCarrierCode",
-    header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-    cell: ({ row }) => <div>{row.original.jtCarrierCode}</div>,
+    header: () => <TableHeadCustom className="w-32">Carrier</TableHeadCustom>,
+    cell: ({ row }) => (
+      <TableCellCustom>{row.original.jtCarrierCode}</TableCellCustom>
+    ),
     meta: {
       className: "sticky left-0 bg-white",
     },
@@ -39,14 +43,28 @@ export const columns: ColumnDef<SummaryType>[] = [
         ? "rnf"
         : "";
 
-      return <Badge className="capitalize bg-stone-500">{qType}</Badge>;
+      return (
+        <TableCellCustom>
+          <Badge className="capitalize bg-stone-500">{qType}</Badge>
+        </TableCellCustom>
+      );
     },
   },
   {
     id: "active",
     accessorKey: "jtCrawledTotal",
-    header: () => <TableHeadCustom>Active</TableHeadCustom>,
-    cell: ({ row }) => <div>{row.original.jtCrawledTotal}</div>,
+    header: ({ column }) => {
+      return (
+        <TableHeadCustom
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Active <ArrowUpDown className="ml-2 h-4 w-4" />
+        </TableHeadCustom>
+      );
+    },
+    cell: ({ row }) => (
+      <TableCellCustom>{row.original.jtCrawledTotal}</TableCellCustom>
+    ),
   },
   {
     id: "avg-age",
@@ -55,17 +73,21 @@ export const columns: ColumnDef<SummaryType>[] = [
     cell: ({ row }) => {
       const age = row.original.AvgAge;
       return (
-        <div className={`${age >= 90 ? "text-red-500" : "text-inherit"}`}>
+        <TableCellCustom
+          className={`${age >= 90 ? "text-red-500" : "text-inherit"}`}
+        >
           {age} days
-        </div>
+        </TableCellCustom>
       );
     },
   },
   {
     id: "last-run",
     accessorKey: "lastRunStartAt",
-    header: () => <TableHeadCustom>Last Run</TableHeadCustom>,
-    cell: ({ row }) => <div>{row.original.lastRunStartAt} ago</div>,
+    header: () => <TableHeadCustom className="w-32">Last Run</TableHeadCustom>,
+    cell: ({ row }) => (
+      <TableCellCustom>{row.original.lastRunStartAt} ago</TableCellCustom>
+    ),
   },
   {
     id: "duration",
@@ -74,21 +96,23 @@ export const columns: ColumnDef<SummaryType>[] = [
     cell: ({ row }) => {
       const durDiff = row.original.timeDiffMinutes;
       return (
-        <div className={`${durDiff >= 90 ? "text-red-500" : "text-inherit"}`}>
+        <TableCellCustom
+          className={`${durDiff >= 90 ? "text-red-500" : "text-inherit"}`}
+        >
           {row.original.timeDiffInFk}
-        </div>
+        </TableCellCustom>
       );
     },
   },
   {
     id: "success",
     accessorKey: "successCount",
-    header: () => <TableHeadCustom>Success</TableHeadCustom>,
+    header: () => <TableHeadCustom className="w-32">Success</TableHeadCustom>,
     cell: ({ row }) => {
       return (
-        <div className="">
+        <TableCellCustom>
           {row.original.successCount} ({row.original.successRatio}%)
-        </div>
+        </TableCellCustom>
       );
     },
   },
@@ -100,7 +124,7 @@ export const columns: ColumnDef<SummaryType>[] = [
       const rnfRatio = row.original.getReferenceNotFoundPercentage;
       const queue = row.original.queueType;
       return (
-        <div
+        <TableCellCustom
           className={`${
             rnfRatio >= 20 && !queue.includes("RNF")
               ? "text-red-500"
@@ -108,57 +132,65 @@ export const columns: ColumnDef<SummaryType>[] = [
           }`}
         >
           {row.original.getReferenceNotFound}
-        </div>
+        </TableCellCustom>
       );
     },
   },
   {
     id: "fail",
     accessorKey: "failCount",
-    header: () => <TableHeadCustom>Fail</TableHeadCustom>,
+    header: () => <TableHeadCustom className="w-32">Fail</TableHeadCustom>,
     cell: ({ row }) => {
       const failRatio = row.original.failureRatio;
       return (
-        <TableCellTooltip
-          tip={
-            <div>
-              <p>Sending Failure: {row.original.toFKFailedNotSent}</p>
-              <p>API/Scraping Failure: {row.original.toFKFailedScraping}</p>
-              <p>Mapping Failure: {row.original.toFKFailedMapping}</p>
-              <p>Validation Failure: {row.original.toFKFailedValidation}</p>
-            </div>
-          }
-        >
-          <div
-            className={`${failRatio >= 3.0 ? "text-red-500" : "text-inherit"}`}
+        <TableCellCustom>
+          <TableCellTooltip
+            tip={
+              <div>
+                <p>Sending Failure: {row.original.toFKFailedNotSent}</p>
+                <p>API/Scraping Failure: {row.original.toFKFailedScraping}</p>
+                <p>Mapping Failure: {row.original.toFKFailedMapping}</p>
+                <p>Validation Failure: {row.original.toFKFailedValidation}</p>
+              </div>
+            }
           >
-            {row.original.failCount} ({failRatio}%)
-          </div>
-        </TableCellTooltip>
+            <div
+              className={`${
+                failRatio >= 3.0 ? "text-red-500" : "text-inherit"
+              }`}
+            >
+              {row.original.failCount} ({failRatio}%)
+            </div>
+          </TableCellTooltip>
+        </TableCellCustom>
       );
     },
   },
   {
     id: "diff-rate",
     accessorKey: "getTotalDiffFound",
-    header: () => <TableHeadCustom>DiffRate</TableHeadCustom>,
+    header: () => <TableHeadCustom className="w-32">DiffRate</TableHeadCustom>,
     cell: ({ row }) => {
       const diffRatio = row.original.diffRatio;
       return (
-        <TableCellTooltip
-          tip={
-            <div>
-              <p>WithIn Cron: {row.original.diffRateCountWithInCron}</p>
-              <p>Above Cron: {row.original.diffRateCountAboveCron}</p>
-            </div>
-          }
-        >
-          <div
-            className={`${diffRatio >= 10.0 ? "text-red-500" : "text-inherit"}`}
+        <TableCellCustom>
+          <TableCellTooltip
+            tip={
+              <div>
+                <p>WithIn Cron: {row.original.diffRateCountWithInCron}</p>
+                <p>Above Cron: {row.original.diffRateCountAboveCron}</p>
+              </div>
+            }
           >
-            {row.original.getTotalDiffFound} ({diffRatio}%)
-          </div>
-        </TableCellTooltip>
+            <div
+              className={`${
+                diffRatio >= 10.0 ? "text-red-500" : "text-inherit"
+              }`}
+            >
+              {row.original.getTotalDiffFound} ({diffRatio}%)
+            </div>
+          </TableCellTooltip>
+        </TableCellCustom>
       );
     },
   },
@@ -167,7 +199,7 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "crawlFrequency",
     header: () => <TableHeadCustom>Crawl Frequency</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.crawlFrequency}</div>;
+      return <TableCellCustom>{row.original.crawlFrequency}</TableCellCustom>;
     },
   },
   {
@@ -175,7 +207,7 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "durationToLaunch",
     header: () => <TableHeadCustom>Duration To Launch</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.durationToLaunch}</div>;
+      return <TableCellCustom>{row.original.durationToLaunch}</TableCellCustom>;
     },
   },
   {
@@ -183,7 +215,7 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "deliverCount",
     header: () => <TableHeadCustom>Deliver Count</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.deliverCount}</div>;
+      return <TableCellCustom>{row.original.deliverCount}</TableCellCustom>;
     },
   },
   {
@@ -191,7 +223,7 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "closeCount",
     header: () => <TableHeadCustom>Close Count</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.closeCount}</div>;
+      return <TableCellCustom>{row.original.closeCount}</TableCellCustom>;
     },
   },
   {
@@ -199,7 +231,9 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "toFKFailedNotSent",
     header: () => <TableHeadCustom>FK Timeout</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.toFKFailedNotSent}</div>;
+      return (
+        <TableCellCustom>{row.original.toFKFailedNotSent}</TableCellCustom>
+      );
     },
   },
   {
@@ -210,20 +244,24 @@ export const columns: ColumnDef<SummaryType>[] = [
       const hitPer = row.original.hitRatePer;
       const queue = row.original.queueType;
       return (
-        <TableCellTooltip
-          tip={
-            <div>
-              <p>WithIn Cron: {row.original.diffHitRateCountWithInCron}</p>
-              <p>Above Cron: {row.original.diffHitRateCountAboveCron}</p>
+        <TableCellCustom>
+          <TableCellTooltip
+            tip={
+              <div>
+                <p>WithIn Cron: {row.original.diffHitRateCountWithInCron}</p>
+                <p>Above Cron: {row.original.diffHitRateCountAboveCron}</p>
+              </div>
+            }
+          >
+            <div
+              className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}
+            >
+              {queue.includes("ADAPTIVE")
+                ? `${row.original.hitRateCount} (${hitPer}%)`
+                : "NA"}
             </div>
-          }
-        >
-          <div className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}>
-            {queue.includes("ADAPTIVE")
-              ? `${row.original.hitRateCount} (${hitPer}%)`
-              : "NA"}
-          </div>
-        </TableCellTooltip>
+          </TableCellTooltip>
+        </TableCellCustom>
       );
     },
   },
@@ -232,7 +270,7 @@ export const columns: ColumnDef<SummaryType>[] = [
     accessorKey: "schedulerId",
     header: () => <TableHeadCustom>Scheduler Id</TableHeadCustom>,
     cell: ({ row }) => {
-      return <div className="">{row.original.schedulerId}</div>;
+      return <TableCellCustom>{row.original.schedulerId}</TableCellCustom>;
     },
   },
   {
@@ -241,9 +279,9 @@ export const columns: ColumnDef<SummaryType>[] = [
     header: () => <TableHeadCustom>Start Time</TableHeadCustom>,
     cell: ({ row }) => {
       return (
-        <div className="">
+        <TableCellCustom>
           {format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}
-        </div>
+        </TableCellCustom>
       );
     },
   },
@@ -253,9 +291,9 @@ export const columns: ColumnDef<SummaryType>[] = [
     header: () => <TableHeadCustom>End Time</TableHeadCustom>,
     cell: ({ row }) => {
       return (
-        <div className="">
+        <TableCellCustom>
           {format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}
-        </div>
+        </TableCellCustom>
       );
     },
   },
