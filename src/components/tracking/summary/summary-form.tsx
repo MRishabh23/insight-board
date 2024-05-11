@@ -42,7 +42,10 @@ export const SummaryForm = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const queryCarriers = searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : [];
+  const [btnLoad, setBtnLoad] = React.useState(false);
+  const queryCarriers = searchParams.get("carriers")
+    ? searchParams.get("carriers")?.split(",")
+    : [];
   let newCarrOpt: any = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
@@ -61,8 +64,12 @@ export const SummaryForm = () => {
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
-    const q = createQueryString(data);
-    router.push(pathname + "?" + q);
+    setBtnLoad(true);
+    setTimeout(() => {
+      const q = createQueryString(data);
+      router.push(pathname + "?" + q);
+      setBtnLoad(false);
+    }, 1000);
   };
 
   const createQueryString = React.useCallback(
@@ -210,8 +217,8 @@ export const SummaryForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[100px] mt-4 capitalize">
-            Submit
+          <Button type="submit" className="w-[120px] mt-4 capitalize" disabled={btnLoad}>
+            {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>
       </Form>
