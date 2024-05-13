@@ -171,3 +171,31 @@ export const useHistoryForm = (searchParams: any) => {
 
   return form;
 };
+
+// latency schema
+const latencyOptionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
+const latencyFormSchema = z.object({
+  carriers: z
+    .array(latencyOptionSchema)
+    .max(5, "Please select up to 5 carriers"),
+  queue: z.string(),
+  refType: z.string(),
+});
+
+export const useLatencyForm = (newCarrOpt: any, searchParams: any) => {
+  const form = useForm<z.infer<typeof latencyFormSchema>>({
+    resolver: zodResolver(latencyFormSchema),
+    defaultValues: {
+      carriers: newCarrOpt,
+      queue: searchParams.get("queue") || "NORMAL",
+      refType: searchParams.get("refType") || "ALL",
+    },
+  });
+
+  return form;
+};

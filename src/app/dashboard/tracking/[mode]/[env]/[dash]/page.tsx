@@ -4,6 +4,7 @@ import React from "react";
 import MainStatusComponent from "@/components/tracking/status/main-status-component";
 import MainSummaryComponent from "@/components/tracking/summary/main-summary-component";
 import MainHistoryComponent from "@/components/tracking/history/main-history-component";
+import MainLatencyComponent from "@/components/tracking/latency/main-latency-component";
 
 const SlugPage = ({
   params,
@@ -18,6 +19,8 @@ const SlugPage = ({
         <MainSummaryComponent />
       ) : params.dash === "history" ? (
         <MainHistoryComponent />
+      ) : params.dash === "latency" ? (
+        <MainLatencyComponent />
       ) : (
         <div>{params.dash}</div>
       )}

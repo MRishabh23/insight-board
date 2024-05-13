@@ -89,7 +89,7 @@ const terminalCarriers = [
   { value: "WBCT", label: "WBCT" },
 ];
 
-const queue = [
+const oceanQueue = [
   {
     label: "Normal",
     value: "NORMAL",
@@ -97,6 +97,17 @@ const queue = [
   {
     label: "Adaptive",
     value: "ADAPTIVE",
+  },
+  {
+    label: "Reference Not Found",
+    value: "RNF",
+  },
+];
+
+const commonQueue = [
+  {
+    label: "Normal",
+    value: "NORMAL",
   },
   {
     label: "Reference Not Found",
@@ -152,8 +163,8 @@ export const getCarriersList = (mode: string) => {
     : terminalCarriers;
 };
 
-export const getQueueList = () => {
-  return queue;
+export const getQueueList = (mode: string) => {
+  return mode === "ocean" ? oceanQueue : commonQueue;
 };
 
 export const getHistoryType = () => {

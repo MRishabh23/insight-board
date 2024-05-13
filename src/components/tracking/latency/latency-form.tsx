@@ -14,7 +14,11 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
+import {
+  getCarriersList,
+  getQueueList,
+  getRefList,
+} from "@/utils/pre-define-data/data";
 import {
   Select,
   SelectContent,
@@ -23,22 +27,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format, startOfDay, subDays } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ParamType, SummaryFormType } from "@/utils/types/common";
-import { useSummaryForm } from "@/utils/schema";
+import { LatencyFormType, ParamType } from "@/utils/types/common";
+import { useLatencyForm } from "@/utils/schema";
 
-export const SummaryForm = () => {
+export const LatencyForm = () => {
   const params = useParams<ParamType>();
   const carriersOptions = getCarriersList(params.mode);
   const queueOptions = getQueueList(params.mode);
+  const refOptions = getRefList(params.mode);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -60,7 +56,7 @@ export const SummaryForm = () => {
     });
   }
 
-  const form = useSummaryForm(newCarrOpt, searchParams);
+  const form = useLatencyForm(newCarrOpt, searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
@@ -73,7 +69,7 @@ export const SummaryForm = () => {
   };
 
   const createQueryString = React.useCallback(
-    (data: SummaryFormType) => {
+    (data: LatencyFormType) => {
       let str = "";
       if (data.carriers.length > 0) {
         data.carriers.map((carrier: any, index: number) => {
@@ -91,13 +87,7 @@ export const SummaryForm = () => {
         summaryParams.set("carriers", "");
       }
       summaryParams.set("queue", data.queue);
-      if (data.carriers.length === 1) {
-        summaryParams.set("from", format(data.range.from, "yyyy-MM-dd"));
-        summaryParams.set("to", format(data.range.to, "yyyy-MM-dd"));
-      } else {
-        summaryParams.set("from", "");
-        summaryParams.set("to", "");
-      }
+      summaryParams.set("refType", data.refType);
 
       return summaryParams.toString();
     },
@@ -165,59 +155,37 @@ export const SummaryForm = () => {
           />
           <FormField
             control={form.control}
-            name="range"
+            name="refType"
             render={({ field }) => (
-              <FormItem className="flex flex-col mt-6">
-                <FormLabel htmlFor="dateRange">Date Range</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl id="dateRange">
-                      <Button
-                        id="date"
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                        disabled={
-                          form.watch("carriers").length === 1 ? false : true
-                        }
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value?.from ? (
-                          field.value?.to ? (
-                            <>
-                              {format(field.value.from, "LLL dd, y")} -{" "}
-                              {format(field.value.to, "LLL dd, y")}
-                            </>
-                          ) : (
-                            format(field.value.from, "LLL dd, y")
-                          )
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      max={15}
-                      defaultMonth={field.value?.from}
-                      fromDate={startOfDay(subDays(new Date(), 14))}
-                      toDate={new Date()}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      numberOfMonths={1}
-                    />
-                  </PopoverContent>
-                </Popover>
+              <FormItem className="mt-4">
+                <FormLabel htmlFor="refType">Reference Type</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl id="refType">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a reference type..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="ALL">All</SelectItem>
+                    {refOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[120px] mt-4 capitalize" disabled={btnLoad}>
+          <Button
+            type="submit"
+            className="w-[120px] mt-4 capitalize"
+            disabled={btnLoad}
+          >
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

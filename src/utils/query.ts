@@ -168,3 +168,45 @@ export const useHistoryFetchQuery = (
 
   return query;
 };
+
+// latency fetch query
+export const useLatencyQuery = (
+  username: string,
+  params: ParamType,
+  newCarrOpt: any,
+  searchParams: any
+) => {
+  const query = useQuery({
+    queryKey: [
+      "latency",
+      `/dashboard/tracking/${params.mode}/${params.env}/latency`,
+      `${searchParams.get("carriers")}-${searchParams.get(
+        "queue"
+      )}-${searchParams.get("refType")}`,
+    ],
+    queryFn: async () => {
+      const response =
+        username !== null &&
+        username !== "" &&
+        newCarrOpt.length > 0 &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/latency",
+          data: {
+            type: "GET_LATENCY",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            carriers: newCarrOpt,
+            queue: searchParams.get("queue"),
+            referenceType: searchParams.get("refType")
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  return query;
+};
