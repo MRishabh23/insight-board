@@ -9,7 +9,7 @@ import {
 import { useHistoryFetchQuery } from "@/utils/query";
 import JsonView from "@uiw/react-json-view";
 import { CgSpinnerAlt } from "react-icons/cg";
-import { ScrollArea } from "./ui/scroll-area";
+import { ScrollArea } from "../../ui/scroll-area";
 
 export function CustomDrawer({ ...props }) {
   return (
@@ -57,6 +57,15 @@ function SheetCustomContent({ ...props }) {
       </div>
     );
   }
+
+  if (fetchHistoryQuery.data && !fetchHistoryQuery.data?.data?.success) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center mt-10">
+        <p className="text-red-500">{fetchHistoryQuery.data?.data?.message}</p>
+      </div>
+    );
+  }
+
   return <CustomView data={fetchHistoryQuery.data} />;
 }
 

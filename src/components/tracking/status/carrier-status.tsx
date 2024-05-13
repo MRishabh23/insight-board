@@ -30,6 +30,14 @@ export const CarrierStatus = () => {
     );
   }
 
+  if (carrierStatusQuery.data && !carrierStatusQuery.data?.data?.success) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center">
+        <p className="text-red-500">{carrierStatusQuery.data?.data?.message}</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <CarrierStatusTable

@@ -45,11 +45,20 @@ export async function POST(request: NextRequest) {
     const carrierHistoryRes: any = await axios(sendObj);
 
     if (!carrierHistoryRes?.data?.response?.success) {
+      const dataErr = carrierHistoryRes?.data?.response?.data;
       return NextResponse.json(
         {
-          error: "Something went wrong while fetching history.",
-        },
-        { status: 400 }
+          message: dataErr.includes("Incorrect SubscriptionId")
+            ? dataErr
+            : dataErr.includes("Not Found")
+            ? dataErr
+            : dataErr.includes("No data available")
+            ? dataErr
+            : dataErr.includes("for this query")
+            ? dataErr
+            : "Something went wrong while fetching history.",
+          success: false,
+        }
       );
     }
 
