@@ -48,7 +48,11 @@ const TrackingDashHeader = ({
     {
       name: "Latency",
       path: `/dashboard/tracking/${params.mode}/${params.env}/latency`,
-      query: {}
+      query: {
+        carriers: "",
+        queue: "NORMAL",
+        refType: "ALL"
+      }
     },
     {
       name: "Induced",

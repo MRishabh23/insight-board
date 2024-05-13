@@ -46,20 +46,20 @@ export async function POST(request: NextRequest) {
 
     if (!carrierHistoryRes?.data?.response?.success) {
       const dataErr = carrierHistoryRes?.data?.response?.data;
-      return NextResponse.json(
-        {
-          message: dataErr.includes("Incorrect SubscriptionId")
-            ? dataErr
-            : dataErr.includes("Not Found")
-            ? dataErr
-            : dataErr.includes("No data available")
-            ? dataErr
-            : dataErr.includes("for this query")
-            ? dataErr
-            : "Something went wrong while fetching history.",
-          success: false,
-        }
-      );
+      return NextResponse.json({
+        message: dataErr.includes("Incorrect SubscriptionId")
+          ? dataErr
+          : dataErr.includes("Not Found")
+          ? dataErr
+          : dataErr.includes("No data available")
+          ? dataErr
+          : dataErr.includes("for this query")
+          ? dataErr
+          : dataErr.includes("created for next container journey")
+          ? dataErr
+          : "Something went wrong while fetching history.",
+        success: false,
+      });
     }
 
     // create next response

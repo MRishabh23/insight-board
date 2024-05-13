@@ -136,4 +136,26 @@ export type HistoryFormType = {
   };
 };
 
+// latency related types
+export type LatencyFormType = {
+  carriers: string[];
+  queue: string;
+  refType: string;
+};
+
+export type LatencyTableType = {
+  carrier: string;
+  queue:   string;
+  refType: string;
+  first:   number;
+  second:  number;
+  third:   number;
+  fourth:  number;
+  fifth:   number;
+  sixth:   number;
+  seventh: number;
+  eight:   number;
+  ninth:   number;
+};
+
 // ************* dashboard types end ****************
