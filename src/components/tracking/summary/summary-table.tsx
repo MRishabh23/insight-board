@@ -339,5 +339,13 @@ export function SummaryTable() {
     );
   }
 
+  if (summaryQuery.data && !summaryQuery.data?.data?.success) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center mt-10">
+        <p className="text-red-500">{summaryQuery.data?.data?.message}</p>
+      </div>
+    );
+  }
+
   return <TableDataComponent data={summaryQuery.data} columns={columns} />;
 }

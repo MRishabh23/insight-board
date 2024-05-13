@@ -45,9 +45,18 @@ export async function POST(request: NextRequest) {
     if (!carrierStatusRes?.data?.response?.success) {
       return NextResponse.json(
         {
-          error: errorStr,
-        },
-        { status: 400 }
+          message: errorStr,
+          success: false,
+        }
+      );
+    }
+
+    if (carrierStatusRes?.data?.response?.success && carrierStatusRes?.data?.response?.data?.includes("data not present")) {
+      return NextResponse.json(
+        {
+          message: "Sufficient data not present.",
+          success: false,
+        }
       );
     }
 

@@ -17,7 +17,7 @@ import { ParamType, HistoryType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
-import { CustomDrawer } from "@/components/drawer-component";
+import { CustomDrawer } from "@/components/tracking/history/history-drawer-component";
 
 export function HistoryTable() {
   const username = React.useContext(UserContext);
@@ -42,7 +42,7 @@ export function HistoryTable() {
 }
 
 const HistoryData = ({ ...props }) => {
-  const summaryQuery = useHistoryQuery(
+  const historyQuery = useHistoryQuery(
     props.username || "",
     props.params,
     props.searchParams
@@ -254,7 +254,7 @@ const HistoryData = ({ ...props }) => {
     },
   ];
 
-  if (summaryQuery.isPending) {
+  if (historyQuery.isPending) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-6">
         <CgSpinnerAlt className="animate-spin text-lg mr-2" />
@@ -262,13 +262,21 @@ const HistoryData = ({ ...props }) => {
     );
   }
 
-  if (summaryQuery.isError || summaryQuery.error) {
+  if (historyQuery.isError || historyQuery.error) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-6">
-        <p className="text-red-500">Error: {summaryQuery.error?.message}</p>
+        <p className="text-red-500">Error: {historyQuery.error?.message}</p>
       </div>
     );
   }
 
-  return <TableDataComponent data={summaryQuery.data} columns={columns} />;
+  if (historyQuery.data && !historyQuery.data?.data?.success) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center mt-10">
+        <p className="text-red-500">{historyQuery.data?.data?.message}</p>
+      </div>
+    );
+  }
+
+  return <TableDataComponent data={historyQuery.data} columns={columns} />;
 };

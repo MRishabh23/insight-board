@@ -39,11 +39,12 @@ export async function POST(request: NextRequest) {
     const carrierHistoryFetchRes: any = await axios(sendObj);
 
     if (!carrierHistoryFetchRes?.data?.response?.success) {
+      const dataErr = carrierHistoryFetchRes?.data?.response?.data;
       return NextResponse.json(
         {
-          error: "Something went wrong while fetching resource history.",
-        },
-        { status: 400 }
+          message: dataErr.includes("Data doesn't exists") ? dataErr : "Something went wrong while fetching resource history.",
+          success: false,
+        }
       );
     }
 

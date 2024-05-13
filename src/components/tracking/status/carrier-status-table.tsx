@@ -44,60 +44,54 @@ import { useStatusMutation } from "@/utils/mutation";
 export function CarrierStatusTable({ ...props }) {
   return (
     <>
-      {props.statusList.data?.data.includes("data not present") ? (
-        <div className="h-full flex flex-col justify-center items-center">
-          <p className="text-red-500">Error: {props.statusList.data?.data}</p>
-        </div>
-      ) : (
-        <TableDiv className="h-96">
-          <TableTwo>
-            <TableHeader className="sticky top-0 bg-white">
-              <TableRow>
-                <TableHead>Carrier</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+      <TableDiv className="h-96">
+        <TableTwo>
+          <TableHeader className="sticky top-0 bg-white">
+            <TableRow>
+              <TableHead>Carrier</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
 
-            <TableBody>
-              {Array.isArray(props.statusList.data?.data) &&
-                props.statusList.data?.data.length > 0 &&
-                props.statusList.data?.data.map((item: StatusType) => (
-                  <TableRow key={item.carrier}>
-                    <TableCell className="font-semibold">
-                      {item.carrier}
-                    </TableCell>
-                    <TableCell className="">
-                      <Badge
-                        className={cn(
-                          "tracking-wide",
-                          item.status.toLowerCase().includes("operation")
-                            ? "bg-green-500 hover:bg-green-400"
-                            : item.status.toLowerCase().includes("partial")
-                            ? "bg-yellow-500 hover:bg-yellow-400"
-                            : item.status.toLowerCase().includes("degraded")
-                            ? "bg-orange-500 hover:bg-orange-400"
-                            : item.status.toLowerCase().includes("outage")
-                            ? "bg-red-600 hover:bg-red-500"
-                            : "bg-black"
-                        )}
-                      >
-                        {item.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <TableStatusForm
-                        params={props.params}
-                        username={props.username}
-                        item={item}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </TableTwo>
-        </TableDiv>
-      )}
+          <TableBody>
+            {Array.isArray(props.statusList.data?.data) &&
+              props.statusList.data?.data.length > 0 &&
+              props.statusList.data?.data.map((item: StatusType) => (
+                <TableRow key={item.carrier}>
+                  <TableCell className="font-semibold">
+                    {item.carrier}
+                  </TableCell>
+                  <TableCell className="">
+                    <Badge
+                      className={cn(
+                        "tracking-wide",
+                        item.status.toLowerCase().includes("operation")
+                          ? "bg-green-500 hover:bg-green-400"
+                          : item.status.toLowerCase().includes("partial")
+                          ? "bg-yellow-500 hover:bg-yellow-400"
+                          : item.status.toLowerCase().includes("degraded")
+                          ? "bg-orange-500 hover:bg-orange-400"
+                          : item.status.toLowerCase().includes("outage")
+                          ? "bg-red-600 hover:bg-red-500"
+                          : "bg-black"
+                      )}
+                    >
+                      {item.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <TableStatusForm
+                      params={props.params}
+                      username={props.username}
+                      item={item}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </TableTwo>
+      </TableDiv>
     </>
   );
 }

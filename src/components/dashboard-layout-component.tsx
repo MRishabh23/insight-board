@@ -26,6 +26,15 @@ const DashboardLayoutComponent = ({ children }: Readonly<DashboardProps>) => {
       </div>
     );
   }
+
+  if (userData.data && !userData.data?.data?.success) {
+    return (
+      <div className="h-full flex flex-col justify-center items-center">
+        <p className="text-red-500">{userData.data?.data?.message}</p>
+      </div>
+    );
+  }
+
   return (
     <UserContext.Provider value={userData.data?.data?.user?.username}>
       <div className="h-full flex flex-col bg-primary text-primary-foreground">

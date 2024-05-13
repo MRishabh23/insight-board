@@ -48,11 +48,12 @@ export async function POST(request: NextRequest) {
     const carrierSummaryRes: any = await axios(sendObj);
 
     if (!carrierSummaryRes?.data?.response?.success) {
+      const dataErr = carrierSummaryRes?.data?.response?.data;
       return NextResponse.json(
         {
-          error: "Something went wrong while fetching summary.",
-        },
-        { status: 400 }
+          message: dataErr.includes("searched time period") ? dataErr : "Something went wrong while fetching summary.",
+          success: false,
+        }
       );
     }
 
