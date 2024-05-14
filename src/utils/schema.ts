@@ -201,29 +201,53 @@ export const useLatencyForm = (newCarrOpt: any, searchParams: any) => {
 };
 
 // reference schema
-const referenceOptionSchema = z.object({
-  label: z.string(),
-  value: z.string(),
-  disable: z.boolean().optional(),
-});
-
 const referenceAllFormSchema = z.object({
-  carriers: z
-    .array(referenceOptionSchema)
-    .max(1, "Please select up to 1 carriers"),
+  carrier: z.string(),
   queue: z.string(),
   refType: z.string(),
   active: z.string(),
 });
 
-export const useReferenceAllForm = (newCarrOpt: any, searchParams: any) => {
+export const useReferenceAllForm = (searchParams: any) => {
   const form = useForm<z.infer<typeof referenceAllFormSchema>>({
     resolver: zodResolver(referenceAllFormSchema),
     defaultValues: {
-      carriers: newCarrOpt.length > 0 ? newCarrOpt : [{label: "ACL", value: "ACL"}],
+      carrier: searchParams.get("carrier") || "",
       queue: searchParams.get("queue") || "NORMAL",
       refType: searchParams.get("refType") || "BOOKING",
       active: searchParams.get("active") || "yes",
+    },
+  });
+
+  return form;
+};
+
+const referenceFormSchema = z.object({
+  carrier: z.string(),
+  reference: z.string()
+});
+
+export const useReferenceForm = (searchParams: any) => {
+  const form = useForm<z.infer<typeof referenceFormSchema>>({
+    resolver: zodResolver(referenceFormSchema),
+    defaultValues: {
+      carrier: searchParams.get("carrier") || "",
+      reference: searchParams.get("reference") || "",
+    },
+  });
+
+  return form;
+};
+
+const referenceSubscriptionFormSchema = z.object({
+  subscriptionId: z.string(),
+});
+
+export const useReferenceSubscriptionForm = (searchParams: any) => {
+  const form = useForm<z.infer<typeof referenceSubscriptionFormSchema>>({
+    resolver: zodResolver(referenceSubscriptionFormSchema),
+    defaultValues: {
+      subscriptionId: searchParams.get("subscriptionId") || "",
     },
   });
 

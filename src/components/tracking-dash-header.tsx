@@ -45,7 +45,7 @@ const TrackingDashHeader = ({
       path: `/dashboard/tracking/${params.mode}/${params.env}/references`,
       query: {
         category: "all",
-        carriers: "ACL",
+        carrier: "",
         queue: "NORMAL",
         refType: "BOOKING",
         active: "yes",

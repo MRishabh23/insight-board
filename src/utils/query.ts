@@ -157,7 +157,7 @@ export const useHistoryFetchQuery = (
             username: username,
             env: params.env.toUpperCase(),
             mode: params.mode.toUpperCase(),
-            resourceId: resourceId
+            resourceId: resourceId,
           },
         }));
       return response;
@@ -199,7 +199,7 @@ export const useLatencyQuery = (
             mode: params.mode.toUpperCase(),
             carriers: newCarrOpt,
             queue: searchParams.get("queue"),
-            referenceType: searchParams.get("refType")
+            referenceType: searchParams.get("refType"),
           },
         }));
       return response;
@@ -215,22 +215,24 @@ export const useLatencyQuery = (
 export const useReferenceAllQuery = (
   username: string,
   params: ParamType,
-  newCarrOpt: any,
   searchParams: any
 ) => {
   const query = useQuery({
     queryKey: [
       "reference-all",
       `/dashboard/tracking/${params.mode}/${params.env}/references`,
-      `${searchParams.get("carriers")}-${searchParams.get(
+      `${searchParams.get("category")}`,
+      `${searchParams.get("carrier")}-${searchParams.get(
         "queue"
-      )}-${searchParams.get("refType")}-${searchParams.get("active")}-${searchParams.get("bucket")}-${searchParams.get("page")}`,
+      )}-${searchParams.get("refType")}-${searchParams.get(
+        "active"
+      )}-${searchParams.get("bucket")}-${searchParams.get("page")}`,
     ],
     queryFn: async () => {
       const response =
         username !== null &&
         username !== "" &&
-        newCarrOpt.length > 0 &&
+        searchParams.get("carrier") &&
         (await axios({
           method: "post",
           url: "/api/tracking/reference",
@@ -239,13 +241,95 @@ export const useReferenceAllQuery = (
             username: username,
             env: params.env.toUpperCase(),
             mode: params.mode.toUpperCase(),
-            carriers: newCarrOpt,
+            carrier: searchParams.get("carrier"),
             queue: searchParams.get("queue"),
             referenceType: searchParams.get("refType"),
             active: searchParams.get("active"),
             bucket: searchParams.get("bucket"),
             page: searchParams.get("page"),
-            category: searchParams.get("category")
+            category: searchParams.get("category"),
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  return query;
+};
+
+// reference query
+export const useReferenceQuery = (
+  username: string,
+  params: ParamType,
+  searchParams: any
+) => {
+  const query = useQuery({
+    queryKey: [
+      "reference-reference",
+      `/dashboard/tracking/${params.mode}/${params.env}/references`,
+      `${searchParams.get("category")}`,
+      `${searchParams.get("carrier")}-${searchParams.get("reference")}`,
+    ],
+    queryFn: async () => {
+      const referenceId =
+        searchParams.get("carrier") &&
+        searchParams.get("reference") &&
+        `${searchParams.get("carrier")}_${searchParams.get("reference")}`;
+      const response =
+        username !== null &&
+        username !== "" &&
+        referenceId &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/reference",
+          data: {
+            type: "GET_REFERENCE_LIST",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            referenceId: referenceId,
+            category: searchParams.get("category"),
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  return query;
+};
+
+// reference subscription query
+export const useReferenceSubscriptionQuery = (
+  username: string,
+  params: ParamType,
+  searchParams: any
+) => {
+  const query = useQuery({
+    queryKey: [
+      "reference-subscription",
+      `/dashboard/tracking/${params.mode}/${params.env}/references`,
+      `${searchParams.get("category")}`,
+      `${searchParams.get("subscriptionId")}`,
+    ],
+    queryFn: async () => {
+      const response =
+        username !== null &&
+        username !== "" &&
+        searchParams.get("subscriptionId") &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/reference",
+          data: {
+            type: "GET_REFERENCE_LIST",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            subscriptionId: searchParams.get("subscriptionId"),
+            category: searchParams.get("category"),
           },
         }));
       return response;

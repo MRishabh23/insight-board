@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MultipleSelector from "@/components/multi-select";
 import { ParamType, ReferenceAllFormType } from "@/utils/types/common";
 import { useReferenceAllForm } from "@/utils/schema";
 
@@ -39,30 +38,14 @@ export const ReferenceAllForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
 
-  if (queryCarriers !== undefined && queryCarriers.length > 0) {
-    queryCarriers.map((carrier) => {
-      if (carrier) {
-        const carrObj = {
-          label: carrier,
-          value: carrier,
-        };
-        newCarrOpt.push(carrObj);
-      }
-    });
-  }
-
-  const form = useReferenceAllForm(newCarrOpt, searchParams);
+  const form = useReferenceAllForm(searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
     setBtnLoad(true);
-    if (data.carriers.length !== 1) {
-      form.setError("carriers", {
+    if (data.carrier.length === 0) {
+      form.setError("carrier", {
         type: "custom",
         message: "At least one carrier should be selected.",
       });
@@ -78,22 +61,8 @@ export const ReferenceAllForm = () => {
 
   const createQueryString = React.useCallback(
     (data: ReferenceAllFormType) => {
-      let str = "";
-      if (data.carriers.length > 0) {
-        data.carriers.map((carrier: any, index: number) => {
-          if (index === data.carriers.length - 1) {
-            str += carrier.value;
-          } else {
-            str += carrier.value + ",";
-          }
-        });
-      }
       const referenceAllParams = new URLSearchParams(searchParams.toString());
-      if (str !== "") {
-        referenceAllParams.set("carriers", str);
-      } else {
-        referenceAllParams.set("carriers", "");
-      }
+      referenceAllParams.set("carrier", data.carrier);
       referenceAllParams.set("queue", data.queue);
       referenceAllParams.set("refType", data.refType);
       referenceAllParams.set("active", data.active);
@@ -114,25 +83,28 @@ export const ReferenceAllForm = () => {
         >
           <FormField
             control={form.control}
-            name="carriers"
+            name="carrier"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="carriers">Carriers</FormLabel>
-                <FormControl id="carriers">
-                  <MultipleSelector
-                    value={field.value}
-                    onChange={field.onChange}
-                    defaultOptions={carriersOptions}
-                    placeholder="Select Carriers you like..."
-                    hidePlaceholderWhenSelected
-                    maxSelected={1}
-                    emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                        no results found.
-                      </p>
-                    }
-                  />
-                </FormControl>
+                <FormLabel htmlFor="carrier">Carrier</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  required
+                >
+                  <FormControl id="carrier">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a carrier..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {carriersOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

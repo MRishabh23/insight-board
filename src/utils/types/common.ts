@@ -160,10 +160,19 @@ export type LatencyTableType = {
 
 // reference related types
 export type ReferenceAllFormType = {
-  carriers: string[];
+  carrier: string;
   queue: string;
   refType: string;
   active: string;
+};
+
+export type ReferenceFormType = {
+  carrier: string;
+  reference: string;
+};
+
+export type ReferenceSubscriptionFormType = {
+  subscriptionId: string;
 };
 
 export type ReferenceTableType = {

@@ -6,6 +6,10 @@ import { useParams, useSearchParams } from "next/navigation";
 import React from "react";
 import { ReferenceAllForm } from "./reference-all-form";
 import { ReferenceAllTable } from "./reference-all-table";
+import { ReferenceForm } from "./reference-form";
+import { ReferenceTable } from "./reference-table";
+import { ReferenceSubscriptionForm } from "./reference-subscription-form";
+import { ReferenceSubscriptionTable } from "./reference-subscription-table";
 
 export default function MainReferenceComponent() {
   const params = useParams();
@@ -21,7 +25,7 @@ export default function MainReferenceComponent() {
       path: `/dashboard/tracking/${params.mode}/${params.env}/references`,
       query: {
         category: "all",
-        carriers: "ACL",
+        carrier: "",
         queue: "NORMAL",
         refType: "BOOKING",
         active: "yes",
@@ -43,8 +47,9 @@ export default function MainReferenceComponent() {
       name: "Reference",
       path: `/dashboard/tracking/${params.mode}/${params.env}/references`,
       query: {
-        category: "subscription",
-        referenceId: "",
+        category: "reference",
+        carrier: "",
+        reference: "",
       },
     },
   ];
@@ -74,10 +79,16 @@ export default function MainReferenceComponent() {
         </div>
       </TabsContent>
       <TabsContent value="subscription">
-        <div>subscription</div>
+        <div className="flex flex-col">
+          <ReferenceSubscriptionForm />
+          <ReferenceSubscriptionTable />
+        </div>
       </TabsContent>
       <TabsContent value="reference">
-        <div>reference</div>
+        <div className="flex flex-col">
+          <ReferenceForm />
+          <ReferenceTable />
+        </div>
       </TabsContent>
     </Tabs>
   );

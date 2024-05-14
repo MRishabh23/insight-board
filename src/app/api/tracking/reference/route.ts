@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
       username,
       env,
       mode,
-      carriers,
+      carrier,
       queue,
       referenceType,
       active,
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         username: username,
         env: env,
         mode: mode,
-        carriers: carriers,
+        carrier: carrier,
         queue: queue,
         referenceType: referenceType,
         active: active,
@@ -73,19 +73,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         message: dataErr.includes("pass one carrier")
           ? dataErr
+          : dataErr.includes("created for next container journey")
+          ? dataErr
           : "Something went wrong while fetching references.",
         success: false,
       });
     }
 
     // create next response
-    if(category === "all"){
-        return NextResponse.json({
-            message: "Carrier references.",
-            success: true,
-            data: carrierReferenceRes?.data?.response?.data,
-            count: carrierReferenceRes?.data?.response?.count
-          });
+    if (category === "all") {
+      return NextResponse.json({
+        message: "Carrier references.",
+        success: true,
+        data: carrierReferenceRes?.data?.response?.data,
+        count: carrierReferenceRes?.data?.response?.count,
+      });
     }
 
     const response = NextResponse.json({

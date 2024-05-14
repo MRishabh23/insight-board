@@ -10,12 +10,15 @@ import { ParamType, ReferenceTableType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceAllQuery } from "@/utils/query";
 import { TableDataDynamicComponent } from "@/components/data-table-dynamic";
+import { format, toDate } from "date-fns";
 
 export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "subscription-id",
     accessorKey: "subscriptionId",
-    header: () => <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>,
+    header: () => (
+      <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
+    ),
     cell: ({ row }) => (
       <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
     ),
@@ -93,7 +96,11 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "createdAt",
     header: () => <TableHeadCustom>Created On</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{row.original.createdAt}</TableCellCustom>;
+      return (
+        <TableCellCustom>
+          {format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}
+        </TableCellCustom>
+      );
     },
   },
   {
@@ -101,7 +108,9 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "lastCrawledAt",
     header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
     cell: ({ row }) => (
-      <TableCellCustom>{row.original.lastCrawledAt}</TableCellCustom>
+      <TableCellCustom>
+        {format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}
+      </TableCellCustom>
     ),
   },
   {
@@ -109,7 +118,11 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "updatedAt",
     header: () => <TableHeadCustom>Updated At</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{row.original.updatedAt}</TableCellCustom>;
+      return (
+        <TableCellCustom>
+          {format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}
+        </TableCellCustom>
+      );
     },
   },
 ];
@@ -118,23 +131,11 @@ export function ReferenceAllTable() {
   const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
-
-  if (queryCarriers !== undefined && queryCarriers.length > 0) {
-    queryCarriers.map((carrier) => {
-      if (carrier) {
-        newCarrOpt.push(carrier);
-      }
-    });
-  }
+ 
 
   const referenceAllQuery = useReferenceAllQuery(
     username || "",
     params,
-    newCarrOpt,
     searchParams
   );
 
@@ -149,7 +150,9 @@ export function ReferenceAllTable() {
   if (referenceAllQuery.isError || referenceAllQuery.error) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-6">
-        <p className="text-red-500">Error: {referenceAllQuery.error?.message}</p>
+        <p className="text-red-500">
+          Error: {referenceAllQuery.error?.message}
+        </p>
       </div>
     );
   }
@@ -165,12 +168,15 @@ export function ReferenceAllTable() {
   if (!referenceAllQuery.data) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">Select a carrier to view latency.</p>
+        <p className="text-lg font-bold">Select a carrier to view references.</p>
       </div>
     );
   }
 
   return (
-    <TableDataDynamicComponent data={referenceAllQuery.data} columns={columns} />
+    <TableDataDynamicComponent
+      data={referenceAllQuery.data}
+      columns={columns}
+    />
   );
 }

@@ -80,16 +80,16 @@ export const LatencyForm = () => {
           }
         });
       }
-      const summaryParams = new URLSearchParams(searchParams.toString());
+      const latencyParams = new URLSearchParams(searchParams.toString());
       if (str !== "") {
-        summaryParams.set("carriers", str);
+        latencyParams.set("carriers", str);
       } else {
-        summaryParams.set("carriers", "");
+        latencyParams.set("carriers", "");
       }
-      summaryParams.set("queue", data.queue);
-      summaryParams.set("refType", data.refType);
+      latencyParams.set("queue", data.queue);
+      latencyParams.set("refType", data.refType);
 
-      return summaryParams.toString();
+      return latencyParams.toString();
     },
     [searchParams]
   );
