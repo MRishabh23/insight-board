@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { LatencyTableType, ParamType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useLatencyQuery } from "@/utils/query";
-import { TableDataLatencyComponent } from "./latency-data-table";
+import { TableDataDefaultComponent } from "@/components/data-table-default";
 
 export const columns: ColumnDef<LatencyTableType>[] = [
   {
@@ -215,6 +215,6 @@ export function LatencyTable() {
   }
 
   return (
-    <TableDataLatencyComponent data={latencyQuery.data} columns={columns} />
+    <TableDataDefaultComponent data={latencyQuery.data} columns={columns} />
   );
 }

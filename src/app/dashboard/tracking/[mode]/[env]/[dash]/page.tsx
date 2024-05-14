@@ -5,6 +5,7 @@ import MainStatusComponent from "@/components/tracking/status/main-status-compon
 import MainSummaryComponent from "@/components/tracking/summary/main-summary-component";
 import MainHistoryComponent from "@/components/tracking/history/main-history-component";
 import MainLatencyComponent from "@/components/tracking/latency/main-latency-component";
+import MainReferenceComponent from "@/components/tracking/reference/main-reference-component";
 
 const SlugPage = ({
   params,
@@ -21,6 +22,8 @@ const SlugPage = ({
         <MainHistoryComponent />
       ) : params.dash === "latency" ? (
         <MainLatencyComponent />
+      ) : params.dash === "references" ? (
+        <MainReferenceComponent />
       ) : (
         <div>{params.dash}</div>
       )}

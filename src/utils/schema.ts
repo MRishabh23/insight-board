@@ -199,3 +199,33 @@ export const useLatencyForm = (newCarrOpt: any, searchParams: any) => {
 
   return form;
 };
+
+// reference schema
+const referenceOptionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
+const referenceAllFormSchema = z.object({
+  carriers: z
+    .array(referenceOptionSchema)
+    .max(1, "Please select up to 1 carriers"),
+  queue: z.string(),
+  refType: z.string(),
+  active: z.string(),
+});
+
+export const useReferenceAllForm = (newCarrOpt: any, searchParams: any) => {
+  const form = useForm<z.infer<typeof referenceAllFormSchema>>({
+    resolver: zodResolver(referenceAllFormSchema),
+    defaultValues: {
+      carriers: newCarrOpt.length > 0 ? newCarrOpt : [{label: "ACL", value: "ACL"}],
+      queue: searchParams.get("queue") || "NORMAL",
+      refType: searchParams.get("refType") || "BOOKING",
+      active: searchParams.get("active") || "yes",
+    },
+  });
+
+  return form;
+};

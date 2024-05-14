@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableDataComponent } from "@/components/data-table";
+import { TableDataStaticComponent } from "@/components/data-table-static";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
 import {
@@ -347,5 +347,5 @@ export function SummaryTable() {
     );
   }
 
-  return <TableDataComponent data={summaryQuery.data} columns={columns} />;
+  return <TableDataStaticComponent data={summaryQuery.data} columns={columns} />;
 }

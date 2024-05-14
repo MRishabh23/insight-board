@@ -158,4 +158,25 @@ export type LatencyTableType = {
   ninth:   number;
 };
 
+// reference related types
+export type ReferenceAllFormType = {
+  carriers: string[];
+  queue: string;
+  refType: string;
+  active: string;
+};
+
+export type ReferenceTableType = {
+  subscriptionId:  string;
+  carrier:         string;
+  referenceNumber: string;
+  referenceType:   string;
+  createdAt:       string;
+  updatedAt:       string;
+  lastCrawledAt:   string;
+  queue:           string;
+  status:          string;
+  error:           string;
+}
+
 // ************* dashboard types end ****************

@@ -210,3 +210,49 @@ export const useLatencyQuery = (
 
   return query;
 };
+
+// reference all query
+export const useReferenceAllQuery = (
+  username: string,
+  params: ParamType,
+  newCarrOpt: any,
+  searchParams: any
+) => {
+  const query = useQuery({
+    queryKey: [
+      "reference-all",
+      `/dashboard/tracking/${params.mode}/${params.env}/references`,
+      `${searchParams.get("carriers")}-${searchParams.get(
+        "queue"
+      )}-${searchParams.get("refType")}-${searchParams.get("active")}-${searchParams.get("bucket")}-${searchParams.get("page")}`,
+    ],
+    queryFn: async () => {
+      const response =
+        username !== null &&
+        username !== "" &&
+        newCarrOpt.length > 0 &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/reference",
+          data: {
+            type: "GET_REFERENCE_LIST",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            carriers: newCarrOpt,
+            queue: searchParams.get("queue"),
+            referenceType: searchParams.get("refType"),
+            active: searchParams.get("active"),
+            bucket: searchParams.get("bucket"),
+            page: searchParams.get("page"),
+            category: searchParams.get("category")
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  return query;
+};
