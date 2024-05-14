@@ -26,11 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import MultipleSelector from "@/components/multi-select";
-import { LatencyFormType, ParamType } from "@/utils/types/common";
-import { useLatencyForm } from "@/utils/schema";
+import { ParamType, ReferenceAllFormType } from "@/utils/types/common";
+import { useReferenceAllForm } from "@/utils/schema";
 
-export const LatencyForm = () => {
+export const ReferenceAllForm = () => {
   const params = useParams<ParamType>();
   const carriersOptions = getCarriersList(params.mode);
   const queueOptions = getQueueList(params.mode);
@@ -39,57 +38,38 @@ export const LatencyForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
 
-  if (queryCarriers !== undefined && queryCarriers.length > 0) {
-    queryCarriers.map((carrier) => {
-      if (carrier) {
-        const carrObj = {
-          label: carrier,
-          value: carrier,
-        };
-        newCarrOpt.push(carrObj);
-      }
-    });
-  }
-
-  const form = useLatencyForm(newCarrOpt, searchParams);
+  const form = useReferenceAllForm(searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
     setBtnLoad(true);
-    setTimeout(() => {
-      const q = createQueryString(data);
-      router.push(pathname + "?" + q);
+    if (data.carrier.length === 0) {
+      form.setError("carrier", {
+        type: "custom",
+        message: "At least one carrier should be selected.",
+      });
       setBtnLoad(false);
-    }, 1000);
+    } else {
+      setTimeout(() => {
+        const q = createQueryString(data);
+        router.push(pathname + "?" + q);
+        setBtnLoad(false);
+      }, 1000);
+    }
   };
 
   const createQueryString = React.useCallback(
-    (data: LatencyFormType) => {
-      let str = "";
-      if (data.carriers.length > 0) {
-        data.carriers.map((carrier: any, index: number) => {
-          if (index === data.carriers.length - 1) {
-            str += carrier.value;
-          } else {
-            str += carrier.value + ",";
-          }
-        });
-      }
-      const latencyParams = new URLSearchParams(searchParams.toString());
-      if (str !== "") {
-        latencyParams.set("carriers", str);
-      } else {
-        latencyParams.set("carriers", "");
-      }
-      latencyParams.set("queue", data.queue);
-      latencyParams.set("refType", data.refType);
+    (data: ReferenceAllFormType) => {
+      const referenceAllParams = new URLSearchParams(searchParams.toString());
+      referenceAllParams.set("carrier", data.carrier);
+      referenceAllParams.set("queue", data.queue);
+      referenceAllParams.set("refType", data.refType);
+      referenceAllParams.set("active", data.active);
+      referenceAllParams.set("bucket", "");
+      referenceAllParams.set("page", "1");
 
-      return latencyParams.toString();
+      return referenceAllParams.toString();
     },
     [searchParams]
   );
@@ -103,25 +83,81 @@ export const LatencyForm = () => {
         >
           <FormField
             control={form.control}
-            name="carriers"
+            name="carrier"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="carriers">Carriers</FormLabel>
-                <FormControl id="carriers">
-                  <MultipleSelector
-                    value={field.value}
-                    onChange={field.onChange}
-                    defaultOptions={carriersOptions}
-                    placeholder="Select Carriers you like..."
-                    hidePlaceholderWhenSelected
-                    maxSelected={5}
-                    emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                        no results found.
-                      </p>
-                    }
-                  />
-                </FormControl>
+                <FormLabel htmlFor="carrier">Carrier</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  required
+                >
+                  <FormControl id="carrier">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a carrier..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {carriersOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="active"
+            render={({ field }) => (
+              <FormItem className="mt-4">
+                <FormLabel htmlFor="active">Active</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  required
+                >
+                  <FormControl id="active">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a active..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="refType"
+            render={({ field }) => (
+              <FormItem className="mt-4">
+                <FormLabel htmlFor="refType">Reference Type</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  required
+                >
+                  <FormControl id="refType">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a reference type..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {refOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -143,34 +179,6 @@ export const LatencyForm = () => {
                   </FormControl>
                   <SelectContent>
                     {queueOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="refType"
-            render={({ field }) => (
-              <FormItem className="mt-4">
-                <FormLabel htmlFor="refType">Reference Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl id="refType">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a reference type..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="ALL">All</SelectItem>
-                    {refOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>

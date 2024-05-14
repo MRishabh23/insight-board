@@ -43,7 +43,15 @@ const TrackingDashHeader = ({
     {
       name: "References",
       path: `/dashboard/tracking/${params.mode}/${params.env}/references`,
-      query: {}
+      query: {
+        category: "all",
+        carrier: "",
+        queue: "NORMAL",
+        refType: "BOOKING",
+        active: "yes",
+        bucket: "",
+        page: 1,
+      }
     },
     {
       name: "Latency",

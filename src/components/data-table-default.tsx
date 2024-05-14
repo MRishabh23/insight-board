@@ -30,7 +30,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export function TableDataLatencyComponent({ ...props }) {
+export function TableDataDefaultComponent({ ...props }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

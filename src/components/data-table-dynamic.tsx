@@ -25,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -32,7 +33,10 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export function TableDataComponent({ ...props }) {
+export function TableDataDynamicComponent({ ...props }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -40,8 +44,9 @@ export function TableDataComponent({ ...props }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const pageNo = searchParams.get("page") ? +searchParams.get("page")! : 1
   const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex: pageNo - 1,
     pageSize: 5,
   });
   const data = Array.isArray(props.data.data?.data)
@@ -50,6 +55,8 @@ export function TableDataComponent({ ...props }) {
       : []
     : [];
   const columns = props.columns;
+  const count = props.data.data?.count > 0 ? props.data.data?.count : 0;
+  const totalPage = count > 0 ? Math.round(count / 5) : 1;
 
   const table = useReactTable({
     data,
@@ -72,30 +79,49 @@ export function TableDataComponent({ ...props }) {
     },
   });
 
+  React.useEffect(() => {
+    let ignore = false;
+    if (!ignore) {
+      const params = new URLSearchParams(searchParams.toString());
+      const page = pagination.pageIndex + 1;
+      params.set("page", page.toString());
+      router.push(pathname + "?" + params.toString());
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [pagination, searchParams, pathname, router]);
+
   return (
     <div className="w-full mt-6">
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          Total Items: {data.length}
+          Total Items: {count}
         </div>
         <div className="space-x-2 flex justify-center items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            disabled={
+              table.getState().pagination.pageIndex + 1 === 1 ? true : false
+            }
           >
             Previous
           </Button>
           <div className="text-sm text-muted-foreground">
-            {table.getState().pagination.pageIndex + 1} /{" "}
-            {table.getPageCount().toLocaleString()}
+            {table.getState().pagination.pageIndex + 1} / {totalPage}
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            disabled={
+              table.getState().pagination.pageIndex + 1 === totalPage
+                ? true
+                : false
+            }
           >
             Next
           </Button>
@@ -160,7 +186,7 @@ export function TableDataComponent({ ...props }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          Total Items: {data.length}
+          Total Items: {count}
         </div>
         <div className="space-x-2 flex justify-center items-center">
           <Button
