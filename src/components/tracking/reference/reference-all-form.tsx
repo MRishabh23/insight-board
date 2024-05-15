@@ -63,11 +63,15 @@ export const ReferenceAllForm = () => {
     (data: ReferenceAllFormType) => {
       const referenceAllParams = new URLSearchParams(searchParams.toString());
       referenceAllParams.set("carrier", data.carrier);
-      referenceAllParams.set("queue", data.queue);
-      referenceAllParams.set("refType", data.refType);
-      referenceAllParams.set("active", data.active);
+      if (data.refStatus === "ACTIVE") {
+        referenceAllParams.set("queue", data.queue);
+        referenceAllParams.set("refType", data.refType);
+      } else {
+        referenceAllParams.set("queue", "");
+        referenceAllParams.set("refType", "");
+      }
+      referenceAllParams.set("refStatus", data.refStatus);
       referenceAllParams.set("bucket", "");
-      referenceAllParams.set("page", "1");
 
       return referenceAllParams.toString();
     },
@@ -111,10 +115,10 @@ export const ReferenceAllForm = () => {
           />
           <FormField
             control={form.control}
-            name="active"
+            name="refStatus"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel htmlFor="active">Active</FormLabel>
+                <FormLabel htmlFor="refStatus">Status</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -122,12 +126,12 @@ export const ReferenceAllForm = () => {
                 >
                   <FormControl id="active">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a active..." />
+                      <SelectValue placeholder="Select a status..." />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="CLOSED">Closed</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -144,6 +148,7 @@ export const ReferenceAllForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   required
+                  disabled={form.watch("refStatus") === "CLOSED" ? true : false}
                 >
                   <FormControl id="refType">
                     <SelectTrigger>
@@ -171,6 +176,7 @@ export const ReferenceAllForm = () => {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  disabled={form.watch("refStatus") === "CLOSED" ? true : false}
                 >
                   <FormControl id="queue">
                     <SelectTrigger>
