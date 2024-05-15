@@ -9,8 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { ParamType, ReferenceTableType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceSubscriptionQuery } from "@/utils/query";
-import { TableDataStaticComponent } from "@/components/data-table-static";
 import { format, toDate } from "date-fns";
+import { TableDataDefaultComponent } from "@/components/data-table-default";
 
 export const columns: ColumnDef<ReferenceTableType>[] = [
   {
@@ -173,6 +173,6 @@ export function ReferenceSubscriptionTable() {
   }
 
   return (
-    <TableDataStaticComponent data={referenceQuery.data} columns={columns} />
+    <TableDataDefaultComponent data={referenceQuery.data} columns={columns} />
   );
 }

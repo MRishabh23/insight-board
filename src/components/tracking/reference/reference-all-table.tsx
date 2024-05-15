@@ -9,129 +9,154 @@ import { Badge } from "@/components/ui/badge";
 import { ParamType, ReferenceTableType } from "@/utils/types/common";
 import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceAllQuery } from "@/utils/query";
-import { TableDataDynamicComponent } from "@/components/data-table-dynamic";
 import { format, toDate } from "date-fns";
-
-export const columns: ColumnDef<ReferenceTableType>[] = [
-  {
-    id: "subscription-id",
-    accessorKey: "subscriptionId",
-    header: () => (
-      <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
-    ),
-    cell: ({ row }) => (
-      <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
-    ),
-    meta: {
-      className: "sticky left-0 bg-white",
-    },
-  },
-  {
-    id: "carrier",
-    accessorKey: "carrier",
-    header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-    cell: ({ row }) => {
-      return <TableCellCustom>{row.original.carrier}</TableCellCustom>;
-    },
-  },
-  {
-    id: "ref-type",
-    accessorKey: "refType",
-    header: () => (
-      <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>
-    ),
-    cell: ({ row }) => {
-      const ref = row.original.referenceType;
-      let rType = ref.includes("BOOKING")
-        ? "amber"
-        : ref.includes("BILL")
-        ? "orange"
-        : ref.includes("CONTAINER")
-        ? "green"
-        : "blue";
-      rType = "bg-" + rType + "-500";
-
-      return (
-        <TableCellCustom>
-          <Badge className={`${rType}`}>{ref}</Badge>
-        </TableCellCustom>
-      );
-    },
-  },
-  {
-    id: "ref-num",
-    accessorKey: "refNum",
-    header: () => <TableHeadCustom>Reference Number</TableHeadCustom>,
-    cell: ({ row }) => {
-      return <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>;
-    },
-  },
-  {
-    id: "status",
-    accessorKey: "status",
-    header: () => <TableHeadCustom>Status</TableHeadCustom>,
-    cell: ({ row }) => {
-      return <TableCellCustom>{row.original.status}</TableCellCustom>;
-    },
-  },
-  {
-    id: "queue",
-    accessorKey: "queueType",
-    header: () => <TableHeadCustom>Queue</TableHeadCustom>,
-    cell: ({ row }) => {
-      const queue = row.original.queue;
-      const qType = queue.includes("NORMAL")
-        ? "Normal"
-        : queue.includes("ADAPTIVE")
-        ? "Adaptive"
-        : queue.includes("RNF")
-        ? "RNF"
-        : "";
-
-      return <TableCellCustom>{qType}</TableCellCustom>;
-    },
-  },
-  {
-    id: "created-at",
-    accessorKey: "createdAt",
-    header: () => <TableHeadCustom>Created On</TableHeadCustom>,
-    cell: ({ row }) => {
-      return (
-        <TableCellCustom>
-          {format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}
-        </TableCellCustom>
-      );
-    },
-  },
-  {
-    id: "last-crawled-at",
-    accessorKey: "lastCrawledAt",
-    header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
-    cell: ({ row }) => (
-      <TableCellCustom>
-        {format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}
-      </TableCellCustom>
-    ),
-  },
-  {
-    id: "updated-at",
-    accessorKey: "updatedAt",
-    header: () => <TableHeadCustom>Updated At</TableHeadCustom>,
-    cell: ({ row }) => {
-      return (
-        <TableCellCustom>
-          {format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}
-        </TableCellCustom>
-      );
-    },
-  },
-];
+import { TableDataStaticComponent } from "@/components/data-table-static";
+import { CustomDrawerReference } from "./reference-all-drawer";
+import { cn } from "@/lib/utils";
 
 export function ReferenceAllTable() {
   const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
- 
+
+  const columns: ColumnDef<ReferenceTableType>[] = [
+    {
+      id: "subscription-id",
+      accessorKey: "subscriptionId",
+      header: () => (
+        <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
+      ),
+      cell: ({ row }) => (
+        <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
+      ),
+      meta: {
+        className: "sticky left-0 bg-white",
+      },
+    },
+    {
+      id: "carrier",
+      accessorKey: "carrier",
+      header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+      cell: ({ row }) => {
+        return <TableCellCustom>{searchParams.get("carrier")}</TableCellCustom>;
+      },
+    },
+    {
+      id: "ref-type",
+      accessorKey: "refType",
+      header: () => (
+        <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>
+      ),
+      cell: ({ row }) => {
+        let ref = row.original.subscriptionId;
+        ref = ref.includes("BOOKING")
+          ? "Booking"
+          : ref.includes("BILL")
+          ? "BillOfLading"
+          : ref.includes("CONTAINER")
+          ? "Container"
+          : "AWB";
+
+        let rType = ref.includes("Booking")
+          ? "amber"
+          : ref.includes("Bill")
+          ? "orange"
+          : ref.includes("Container")
+          ? "green"
+          : "blue";
+        rType = "bg-" + rType + "-500";
+
+        return (
+          <TableCellCustom>
+            <Badge className={`${rType}`}>{ref}</Badge>
+          </TableCellCustom>
+        );
+      },
+    },
+    {
+      id: "ref-num",
+      accessorKey: "refNum",
+      header: () => <TableHeadCustom>Reference Number</TableHeadCustom>,
+      cell: ({ row }) => {
+        return (
+          <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>
+        );
+      },
+    },
+    {
+      id: "status",
+      accessorKey: "status",
+      header: () => <TableHeadCustom>Status</TableHeadCustom>,
+      cell: () => {
+        let status = searchParams.get("refStatus")!;
+
+        return (
+          <TableCellCustom
+            className={cn(
+              status === "ACTIVE" ? "text-green-500" : "text-red-500"
+            )}
+          >
+            {status}
+          </TableCellCustom>
+        );
+      },
+    },
+    {
+      id: "queue",
+      accessorKey: "queueType",
+      header: () => <TableHeadCustom>Queue</TableHeadCustom>,
+      cell: ({ row }) => {
+        const queue = searchParams.get("queue")!;
+        const qType = queue.includes("NORMAL")
+          ? "Normal"
+          : queue.includes("ADAPTIVE")
+          ? "Adaptive"
+          : queue.includes("RNF")
+          ? "RNF"
+          : "";
+
+        return <TableCellCustom>{qType}</TableCellCustom>;
+      },
+    },
+    {
+      id: "last-crawled-at",
+      accessorKey: "lastCrawledAt",
+      header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
+      cell: ({ row }) => {
+        const lastT = row.original.lastCrawledAt;
+        let showT = "Not Crawled Yet";
+        if (lastT !== "null") {
+          showT = format(
+            toDate(row.original.lastCrawledAt),
+            "do MMM yyyy, HH:mm:ss"
+          );
+        }
+        return <TableCellCustom>{showT}</TableCellCustom>;
+      },
+    },
+    {
+      id: "more-info",
+      accessorKey: "moreInfo",
+      header: () => <TableHeadCustom>More Info</TableHeadCustom>,
+      cell: ({ row }) => {
+        return (
+          <CustomDrawerReference
+            variant="normal"
+            buttonTitle="more info"
+            title="Reference Information"
+            username={username || ""}
+            params={params}
+            searchParams={searchParams}
+            resource={row.original.subscriptionId}
+          />
+        );
+      },
+    },
+  ];
+
+  if (searchParams.get("refStatus") === "CLOSED") {
+    columns.splice(5, 2);
+  }
 
   const referenceAllQuery = useReferenceAllQuery(
     username || "",
@@ -168,15 +193,14 @@ export function ReferenceAllTable() {
   if (!referenceAllQuery.data) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">Select a carrier to view references.</p>
+        <p className="text-lg font-bold">
+          Select a carrier to view references.
+        </p>
       </div>
     );
   }
 
   return (
-    <TableDataDynamicComponent
-      data={referenceAllQuery.data}
-      columns={columns}
-    />
+    <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />
   );
 }

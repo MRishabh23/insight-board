@@ -96,7 +96,11 @@ export const useSignOutSubmitMutation = () => {
 // dashboard mutations
 
 // status mutation
-export const useStatusMutation = (username: string, params: ParamType, setOpen: any) => {
+export const useStatusMutation = (
+  username: string,
+  params: ParamType,
+  setOpen: any
+) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: (data: StatusType) => {

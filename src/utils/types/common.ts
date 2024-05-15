@@ -163,7 +163,7 @@ export type ReferenceAllFormType = {
   carrier: string;
   queue: string;
   refType: string;
-  active: string;
+  refStatus: string;
 };
 
 export type ReferenceFormType = {

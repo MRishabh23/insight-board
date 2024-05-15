@@ -205,7 +205,7 @@ const referenceAllFormSchema = z.object({
   carrier: z.string(),
   queue: z.string(),
   refType: z.string(),
-  active: z.string(),
+  refStatus: z.string(),
 });
 
 export const useReferenceAllForm = (searchParams: any) => {
@@ -215,7 +215,7 @@ export const useReferenceAllForm = (searchParams: any) => {
       carrier: searchParams.get("carrier") || "",
       queue: searchParams.get("queue") || "NORMAL",
       refType: searchParams.get("refType") || "BOOKING",
-      active: searchParams.get("active") || "yes",
+      refStatus: searchParams.get("refStatus") || "ACTIVE",
     },
   });
 

@@ -3,7 +3,6 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
-//import { format } from "date-fns";
 
 const TrackingDashHeader = ({
   params,
@@ -48,9 +47,8 @@ const TrackingDashHeader = ({
         carrier: "",
         queue: "NORMAL",
         refType: "BOOKING",
-        active: "yes",
+        refStatus: "ACTIVE",
         bucket: "",
-        page: 1,
       }
     },
     {

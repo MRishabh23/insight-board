@@ -225,8 +225,8 @@ export const useReferenceAllQuery = (
       `${searchParams.get("carrier")}-${searchParams.get(
         "queue"
       )}-${searchParams.get("refType")}-${searchParams.get(
-        "active"
-      )}-${searchParams.get("bucket")}-${searchParams.get("page")}`,
+        "refStatus"
+      )}-${searchParams.get("bucket")}`,
     ],
     queryFn: async () => {
       const response =
@@ -244,10 +244,51 @@ export const useReferenceAllQuery = (
             carrier: searchParams.get("carrier"),
             queue: searchParams.get("queue"),
             referenceType: searchParams.get("refType"),
-            active: searchParams.get("active"),
+            refStatus: searchParams.get("refStatus"),
             bucket: searchParams.get("bucket"),
-            page: searchParams.get("page"),
             category: searchParams.get("category"),
+          },
+        }));
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+    refetchInterval: 1000 * 60 * 30,
+  });
+
+  return query;
+};
+
+// reference info query
+export const useReferenceInfoQuery = (
+  username: string,
+  params: ParamType,
+  searchParams: any,
+  reference: string
+) => {
+  const query = useQuery({
+    queryKey: [
+      "reference-info",
+      `/dashboard/tracking/${params.mode}/${params.env}/references`,
+      `${searchParams.get("carrier")}-${searchParams.get(
+        "refType"
+      )}-${searchParams.get("refStatus")}-${reference}`,
+    ],
+    queryFn: async () => {
+      const response =
+        username !== null &&
+        username !== "" &&
+        (await axios({
+          method: "post",
+          url: "/api/tracking/referenceinfo",
+          data: {
+            type: "GET_REFERENCE_INFO",
+            username: username,
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            carrier: searchParams.get("carrier"),
+            referenceType: searchParams.get("refType"),
+            refStatus: searchParams.get("refStatus"),
+            reference: reference,
           },
         }));
       return response;

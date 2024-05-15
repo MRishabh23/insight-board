@@ -10,45 +10,21 @@ export async function POST(request: NextRequest) {
       env,
       mode,
       carrier,
-      queue,
       referenceType,
       refStatus,
-      bucket,
-      subscriptionId,
-      referenceId,
-      category,
+      reference,
     } = reqBody;
 
-    let reqData = {};
-    if (category === "all") {
-      reqData = {
-        type: type,
-        username: username,
-        env: env,
-        mode: mode,
-        carrier: carrier,
-        queue: queue,
-        referenceType: referenceType,
-        status: refStatus,
-        bucket: bucket,
-      };
-    } else if (category === "subscription") {
-      reqData = {
-        type: type,
-        username: username,
-        env: env,
-        mode: mode,
-        subscriptionId: subscriptionId,
-      };
-    } else {
-      reqData = {
-        type: type,
-        username: username,
-        env: env,
-        mode: mode,
-        referenceId: referenceId,
-      };
-    }
+    let reqData = {
+      type: type,
+      username: username,
+      env: env,
+      mode: mode,
+      carrier: carrier,
+      referenceType: referenceType,
+      status: refStatus,
+      reference: reference,
+    };
 
     const sendObj = {
       method: "post",
@@ -68,27 +44,16 @@ export async function POST(request: NextRequest) {
     if (!carrierReferenceRes?.data?.response?.success) {
       const dataErr = carrierReferenceRes?.data?.response?.data;
       return NextResponse.json({
-        message: dataErr.includes("pass one carrier")
+        message: dataErr.includes("Wrong reference")
           ? dataErr
-          : dataErr.includes("created for next container journey")
-          ? dataErr
-          : "Something went wrong while fetching references.",
+          : "Something went wrong while fetching reference data.",
         success: false,
       });
     }
 
     // create next response
-    if (category === "all") {
-      return NextResponse.json({
-        message: "Carrier references.",
-        success: true,
-        data: carrierReferenceRes?.data?.response?.data,
-        count: carrierReferenceRes?.data?.response?.count,
-      });
-    }
-
     const response = NextResponse.json({
-      message: "Carrier references.",
+      message: "Carrier reference data.",
       success: true,
       data: carrierReferenceRes?.data?.response?.data,
     });

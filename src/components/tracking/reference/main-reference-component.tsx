@@ -28,9 +28,8 @@ export default function MainReferenceComponent() {
         carrier: "",
         queue: "NORMAL",
         refType: "BOOKING",
-        active: "yes",
+        refStatus: "ACTIVE",
         bucket: "",
-        page: 1,
       },
     },
     {
@@ -73,9 +72,8 @@ export default function MainReferenceComponent() {
       </TabsList>
       <TabsContent value="all">
         <div className="flex flex-col">
-          {/* <ReferenceAllForm />
-          <ReferenceAllTable /> */}
-          Coming Soon....
+          <ReferenceAllForm />
+          <ReferenceAllTable />
         </div>
       </TabsContent>
       <TabsContent value="subscription">
