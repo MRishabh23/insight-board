@@ -23,8 +23,8 @@ export const useAuthSubmitMutation = (
       });
     },
     onSuccess: () => {
-      toast.success(`${title} Successful.`);
       form.reset({ username: "", password: "" });
+      toast.success(`${title} Successful.`);
       router.push(pushRoute);
     },
     onError: (error: any) => {
@@ -51,8 +51,8 @@ export const useSignInSubmitMutation = (form: any) => {
       });
     },
     onSuccess: () => {
-      toast.success("Sign In Successful.");
       form.reset({ role: "user", username: "", password: "" });
+      toast.success("Sign In Successful.");
       router.push("/dashboard");
     },
     onError: (error: any) => {
