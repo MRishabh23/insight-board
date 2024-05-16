@@ -13,7 +13,7 @@ interface RootProps {
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dashboard",
+  title: "JT TRACKING",
   description: "Multi-purpose Dashboard",
 };
 
