@@ -8,19 +8,19 @@ export default function QueryProviderWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  const queryClient = new QueryClient();
-  // const [queryClient] = React.useState(
-  //   () =>
-  //     new QueryClient({
-  //       defaultOptions: {
-  //         queries: {
-  //           //refetchOnWindowFocus: false,
-  //           staleTime: 6 * 1000,
-  //           refetchInterval: 6 * 1000,
-  //         },
-  //       },
-  //     })
-  // );
+  //const queryClient = new QueryClient();
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            //staleTime: 6 * 1000,
+            //refetchInterval: 6 * 1000,
+          },
+        },
+      })
+  );
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

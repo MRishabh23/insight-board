@@ -13,7 +13,7 @@ const eD = new Date();
 // auth schema
 
 // combine signUp and forgot/reset
-const authFormSchema = z.object({
+export const authSchema = z.object({
   username: z
     .string()
     .min(6, {
@@ -39,47 +39,9 @@ const authFormSchema = z.object({
 });
 
 export const useAuthForm = () => {
-  const form = useForm<z.infer<typeof authFormSchema>>({
-    resolver: zodResolver(authFormSchema),
+  const form = useForm<z.infer<typeof authSchema>>({
+    resolver: zodResolver(authSchema),
     defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  return form;
-};
-
-// signIn
-const signInFormSchema = z.object({
-  role: z.string(),
-  username: z
-    .string()
-    .min(6, {
-      message: "Username must be at least 6 characters.",
-    })
-    .max(20, { message: "Username must be at most 20 characters." })
-    .trim(),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters." })
-    .regex(/[a-zA-Z]/, {
-      message: "Password must contain at least one letter.",
-    })
-    .regex(/[0-9]/, {
-      message: "Password must contain at least one number.",
-    })
-    .regex(/[^A-Za-z0-9]/, {
-      message: "Password must contain at least one special character.",
-    })
-    .trim(),
-});
-
-export const useSignInForm = () => {
-  const form = useForm<z.infer<typeof signInFormSchema>>({
-    resolver: zodResolver(signInFormSchema),
-    defaultValues: {
-      role: "user",
       username: "",
       password: "",
     },

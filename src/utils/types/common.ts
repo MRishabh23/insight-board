@@ -10,23 +10,9 @@ export type ParamType = {
 
 // ************* auth types start ****************
 
-export type SignInType = {
-  role: string;
-  username: string;
-  password: string;
-};
-
-export type SubmitType = {
-  username: string;
-  password: string;
-};
-
 export type AuthType = {
-  title: string;
-  switchTitle?: string;
-  switchRoute?: string;
-  postRoute: string;
-  pushRoute: string;
+  username: string;
+  password: string;
 };
 
 // ************* auth types end ****************
@@ -145,17 +131,17 @@ export type LatencyFormType = {
 
 export type LatencyTableType = {
   carrier: string;
-  queue:   string;
+  queue: string;
   refType: string;
-  first:   number;
-  second:  number;
-  third:   number;
-  fourth:  number;
-  fifth:   number;
-  sixth:   number;
+  first: number;
+  second: number;
+  third: number;
+  fourth: number;
+  fifth: number;
+  sixth: number;
   seventh: number;
-  eight:   number;
-  ninth:   number;
+  eight: number;
+  ninth: number;
 };
 
 // reference related types
@@ -176,16 +162,16 @@ export type ReferenceSubscriptionFormType = {
 };
 
 export type ReferenceTableType = {
-  subscriptionId:  string;
-  carrier:         string;
+  subscriptionId: string;
+  carrier: string;
   referenceNumber: string;
-  referenceType:   string;
-  createdAt:       string;
-  updatedAt:       string;
-  lastCrawledAt:   string;
-  queue:           string;
-  status:          string;
-  error:           string;
-}
+  referenceType: string;
+  createdAt: string;
+  updatedAt: string;
+  lastCrawledAt: string;
+  queue: string;
+  status: string;
+  error: string;
+};
 
 // ************* dashboard types end ****************

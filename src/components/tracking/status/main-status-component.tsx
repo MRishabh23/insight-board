@@ -1,4 +1,3 @@
-import React from "react";
 import { CarrierStatus } from "./carrier-status";
 import { Separator } from "@/components/ui/separator";
 import { CarrierIssueTab } from "./carrier-issue-tab";
