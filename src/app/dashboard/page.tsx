@@ -1,5 +1,3 @@
-import React from "react";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -31,9 +29,7 @@ const Dashboard = () => {
     },
   ];
   return (
-    <div
-      className={cn("h-full px-6 flex flex-col justify-center items-center")}
-    >
+    <div className="h-full px-6 flex flex-col justify-center items-center">
       <Card className="w-[350px]">
         <CardHeader className="border-b">
           <CardTitle>Tracking</CardTitle>

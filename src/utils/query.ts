@@ -3,48 +3,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { ParamType } from "./types/common";
 import axios from "axios";
-
-// user query
-
-export const useGetUsername = () => {
-  const query = useQuery({
-    queryKey: ["all-routes", "user-details"],
-    queryFn: async () => {
-      const response = await axios.get("/api/users/me");
-      return response;
-    },
-    staleTime: 1000 * 60 * 60 * 24,
-    refetchInterval: 1000 * 60 * 60 * 24,
-  });
-
-  return query;
-};
+import { getStatusAction } from "@/app/actions";
 
 // status query
-export const useStatusQuery = (username: string, params: ParamType) => {
+export const useStatusQuery = (params: ParamType) => {
   const query = useQuery({
-    queryKey: [
-      "carrier-status",
-      `/dashboard/tracking/${params.mode}/${params.env}/status`,
-    ],
+    queryKey: ["status", `${params.mode}`, `${params.env}`],
     queryFn: async () => {
-      const response =
-        username !== null &&
-        username !== "" &&
-        (await axios({
-          method: "post",
-          url: "/api/tracking/status",
-          data: {
-            type: "GET_CARRIER_STATUS",
-            username: username,
-            env: params.env.toUpperCase(),
-            mode: params.mode.toUpperCase(),
-          },
-        }));
+      const response = await getStatusAction(params);
       return response;
     },
     staleTime: 1000 * 60 * 60 * 8,
-    refetchInterval: 1000 * 60 * 60 * 8,
   });
 
   return query;

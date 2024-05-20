@@ -55,9 +55,9 @@ export function CarrierStatusTable({ ...props }) {
           </TableHeader>
 
           <TableBody>
-            {Array.isArray(props.statusList.data?.data) &&
-              props.statusList.data?.data.length > 0 &&
-              props.statusList.data?.data.map((item: StatusType) => (
+            {Array.isArray(props.statusList.data) &&
+              props.statusList.data.length > 0 &&
+              props.statusList.data.map((item: StatusType) => (
                 <TableRow key={item.carrier}>
                   <TableCell className="font-semibold">
                     {item.carrier}
@@ -100,10 +100,11 @@ const TableStatusForm = ({ ...props }) => {
   const [open, setOpen] = React.useState(false);
   const form = useStatusForm(props.item);
 
-  const mutateStatus = useStatusMutation(props.username, props.params, setOpen);
+  const { mutate: server_updateStatus, isPending: statusPending } =
+    useStatusMutation(props.params, setOpen);
 
   const onSubmit = (data: StatusType) => {
-    mutateStatus.mutate(data);
+    server_updateStatus(data);
   };
 
   const handleOpen = () => {
@@ -183,10 +184,10 @@ const TableStatusForm = ({ ...props }) => {
 
               <Button
                 type="submit"
-                disabled={mutateStatus.isPending}
+                disabled={statusPending}
                 className={cn("w-full capitalize")}
               >
-                {mutateStatus.isPending ? "Saving..." : "Save Changes"}
+                {statusPending ? "Saving..." : "Save Changes"}
               </Button>
             </form>
           </Form>

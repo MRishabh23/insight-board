@@ -74,3 +74,16 @@ export const TableCellCustom = ({ ...props }) => {
     </div>
   );
 };
+
+export const CommonTooltip = ({ ...props }) => {
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>{props.children}</TooltipTrigger>
+        <TooltipContent className="flex justify-center item-center">
+          {props.tip}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+};

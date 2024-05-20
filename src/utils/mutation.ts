@@ -1,37 +1,36 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SignInType, SubmitType, StatusType, ParamType } from "./types/common";
+import { AuthType, StatusType, ParamType } from "./types/common";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  resetAction,
+  signInAction,
+  signUpAction,
+  updateStatusAction,
+} from "@/app/actions";
 
 // auth mutations
 
-// combine mutation for signUp and forgot/reset
-export const useAuthSubmitMutation = (
-  form: any,
-  title: string,
-  postRoute: string,
-  pushRoute: string
-) => {
+// mutation for signUp
+export const useSignUpSubmitMutation = (form: any) => {
   const router = useRouter();
   const submit = useMutation({
-    mutationFn: (data: SubmitType) => {
-      return axios({
-        method: "post",
-        url: `/api/users/${postRoute}`,
-        data: data,
-      });
-    },
-    onSuccess: () => {
-      form.reset({ username: "", password: "" });
-      toast.success(`${title} Successful.`);
-      router.push(pushRoute);
+    mutationFn: async (data: AuthType) => await signUpAction(data),
+    onSuccess: (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong, Sign up failed.`, {
+          description: data.data,
+        });
+      } else {
+        form.reset({ username: "", password: "" });
+        toast.success("Sign up Successful.");
+        router.push("/signin");
+      }
     },
     onError: (error: any) => {
-      toast.error(`Uh oh! Something went wrong, ${title} failed.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
+      toast.error(`Uh oh! Something went wrong, Sign up failed.`, {
+        description: error.message,
       });
     },
   });
@@ -43,23 +42,21 @@ export const useAuthSubmitMutation = (
 export const useSignInSubmitMutation = (form: any) => {
   const router = useRouter();
   const submit = useMutation({
-    mutationFn: (data: SignInType) => {
-      return axios({
-        method: "post",
-        url: "/api/users/signin",
-        data: data,
-      });
-    },
-    onSuccess: () => {
-      form.reset({ role: "user", username: "", password: "" });
-      toast.success("Sign In Successful.");
-      router.push("/dashboard");
+    mutationFn: async (data: AuthType) => await signInAction(data),
+    onSuccess: (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong, Sign in failed.`, {
+          description: data.data,
+        });
+      } else {
+        form.reset({ username: "", password: "" });
+        toast.success("Sign In Successful.");
+        router.push("/dashboard");
+      }
     },
     onError: (error: any) => {
       toast.error(`Uh oh! Something went wrong, Sign in failed.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
+        description: error.message,
       });
     },
   });
@@ -67,25 +64,25 @@ export const useSignInSubmitMutation = (form: any) => {
   return submit;
 };
 
-// mutation for signOut
-export const useSignOutSubmitMutation = () => {
+// mutation for reset
+export const useResetSubmitMutation = (form: any) => {
   const router = useRouter();
   const submit = useMutation({
-    mutationFn: () => {
-      return axios({
-        method: "get",
-        url: "/api/users/signout",
-      });
-    },
-    onSuccess: () => {
-      toast.success("Sign out successful");
-      router.push("/signin");
+    mutationFn: async (data: AuthType) => await resetAction(data),
+    onSuccess: (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong, while resetting.`, {
+          description: data.data,
+        });
+      } else {
+        form.reset({ username: "", password: "" });
+        toast.success("Reset password Successful.");
+        router.push("/signin");
+      }
     },
     onError: (error: any) => {
-      toast.error(`Uh oh! Something went wrong, Sign out failed.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
+      toast.error(`Uh oh! Something went wrong, while resetting.`, {
+        description: error.message,
       });
     },
   });
@@ -96,42 +93,33 @@ export const useSignOutSubmitMutation = () => {
 // dashboard mutations
 
 // status mutation
-export const useStatusMutation = (
-  username: string,
-  params: ParamType,
-  setOpen: any
-) => {
+export const useStatusMutation = (params: ParamType, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
-    mutationFn: (data: StatusType) => {
-      return axios({
-        method: "post",
-        url: "/api/tracking/status",
-        data: {
-          type: "UPDATE_CARRIER_STATUS",
-          username: username,
-          env: params.env.toUpperCase(),
-          mode: params.mode.toUpperCase(),
-          carrier: data.carrier,
-          status: data.status,
-        },
-      });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [
-          "carrier-status",
-          `/dashboard/tracking/${params.mode}/${params.env}/status`,
-        ],
-      });
-      toast.success("Carrier status updated successfully!");
-      setOpen(false);
+    mutationFn: async (data: StatusType) =>
+      await updateStatusAction({
+        env: params.env,
+        mode: params.mode,
+        carrier: data.carrier,
+        status: data.status,
+      }),
+
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong, while updating status.`, {
+          description: data.data,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["status", `${params.mode}`, `${params.env}`],
+        });
+        toast.success("Carrier status updated successfully!");
+        setOpen(false);
+      }
     },
     onError: (error: any) => {
       toast.error(`Uh oh! Something went wrong, while updating status.`, {
-        description: error?.response?.data?.error
-          ? error?.response?.data?.error
-          : error.message,
+        description: error.message,
       });
     },
   });

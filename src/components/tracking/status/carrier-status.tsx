@@ -1,16 +1,16 @@
+'use client';
+
 import React from "react";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { CarrierStatusTable } from "./carrier-status-table";
 import { useParams } from "next/navigation";
 import { ParamType } from "@/utils/types/common";
 import { useStatusQuery } from "@/utils/query";
-import { UserContext } from "@/components/dashboard-layout-component";
 
 export const CarrierStatus = () => {
   const params = useParams<ParamType>();
-  const username = React.useContext(UserContext);
 
-  const carrierStatusQuery = useStatusQuery(username || "", params);
+  const carrierStatusQuery = useStatusQuery(params);
 
   if (carrierStatusQuery.isPending) {
     return (
@@ -30,10 +30,10 @@ export const CarrierStatus = () => {
     );
   }
 
-  if (carrierStatusQuery.data && !carrierStatusQuery.data?.data?.success) {
+  if (carrierStatusQuery.data && !carrierStatusQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
-        <p className="text-red-500">{carrierStatusQuery.data?.data?.message}</p>
+        <p className="text-red-500">{carrierStatusQuery.data?.data}</p>
       </div>
     );
   }
@@ -43,7 +43,6 @@ export const CarrierStatus = () => {
       <CarrierStatusTable
         statusList={carrierStatusQuery.data || []}
         params={params}
-        username={username}
       />
     </div>
   );

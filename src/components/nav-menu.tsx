@@ -1,9 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
 import Link from "next/link";
-
-import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,10 +8,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";;
+} from "@/components/ui/navigation-menu";
 
 export function NavigationMenuComponent() {
-
   const components: {
     title: string;
     path: string;
@@ -48,9 +44,7 @@ export function NavigationMenuComponent() {
                 <li key={component.title}>
                   <Link
                     href={component.path}
-                    className={cn(
-                      "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                    )}
+                    className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                   >
                     <div className="text-sm font-medium leading-none">
                       {component.title}
