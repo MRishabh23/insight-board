@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AuthType, StatusType, ParamType } from "./types/common";
-import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {

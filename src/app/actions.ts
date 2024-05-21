@@ -316,3 +316,88 @@ export const updateStatusAction = async ({
     };
   }
 };
+
+// get summary action
+export const getSummaryAction = async ({
+  env,
+  mode,
+  carriers,
+  queue,
+  startTime,
+  endTime,
+}: {
+  env: string;
+  mode: string;
+  carriers: string[];
+  queue: string;
+  startTime: string;
+  endTime: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqData = {};
+    if (startTime != "" && endTime != "") {
+      reqData = {
+        type: "GET_SUMMARY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
+        endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
+      };
+    } else {
+      reqData = {
+        type: "GET_SUMMARY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        startTime: "",
+        endTime: "",
+      };
+    }
+
+    const sendObj = {
+      method: "post",
+      url: process.env.REST_URL!,
+      timeout: 120000,
+      auth: {
+        username: process.env.REST_USERNAME!,
+        password: process.env.REST_PASSWORD!,
+      },
+      data: reqData,
+    };
+
+    //console.log("sendObj", sendObj);
+
+    const summaryRes: any = await axios(sendObj);
+
+    if (!summaryRes?.data?.response?.success) {
+      const dataErr = summaryRes?.data?.response?.data;
+      const errMsg = dataErr.includes("searched time period")
+        ? dataErr
+        : "Something went wrong while fetching summary.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: summaryRes?.data?.response?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message.includes("timeout")
+        ? "Request timed out. Please try again."
+        : error.message,
+      success: false,
+    };
+  }
+};

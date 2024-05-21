@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ParamType } from "./types/common";
 import axios from "axios";
-import { getStatusAction } from "@/app/actions";
+import { getStatusAction, getSummaryAction } from "@/app/actions";
 
 // status query
 export const useStatusQuery = (params: ParamType) => {
@@ -21,7 +21,6 @@ export const useStatusQuery = (params: ParamType) => {
 
 // summary query
 export const useSummaryQuery = (
-  username: string,
   params: ParamType,
   newCarrOpt: any,
   searchParams: any
@@ -29,33 +28,25 @@ export const useSummaryQuery = (
   const query = useQuery({
     queryKey: [
       "summary",
-      `/dashboard/tracking/${params.mode}/${params.env}/summary`,
-      `${searchParams.get("carriers")}-${searchParams.get(
-        "queue"
-      )}-${searchParams.get("from")}-${searchParams.get("to")}`,
+      `${params.mode}`,
+      `${params.env}`,
+      newCarrOpt,
+      `${searchParams.get("queue")}`,
+      `${searchParams.get("from") || ""}`,
+      `${searchParams.get("to") || ""}`,
     ],
     queryFn: async () => {
-      const response =
-        username !== null &&
-        username !== "" &&
-        (await axios({
-          method: "post",
-          url: "/api/tracking/summary",
-          data: {
-            type: "GET_SUMMARY",
-            username: username,
-            env: params.env.toUpperCase(),
-            mode: params.mode.toUpperCase(),
-            carriers: newCarrOpt,
-            queue: searchParams.get("queue"),
-            startTime: searchParams.get("from") || "",
-            endTime: searchParams.get("to") || "",
-          },
-        }));
+      const response = await getSummaryAction({
+        env: params.env,
+        mode: params.mode,
+        carriers: newCarrOpt,
+        queue: searchParams.get("queue"),
+        startTime: searchParams.get("from") || "",
+        endTime: searchParams.get("to") || "",
+      });
       return response;
     },
     staleTime: 1000 * 60 * 30,
-    refetchInterval: 1000 * 60 * 30,
   });
 
   return query;

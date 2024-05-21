@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Form,
@@ -37,15 +39,25 @@ import { useSummaryForm } from "@/utils/schema";
 
 export const SummaryForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = getCarriersList(params.mode);
-  const queueOptions = getQueueList(params.mode);
+  const carriersOptions = React.useMemo(
+    () => getCarriersList(params.mode),
+    [params.mode]
+  );
+  const queueOptions = React.useMemo(
+    () => getQueueList(params.mode),
+    [params.mode]
+  );
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
+  const queryCarriers = React.useMemo(
+    () =>
+      searchParams.get("carriers")
+        ? searchParams.get("carriers")?.split(",")
+        : [],
+    [searchParams]
+  );
   let newCarrOpt: any = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
@@ -69,7 +81,7 @@ export const SummaryForm = () => {
       const q = createQueryString(data);
       router.push(pathname + "?" + q);
       setBtnLoad(false);
-    }, 1000);
+    }, 700);
   };
 
   const createQueryString = React.useCallback(
@@ -217,7 +229,11 @@ export const SummaryForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[120px] mt-4 capitalize" disabled={btnLoad}>
+          <Button
+            type="submit"
+            className="w-[120px] mt-4 capitalize"
+            disabled={btnLoad}
+          >
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>
