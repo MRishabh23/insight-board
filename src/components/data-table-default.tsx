@@ -42,12 +42,16 @@ export function TableDataDefaultComponent({ ...props }) {
     pageIndex: 0,
     pageSize: 20,
   });
-  const data = Array.isArray(props.data.data?.data)
-    ? props.data.data?.data.length > 0
-      ? props.data.data?.data
-      : []
-    : [];
-  const columns = props.columns;
+  const data = React.useMemo(
+    () =>
+      Array.isArray(props.data.data)
+        ? props.data.data.length > 0
+          ? props.data.data
+          : []
+        : [],
+    [props.data.data]
+  );
+  const columns = React.useMemo(() => props.columns, [props.columns]);
 
   const table = useReactTable({
     data,

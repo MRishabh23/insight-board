@@ -7,7 +7,6 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { LatencyTableType, ParamType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useLatencyQuery } from "@/utils/query";
 import { TableDataDefaultComponent } from "@/components/data-table-default";
 
@@ -80,7 +79,8 @@ export const columns: ColumnDef<LatencyTableType>[] = [
         (row.original.sixth || 0) +
         (row.original.seventh || 0) +
         (row.original.eight || 0) +
-        (row.original.ninth || 0);
+        (row.original.ninth || 0) +
+        (row.original.tenth || 0);
       return <TableCellCustom>{totalC}</TableCellCustom>;
     },
   },
@@ -151,21 +151,33 @@ export const columns: ColumnDef<LatencyTableType>[] = [
   {
     id: "ninth",
     accessorKey: "ninth",
-    header: () => <TableHeadCustom>{">48"}</TableHeadCustom>,
+    header: () => <TableHeadCustom>{"48_120"}</TableHeadCustom>,
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.ninth || 0}</TableCellCustom>;
+    },
+  },
+  {
+    id: "tenth",
+    accessorKey: "tenth",
+    header: () => <TableHeadCustom>{">5days"}</TableHeadCustom>,
+    cell: ({ row }) => {
+      return <TableCellCustom className="text-red-500">{row.original.tenth || 0}</TableCellCustom>;
     },
   },
 ];
 
 export function LatencyTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
+
+  const queryCarriers = React.useMemo(
+    () =>
+      searchParams.get("carriers")
+        ? searchParams.get("carriers")?.split(",")
+        : [],
+    [searchParams]
+  );
+  let newCarrOpt: string[] = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
@@ -175,11 +187,28 @@ export function LatencyTable() {
     });
   }
 
+  if (!searchParams.get("carriers")) {
+    return (
+      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+        Select a carrier to view latency.
+      </div>
+    );
+  }
+
+  return (
+    <LatencyData
+      params={params}
+      carriers={newCarrOpt}
+      searchParams={searchParams}
+    />
+  );
+}
+
+const LatencyData = ({ ...props }) => {
   const latencyQuery = useLatencyQuery(
-    username || "",
-    params,
-    newCarrOpt,
-    searchParams
+    props.params,
+    props.carriers,
+    props.searchParams
   );
 
   if (latencyQuery.isPending) {
@@ -198,18 +227,10 @@ export function LatencyTable() {
     );
   }
 
-  if (latencyQuery.data && !latencyQuery.data?.data?.success) {
+  if (latencyQuery.data && !latencyQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{latencyQuery.data?.data?.message}</p>
-      </div>
-    );
-  }
-
-  if (!latencyQuery.data) {
-    return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">Select a carrier to view latency.</p>
+        <p className="text-red-500">{latencyQuery.data?.data}</p>
       </div>
     );
   }
@@ -217,4 +238,4 @@ export function LatencyTable() {
   return (
     <TableDataDefaultComponent data={latencyQuery.data} columns={columns} />
   );
-}
+};

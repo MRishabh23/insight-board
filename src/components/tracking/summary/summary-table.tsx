@@ -19,10 +19,14 @@ import { ArrowUpDown } from "lucide-react";
 export function SummaryTable() {
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
+  const queryCarriers = React.useMemo(
+    () =>
+      searchParams.get("carriers")
+        ? searchParams.get("carriers")?.split(",")
+        : [],
+    [searchParams]
+  );
+  let newCarrOpt: string[] = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
@@ -335,11 +339,7 @@ export function SummaryTable() {
     },
   ];
 
-  const summaryQuery = useSummaryQuery(
-    params,
-    newCarrOpt,
-    searchParams
-  );
+  const summaryQuery = useSummaryQuery(params, newCarrOpt, searchParams);
 
   if (summaryQuery.isPending) {
     return (

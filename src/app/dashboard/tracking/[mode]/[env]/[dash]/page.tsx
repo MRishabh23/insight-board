@@ -37,11 +37,11 @@ const SlugPage = ({
         <MainStatusComponent />
       ) : params.dash === "summary" ? (
         <MainSummaryComponent />
+      ) : params.dash === "history" ? (
+        <MainHistoryComponent />
+      ) : params.dash === "latency" ? (
+        <MainLatencyComponent />
       ) : (
-        // ) : params.dash === "history" ? (
-        //   <MainHistoryComponent />
-        // ) : params.dash === "latency" ? (
-        //   <MainLatencyComponent />
         // ) : params.dash === "references" ? (
         //   <MainReferenceComponent />
         // ) : (

@@ -14,13 +14,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType, HistoryType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
 import { CustomDrawer } from "@/components/tracking/history/history-drawer-component";
 
 export function HistoryTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
 
@@ -32,21 +30,11 @@ export function HistoryTable() {
     );
   }
 
-  return (
-    <HistoryData
-      username={username || ""}
-      params={params}
-      searchParams={searchParams}
-    />
-  );
+  return <HistoryData params={params} searchParams={searchParams} />;
 }
 
 const HistoryData = ({ ...props }) => {
-  const historyQuery = useHistoryQuery(
-    props.username || "",
-    props.params,
-    props.searchParams
-  );
+  const historyQuery = useHistoryQuery(props.params, props.searchParams);
 
   const columns: ColumnDef<HistoryType>[] = [
     {
@@ -140,7 +128,6 @@ const HistoryData = ({ ...props }) => {
               variant="warning"
               buttonTitle="Same as before"
               title="Response Sent"
-              username={props.username || ""}
               params={props.params}
               schedulerId={row.original.k}
               resourceId={latestRes}
@@ -157,7 +144,6 @@ const HistoryData = ({ ...props }) => {
               variant="success"
               buttonTitle="New events found"
               title="Response Sent"
-              username={props.username || ""}
               params={props.params}
               schedulerId={row.original.k}
               resourceId={response}
@@ -206,7 +192,6 @@ const HistoryData = ({ ...props }) => {
               variant="warning"
               buttonTitle="Same as before"
               title="Crawled Output"
-              username={props.username || ""}
               params={props.params}
               schedulerId={row.original.k}
               resourceId={crawledRes}
@@ -223,7 +208,6 @@ const HistoryData = ({ ...props }) => {
               variant="normal"
               buttonTitle="Crawled JSON"
               title="Crawled Output"
-              username={props.username || ""}
               params={props.params}
               schedulerId={row.original.k}
               resourceId={crawledRes}
@@ -242,7 +226,6 @@ const HistoryData = ({ ...props }) => {
               variant="success"
               buttonTitle="New events found"
               title="Crawled Output"
-              username={props.username || ""}
               params={props.params}
               schedulerId={row.original.k}
               resourceId={crawledRes}
@@ -270,13 +253,15 @@ const HistoryData = ({ ...props }) => {
     );
   }
 
-  if (historyQuery.data && !historyQuery.data?.data?.success) {
+  if (historyQuery.data && !historyQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{historyQuery.data?.data?.message}</p>
+        <p className="text-red-500">{historyQuery.data?.data}</p>
       </div>
     );
   }
 
-  return <TableDataStaticComponent data={historyQuery.data} columns={columns} />;
+  return (
+    <TableDataStaticComponent data={historyQuery.data} columns={columns} />
+  );
 };

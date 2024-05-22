@@ -34,7 +34,6 @@ function SheetCustomContent({ ...props }) {
   }
 
   const fetchHistoryQuery = useHistoryFetchQuery(
-    props.username,
     props.params,
     props.schedulerId,
     resId
@@ -58,10 +57,10 @@ function SheetCustomContent({ ...props }) {
     );
   }
 
-  if (fetchHistoryQuery.data && !fetchHistoryQuery.data?.data?.success) {
+  if (fetchHistoryQuery.data && !fetchHistoryQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{fetchHistoryQuery.data?.data?.message}</p>
+        <p className="text-red-500">{fetchHistoryQuery.data?.data}</p>
       </div>
     );
   }
@@ -72,7 +71,7 @@ function SheetCustomContent({ ...props }) {
 function CustomView({ ...props }) {
   return (
     <ScrollArea className="w-full mt-5 my-scroll">
-      <JsonView value={props.data.data?.data} />
+      <JsonView value={props.data.data} />
     </ScrollArea>
   );
 }
