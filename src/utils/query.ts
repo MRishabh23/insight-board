@@ -2,13 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ParamType } from "./types/common";
-import axios from "axios";
 import {
   getFetchHistoryAction,
   getHistoryAction,
   getLatencyAction,
+  getReferenceAction,
   getReferenceAllAction,
   getReferenceInfoAction,
+  getReferenceSubscriptionAction,
   getStatusAction,
   getSummaryAction,
 } from "@/app/actions";
@@ -215,42 +216,27 @@ export const useReferenceInfoQuery = (
 
 // reference query
 export const useReferenceQuery = (
-  username: string,
   params: ParamType,
-  searchParams: any
+  category: string,
+  referenceId: string
 ) => {
   const query = useQuery({
     queryKey: [
       "reference-reference",
-      `/dashboard/tracking/${params.mode}/${params.env}/references`,
-      `${searchParams.get("category")}`,
-      `${searchParams.get("carrier")}-${searchParams.get("reference")}`,
+      `${params.mode}`,
+      `${params.env}`,
+      `${category}`,
+      `${referenceId}`,
     ],
     queryFn: async () => {
-      const referenceId =
-        searchParams.get("carrier") &&
-        searchParams.get("reference") &&
-        `${searchParams.get("carrier")}_${searchParams.get("reference")}`;
-      const response =
-        username !== null &&
-        username !== "" &&
-        referenceId &&
-        (await axios({
-          method: "post",
-          url: "/api/tracking/reference",
-          data: {
-            type: "GET_REFERENCE_LIST",
-            username: username,
-            env: params.env.toUpperCase(),
-            mode: params.mode.toUpperCase(),
-            referenceId: referenceId,
-            category: searchParams.get("category"),
-          },
-        }));
+      const response = await getReferenceAction({
+        env: params.env,
+        mode: params.mode,
+        referenceId: referenceId,
+      });
       return response;
     },
     staleTime: 1000 * 60 * 30,
-    refetchInterval: 1000 * 60 * 30,
   });
 
   return query;
@@ -258,38 +244,27 @@ export const useReferenceQuery = (
 
 // reference subscription query
 export const useReferenceSubscriptionQuery = (
-  username: string,
   params: ParamType,
-  searchParams: any
+  category: string,
+  subscriptionId: string
 ) => {
   const query = useQuery({
     queryKey: [
       "reference-subscription",
-      `/dashboard/tracking/${params.mode}/${params.env}/references`,
-      `${searchParams.get("category")}`,
-      `${searchParams.get("subscriptionId")}`,
+      `${params.mode}`,
+      `${params.env}`,
+      `${category}`,
+      `${subscriptionId}`,
     ],
     queryFn: async () => {
-      const response =
-        username !== null &&
-        username !== "" &&
-        searchParams.get("subscriptionId") &&
-        (await axios({
-          method: "post",
-          url: "/api/tracking/reference",
-          data: {
-            type: "GET_REFERENCE_LIST",
-            username: username,
-            env: params.env.toUpperCase(),
-            mode: params.mode.toUpperCase(),
-            subscriptionId: searchParams.get("subscriptionId"),
-            category: searchParams.get("category"),
-          },
-        }));
+      const response = await getReferenceSubscriptionAction({
+        env: params.env,
+        mode: params.mode,
+        subscriptionId: subscriptionId,
+      });
       return response;
     },
     staleTime: 1000 * 60 * 30,
-    refetchInterval: 1000 * 60 * 30,
   });
 
   return query;

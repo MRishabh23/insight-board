@@ -17,21 +17,6 @@ const SlugPage = ({
     );
   }
   return (
-    // <div className="h-full w-full p-4 bg-white text-primary rounded-md">
-    //   {params.dash === "status" ? (
-    //     <MainStatusComponent />
-    //   ) : params.dash === "summary" ? (
-    //     <MainSummaryComponent />
-    //   ) : params.dash === "history" ? (
-    //     <MainHistoryComponent />
-    //   ) : params.dash === "latency" ? (
-    //     <MainLatencyComponent />
-    //   ) : params.dash === "references" ? (
-    //     <MainReferenceComponent />
-    //   ) : (
-    //     <div>{params.dash}</div>
-    //   )}
-    // </div>
     <div className="h-full w-full p-4 bg-white text-primary rounded-md">
       {params.dash === "status" ? (
         <MainStatusComponent />
@@ -41,11 +26,10 @@ const SlugPage = ({
         <MainHistoryComponent />
       ) : params.dash === "latency" ? (
         <MainLatencyComponent />
+      ) : params.dash === "references" ? (
+        <MainReferenceComponent />
       ) : (
-        // ) : params.dash === "references" ? (
-        //   <MainReferenceComponent />
-        // ) : (
-        <div>{params.dash}</div>
+        <div>Coming soon...</div>
       )}
     </div>
   );

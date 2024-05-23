@@ -57,7 +57,7 @@ export const ReferenceAllForm = () => {
         const q = createQueryString(data);
         router.push(pathname + "?" + q);
         setBtnLoad(false);
-      }, 1000);
+      }, 700);
     }
   };
 

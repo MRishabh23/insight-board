@@ -7,7 +7,6 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { ParamType, ReferenceTableType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceSubscriptionQuery } from "@/utils/query";
 import { format, toDate } from "date-fns";
 import { TableDataDefaultComponent } from "@/components/data-table-default";
@@ -128,14 +127,27 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
 ];
 
 export function ReferenceSubscriptionTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
 
+  if (!searchParams.get("subscriptionId")) {
+    return (
+      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+        Enter a subscription id to view data.
+      </div>
+    );
+  }
+
+  return (
+    <ReferenceSubscriptionData params={params} searchParams={searchParams} />
+  );
+}
+
+export function ReferenceSubscriptionData({ ...props }) {
   const referenceQuery = useReferenceSubscriptionQuery(
-    username || "",
-    params,
-    searchParams
+    props.params,
+    props.searchParams.get("category"),
+    props.searchParams.get("subscriptionId")
   );
 
   if (referenceQuery.isPending) {
@@ -154,20 +166,10 @@ export function ReferenceSubscriptionTable() {
     );
   }
 
-  if (referenceQuery.data && !referenceQuery.data?.data?.success) {
+  if (referenceQuery.data && !referenceQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{referenceQuery.data?.data?.message}</p>
-      </div>
-    );
-  }
-
-  if (!referenceQuery.data) {
-    return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">
-          Enter a subscription id to view data.
-        </p>
+        <p className="text-red-500">{referenceQuery.data?.data}</p>
       </div>
     );
   }

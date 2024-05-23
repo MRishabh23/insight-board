@@ -12,7 +12,7 @@ export const eD = new Date();
 
 // auth schema
 
-// combine signUp and forgot/reset
+// combine signIn, signUp and forgot/reset
 export const authSchema = z.object({
   username: z
     .string()

@@ -7,7 +7,6 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { ParamType, ReferenceTableType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceQuery } from "@/utils/query";
 import { TableDataStaticComponent } from "@/components/data-table-static";
 import { format, toDate } from "date-fns";
@@ -16,7 +15,9 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "subscription-id",
     accessorKey: "subscriptionId",
-    header: () => <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>,
+    header: () => (
+      <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
+    ),
     cell: ({ row }) => (
       <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
     ),
@@ -94,7 +95,11 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "createdAt",
     header: () => <TableHeadCustom>Created On</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
+      return (
+        <TableCellCustom>
+          {format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}
+        </TableCellCustom>
+      );
     },
   },
   {
@@ -102,7 +107,9 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "lastCrawledAt",
     header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
     cell: ({ row }) => (
-      <TableCellCustom>{format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
+      <TableCellCustom>
+        {format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}
+      </TableCellCustom>
     ),
   },
   {
@@ -110,20 +117,43 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "updatedAt",
     header: () => <TableHeadCustom>Updated At</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
+      return (
+        <TableCellCustom>
+          {format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}
+        </TableCellCustom>
+      );
     },
   },
 ];
 
 export function ReferenceTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
 
+  if (!searchParams.get("carrier") && !searchParams.get("reference")) {
+    return (
+      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+        Select a carrier and enter a reference to view data.
+      </div>
+    );
+  }
+
+  return <ReferenceData params={params} searchParams={searchParams} />;
+}
+
+const ReferenceData = ({ ...props }) => {
+  const referenceId = React.useMemo(
+    () =>
+      `${props.searchParams.get("carrier")}_${props.searchParams.get(
+        "reference"
+      )}`,
+    [props.searchParams]
+  );
+
   const referenceQuery = useReferenceQuery(
-    username || "",
-    params,
-    searchParams
+    props.params,
+    props.searchParams.get("category"),
+    referenceId
   );
 
   if (referenceQuery.isPending) {
@@ -142,18 +172,10 @@ export function ReferenceTable() {
     );
   }
 
-  if (referenceQuery.data && !referenceQuery.data?.data?.success) {
+  if (referenceQuery.data && !referenceQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{referenceQuery.data?.data?.message}</p>
-      </div>
-    );
-  }
-
-  if (!referenceQuery.data) {
-    return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">Select a carrier and enter a reference to view data.</p>
+        <p className="text-red-500">{referenceQuery.data?.data}</p>
       </div>
     );
   }
@@ -161,4 +183,4 @@ export function ReferenceTable() {
   return (
     <TableDataStaticComponent data={referenceQuery.data} columns={columns} />
   );
-}
+};
