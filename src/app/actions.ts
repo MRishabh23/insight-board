@@ -1,10 +1,51 @@
 "use server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import bcryptjs from "bcryptjs";
 import { AuthType } from "@/utils/types/common";
-import { NextRequest } from "next/server";
+
+// call the main request action
+const mainRequestAction = async (reqBody: any) => {
+  try {
+    const headersList = headers();
+    const authenticate = headersList.get("Postman-Token");
+
+    if (authenticate) {
+      throw new Error("Request is not from trusted source.");
+    }
+
+    const mainObj = {
+      method: "post",
+      url: process.env.REST_URL!,
+      timeout: 120000,
+      auth: {
+        username: process.env.REST_USERNAME!,
+        password: process.env.REST_PASSWORD!,
+      },
+      data: reqBody,
+    };
+    let mainRes: any = await axios(mainObj);
+
+    if (!mainRes?.data?.response?.success) {
+      throw new Error(mainRes.data?.response?.data);
+    }
+
+    return {
+      data: mainRes?.data?.response?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message.includes("timeout")
+        ? "Request timed out. Please try again."
+        : error.message.includes("trusted")
+        ? "Request is not from trusted source."
+        : error.message,
+      success: false,
+    };
+  }
+};
 
 // auth actions
 
@@ -15,24 +56,22 @@ export const signUpAction = async ({ username, password }: AuthType) => {
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     // find user
-    const newUserObj = {
-      method: "post",
-      url: process.env.REST_URL!,
-      timeout: 60000,
-      auth: {
-        username: process.env.REST_USERNAME!,
-        password: process.env.REST_PASSWORD!,
-      },
-      data: {
-        type: "SIGN_UP",
-        username: username,
-        password: hashedPassword,
-      },
+    const reqData = {
+      type: "SIGN_UP",
+      username: username,
+      password: hashedPassword,
     };
 
-    let signUpRes: any = await axios(newUserObj);
+    let res: any = await mainRequestAction(reqData);
 
-    if (!signUpRes?.data?.response?.success) {
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
       throw new Error("User exists. Please sign in.");
     }
 
@@ -42,9 +81,7 @@ export const signUpAction = async ({ username, password }: AuthType) => {
     };
   } catch (error: any) {
     return {
-      data: error.message.includes("timeout")
-        ? "Request timed out. Please try again."
-        : error.message,
+      data: error.message,
       success: false,
     };
   }
@@ -54,40 +91,34 @@ export const signUpAction = async ({ username, password }: AuthType) => {
 export const signInAction = async ({ username, password }: AuthType) => {
   try {
     const cookieStore = cookies();
-    const sendObj = {
-      method: "post",
-      url: process.env.REST_URL!,
-      timeout: 60000, // 60000 (1 minute)
-      auth: {
-        username: process.env.REST_USERNAME!,
-        password: process.env.REST_PASSWORD!,
-      },
-      data: {
-        type: "SIGN_IN",
-        username: username,
-      },
+    const reqData = {
+      type: "SIGN_IN",
+      username: username,
     };
 
-    const signInRes: any = await axios(sendObj);
+    const res: any = await mainRequestAction(reqData);
 
-    if (!signInRes?.data?.response?.success) {
-      throw new Error("User doesn't exists. Please sign up.");
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      throw new Error("User does not exist. Please sign up.");
     }
 
     // check if password matches
-    const validPassword = await bcryptjs.compare(
-      password,
-      signInRes?.data?.response?.data?.password
-    );
+    const validPassword = await bcryptjs.compare(password, res?.data?.password);
     if (!validPassword) {
       throw new Error("Incorrect password. Please try again.");
     }
 
     // create token data
     const tokenData = {
-      userId: signInRes?.data?.response?.data?.userId,
-      username: signInRes?.data?.response?.data?.username,
-      createdAt: signInRes?.data?.response?.data?.createdAt,
+      username: res?.data?.username,
+      createdAt: res?.data?.createdAt,
     };
 
     // create token
@@ -107,9 +138,7 @@ export const signInAction = async ({ username, password }: AuthType) => {
     };
   } catch (error: any) {
     return {
-      data: error.message.includes("timeout")
-        ? "Request timed out. Please try again."
-        : error.message,
+      data: error.message,
       success: false,
     };
   }
@@ -123,24 +152,22 @@ export const resetAction = async ({ username, password }: AuthType) => {
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     // find user
-    const newUserObj = {
-      method: "post",
-      url: process.env.REST_URL!,
-      timeout: 60000,
-      auth: {
-        username: process.env.REST_USERNAME!,
-        password: process.env.REST_PASSWORD!,
-      },
-      data: {
-        type: "RESET_PASSWORD",
-        username: username,
-        newPassword: hashedPassword,
-      },
+    const reqData = {
+      type: "RESET_PASSWORD",
+      username: username,
+      newPassword: hashedPassword,
     };
 
-    let resetRes: any = await axios(newUserObj);
+    let res: any = await mainRequestAction(reqData);
 
-    if (!resetRes?.data?.response?.success) {
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
       throw new Error("User doesn't exists. Please sign up.");
     }
 
@@ -150,9 +177,7 @@ export const resetAction = async ({ username, password }: AuthType) => {
     };
   } catch (error: any) {
     return {
-      data: error.message.includes("timeout")
-        ? "Request timed out. Please try again."
-        : error.message,
+      data: error.message,
       success: false,
     };
   }
@@ -205,8 +230,6 @@ export const getStatusAction = async ({
   mode: string;
 }) => {
   try {
-    //throw new Error("Test error status");
-
     const { data, success } = await getUserAction();
 
     if (!success) {
@@ -220,39 +243,30 @@ export const getStatusAction = async ({
       mode: mode.toUpperCase(),
     };
 
-    const sendObj = {
-      method: "post",
-      url: process.env.REST_URL!,
-      timeout: 120000,
-      auth: {
-        username: process.env.REST_USERNAME!,
-        password: process.env.REST_PASSWORD!,
-      },
-      data: reqData,
-    };
+    const res: any = await mainRequestAction(reqData);
 
-    const statusRes: any = await axios(sendObj);
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
 
-    if (!statusRes?.data?.response?.success) {
+    if (!res?.success) {
       throw new Error("Something went wrong while fetching carrier status.");
     }
 
-    if (
-      statusRes?.data?.response?.success &&
-      statusRes?.data?.response?.data?.includes("data not present")
-    ) {
+    if (res?.success && res?.data?.includes("data not present")) {
       throw new Error("Sufficient data not present.");
     }
 
     return {
-      data: statusRes?.data?.response?.data,
+      data: res?.data,
       success: true,
     };
   } catch (error: any) {
     return {
-      data: error.message.includes("timeout")
-        ? "Request timed out. Please try again."
-        : error.message,
+      data: error.message,
       success: false,
     };
   }
@@ -286,32 +300,544 @@ export const updateStatusAction = async ({
       status: status,
     };
 
-    const sendObj = {
-      method: "post",
-      url: process.env.REST_URL!,
-      timeout: 120000,
-      auth: {
-        username: process.env.REST_USERNAME!,
-        password: process.env.REST_PASSWORD!,
-      },
-      data: reqData,
-    };
+    const res: any = await mainRequestAction(reqData);
 
-    const statusUpdateRes: any = await axios(sendObj);
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
 
-    if (!statusUpdateRes?.data?.response?.success) {
+    if (!res?.success) {
       throw new Error("Something went wrong while updating carrier status.");
     }
 
     return {
-      data: statusUpdateRes?.data?.response?.data,
+      data: res?.data,
       success: true,
     };
   } catch (error: any) {
     return {
-      data: error.message.includes("timeout")
-        ? "Request timed out. Please try again."
-        : error.message,
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get summary action
+export const getSummaryAction = async ({
+  env,
+  mode,
+  carriers,
+  queue,
+  startTime,
+  endTime,
+}: {
+  env: string;
+  mode: string;
+  carriers: string[];
+  queue: string;
+  startTime: string;
+  endTime: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqData = {};
+    if (startTime != "" && endTime != "") {
+      reqData = {
+        type: "GET_SUMMARY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
+        endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
+      };
+    } else {
+      reqData = {
+        type: "GET_SUMMARY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        startTime: "",
+        endTime: "",
+      };
+    }
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("searched time period")
+        ? dataErr
+        : "Something went wrong while fetching summary.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get history action
+export const getHistoryAction = async ({
+  env,
+  mode,
+  subscriptionId,
+  historyType,
+  startTime,
+  endTime,
+}: {
+  env: string;
+  mode: string;
+  subscriptionId: string;
+  historyType: string;
+  startTime: string;
+  endTime: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqData = {};
+    if (startTime != "" && endTime != "") {
+      reqData = {
+        type: "GET_REFERENCE_HISTORY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        subscriptionId: subscriptionId,
+        historyType: historyType,
+        startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
+        endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
+      };
+    }
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("Incorrect SubscriptionId")
+        ? dataErr
+        : dataErr.includes("Not Found")
+        ? dataErr
+        : dataErr.includes("No data available")
+        ? dataErr
+        : dataErr.includes("for this query")
+        ? dataErr
+        : dataErr.includes("created for next container journey")
+        ? dataErr
+        : "Something went wrong while fetching history.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get fetch history action
+export const getFetchHistoryAction = async ({
+  env,
+  mode,
+  resourceId,
+}: {
+  env: string;
+  mode: string;
+  resourceId: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqData = {};
+    if (resourceId != "") {
+      reqData = {
+        type: "FETCH_REFERENCE_HISTORY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        resourceId: resourceId,
+      };
+    }
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("Data doesn't exists.")
+        ? dataErr
+        : "Something went wrong while fetching resource history.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get latency action
+export const getLatencyAction = async ({
+  env,
+  mode,
+  carriers,
+  queue,
+  referenceType,
+}: {
+  env: string;
+  mode: string;
+  carriers: string[];
+  queue: string;
+  referenceType: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqData = {};
+    if (referenceType === "ALL") {
+      reqData = {
+        type: "GET_LATENCY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        referenceType: "",
+      };
+    } else {
+      reqData = {
+        type: "GET_LATENCY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        carriers: carriers,
+        queue: queue,
+        referenceType: referenceType,
+      };
+    }
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("pass one carrier")
+        ? dataErr
+        : "Something went wrong while fetching latency.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get reference all action
+export const getReferenceAllAction = async ({
+  env,
+  mode,
+  carrier,
+  queue,
+  referenceType,
+  refStatus,
+  bucket,
+}: {
+  env: string;
+  mode: string;
+  carrier: string;
+  queue: string;
+  referenceType: string;
+  refStatus: string;
+  bucket: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "GET_REFERENCE_LIST",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      carrier: carrier,
+      queue: queue,
+      referenceType: referenceType,
+      status: refStatus,
+      bucket: bucket,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("pass one carrier")
+        ? dataErr
+        : "Something went wrong while fetching references.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get reference info action
+export const getReferenceInfoAction = async ({
+  env,
+  mode,
+  carrier,
+  referenceType,
+  refStatus,
+  reference,
+}: {
+  env: string;
+  mode: string;
+  carrier: string;
+  referenceType: string;
+  refStatus: string;
+  reference: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "GET_REFERENCE_INFO",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      carrier: carrier,
+      referenceType: referenceType,
+      status: refStatus,
+      reference: reference,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("Wrong reference")
+        ? dataErr
+        : "Something went wrong while fetching reference data.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get reference action
+export const getReferenceAction = async ({
+  env,
+  mode,
+  referenceId,
+}: {
+  env: string;
+  mode: string;
+  referenceId: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "GET_REFERENCE_LIST",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      referenceId: referenceId,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("pass one carrier")
+        ? dataErr
+        : "Something went wrong while fetching references.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// get reference subscription action
+export const getReferenceSubscriptionAction = async ({
+  env,
+  mode,
+  subscriptionId,
+}: {
+  env: string;
+  mode: string;
+  subscriptionId: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "GET_REFERENCE_LIST",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      subscriptionId: subscriptionId,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("created for next container journey")
+        ? dataErr
+        : "Something went wrong while fetching references.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
       success: false,
     };
   }

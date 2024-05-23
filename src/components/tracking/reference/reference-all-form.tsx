@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Form,
@@ -31,9 +33,9 @@ import { useReferenceAllForm } from "@/utils/schema";
 
 export const ReferenceAllForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = getCarriersList(params.mode);
-  const queueOptions = getQueueList(params.mode);
-  const refOptions = getRefList(params.mode);
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode),[params.mode]);
+  const queueOptions = React.useMemo(() => getQueueList(params.mode),[params.mode]);
+  const refOptions = React.useMemo(() => getRefList(params.mode),[params.mode]);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -55,7 +57,7 @@ export const ReferenceAllForm = () => {
         const q = createQueryString(data);
         router.push(pathname + "?" + q);
         setBtnLoad(false);
-      }, 1000);
+      }, 700);
     }
   };
 

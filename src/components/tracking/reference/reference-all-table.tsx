@@ -7,7 +7,6 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { ParamType, ReferenceTableType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useReferenceAllQuery } from "@/utils/query";
 import { format, toDate } from "date-fns";
 import { TableDataStaticComponent } from "@/components/data-table-static";
@@ -15,10 +14,21 @@ import { CustomDrawerReference } from "./reference-all-drawer";
 import { cn } from "@/lib/utils";
 
 export function ReferenceAllTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
 
+  if (!searchParams.get("carrier")) {
+    return (
+      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+        Select a carrier to view references.
+      </div>
+    );
+  }
+
+  return <ReferenceAllData params={params} searchParams={searchParams} />;
+}
+
+const ReferenceAllData = ({ ...props }) => {
   const columns: ColumnDef<ReferenceTableType>[] = [
     {
       id: "subscription-id",
@@ -38,7 +48,7 @@ export function ReferenceAllTable() {
       accessorKey: "carrier",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
       cell: ({ row }) => {
-        return <TableCellCustom>{searchParams.get("carrier")}</TableCellCustom>;
+        return <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>;
       },
     },
     {
@@ -88,7 +98,7 @@ export function ReferenceAllTable() {
       accessorKey: "status",
       header: () => <TableHeadCustom>Status</TableHeadCustom>,
       cell: () => {
-        let status = searchParams.get("refStatus")!;
+        let status = props.searchParams.get("refStatus")!;
 
         return (
           <TableCellCustom
@@ -106,7 +116,7 @@ export function ReferenceAllTable() {
       accessorKey: "queueType",
       header: () => <TableHeadCustom>Queue</TableHeadCustom>,
       cell: ({ row }) => {
-        const queue = searchParams.get("queue")!;
+        const queue = props.searchParams.get("queue")!;
         const qType = queue.includes("NORMAL")
           ? "Normal"
           : queue.includes("ADAPTIVE")
@@ -144,9 +154,8 @@ export function ReferenceAllTable() {
             variant="normal"
             buttonTitle="more info"
             title="Reference Information"
-            username={username || ""}
-            params={params}
-            searchParams={searchParams}
+            params={props.params}
+            searchParams={props.searchParams}
             resource={row.original.subscriptionId}
           />
         );
@@ -154,14 +163,13 @@ export function ReferenceAllTable() {
     },
   ];
 
-  if (searchParams.get("refStatus") === "CLOSED") {
+  if (props.searchParams.get("refStatus") === "CLOSED") {
     columns.splice(5, 2);
   }
 
   const referenceAllQuery = useReferenceAllQuery(
-    username || "",
-    params,
-    searchParams
+    props.params,
+    props.searchParams
   );
 
   if (referenceAllQuery.isPending) {
@@ -182,20 +190,10 @@ export function ReferenceAllTable() {
     );
   }
 
-  if (referenceAllQuery.data && !referenceAllQuery.data?.data?.success) {
+  if (referenceAllQuery.data && !referenceAllQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{referenceAllQuery.data?.data?.message}</p>
-      </div>
-    );
-  }
-
-  if (!referenceAllQuery.data) {
-    return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-lg font-bold">
-          Select a carrier to view references.
-        </p>
+        <p className="text-red-500">{referenceAllQuery.data?.data}</p>
       </div>
     );
   }
@@ -203,4 +201,4 @@ export function ReferenceAllTable() {
   return (
     <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />
   );
-}
+};

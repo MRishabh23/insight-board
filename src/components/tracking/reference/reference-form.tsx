@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Form,
@@ -28,7 +30,7 @@ import { Input } from "@/components/ui/input";
 
 export const ReferenceForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = getCarriersList(params.mode);
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode),[params.mode]);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -43,7 +45,7 @@ export const ReferenceForm = () => {
       const q = createQueryString(data);
       router.push(pathname + "?" + q);
       setBtnLoad(false);
-    }, 1000);
+    }, 700);
   };
 
   const createQueryString = React.useCallback(

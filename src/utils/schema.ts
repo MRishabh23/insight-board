@@ -6,13 +6,13 @@ import { format } from "date-fns";
 
 // current and previous dates
 const sD = new Date();
-sD.setDate(sD.getDate() - 1);
-const eD = new Date();
+export const nD = sD.setDate(sD.getDate() - 1);
+export const eD = new Date();
 
 
 // auth schema
 
-// combine signUp and forgot/reset
+// combine signIn, signUp and forgot/reset
 export const authSchema = z.object({
   username: z
     .string()
@@ -97,7 +97,7 @@ export const useSummaryForm = (newCarrOpt: any, searchParams: any) => {
       carriers: newCarrOpt,
       queue: searchParams.get("queue") || "NORMAL",
       range: {
-        from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
+        from: new Date(searchParams.get("from") || format(nD, "yyyy-MM-dd")),
         to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
       },
     },
@@ -125,7 +125,7 @@ export const useHistoryForm = (searchParams: any) => {
       subId: searchParams.get("subId") || "",
       historyType: searchParams.get("historyType") || "DIFF",
       range: {
-        from: new Date(searchParams.get("from") || format(sD, "yyyy-MM-dd")),
+        from: new Date(searchParams.get("from") || format(nD, "yyyy-MM-dd")),
         to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
       },
     },

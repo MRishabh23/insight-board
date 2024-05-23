@@ -142,6 +142,7 @@ export type LatencyTableType = {
   seventh: number;
   eight: number;
   ninth: number;
+  tenth: number;
 };
 
 // reference related types

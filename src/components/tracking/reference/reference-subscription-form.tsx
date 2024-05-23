@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import {
   Form,
@@ -32,7 +34,7 @@ export const ReferenceSubscriptionForm = () => {
       const q = createQueryString(data);
       router.push(pathname + "?" + q);
       setBtnLoad(false);
-    }, 1000);
+    }, 700);
   };
 
   const createQueryString = React.useCallback(

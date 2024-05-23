@@ -31,7 +31,6 @@ function SheetCustomContent({ ...props }) {
   let resId = props.resource;
 
   const referenceInfoQuery = useReferenceInfoQuery(
-    props.username,
     props.params,
     props.searchParams,
     resId
@@ -55,10 +54,10 @@ function SheetCustomContent({ ...props }) {
     );
   }
 
-  if (referenceInfoQuery.data && !referenceInfoQuery.data?.data?.success) {
+  if (referenceInfoQuery.data && !referenceInfoQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{referenceInfoQuery.data?.data?.message}</p>
+        <p className="text-red-500">{referenceInfoQuery.data?.data}</p>
       </div>
     );
   }
@@ -69,7 +68,7 @@ function SheetCustomContent({ ...props }) {
 function CustomView({ ...props }) {
   return (
     <ScrollArea className="w-full mt-5 my-scroll">
-      <JsonView value={props.data.data?.data} />
+      <JsonView value={props.data.data} />
     </ScrollArea>
   );
 }

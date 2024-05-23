@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Form,
@@ -8,11 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getHistoryType } from "@/utils/pre-define-data/data";
 import {
   Select,
@@ -47,24 +45,24 @@ export const HistoryForm = () => {
     //console.log("submit data", data);
     setBtnLoad(true);
     const subTract = data.range.to - data.range.from;
-    if(millisecondsToHours(subTract) > 360){
+
+    if (millisecondsToHours(subTract) > 360) {
       form.setError("range", {
         type: "custom",
         message: "Date range should be less than or equal to 15 days.",
       });
       setBtnLoad(false);
-    }else{
+    } else {
       setTimeout(() => {
         const q = createQueryString(data);
         router.push(pathname + "?" + q);
         setBtnLoad(false);
-      }, 1000);
+      }, 700);
     }
   };
 
   const createQueryString = React.useCallback(
     (data: HistoryFormType) => {
-
       const historyParams = new URLSearchParams(searchParams.toString());
       historyParams.set("subId", data.subId);
       historyParams.set("historyType", data.historyType);
@@ -93,9 +91,7 @@ export const HistoryForm = () => {
             name="subId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel htmlFor="subId">
-                  Subscription Id
-                </FormLabel>
+                <FormLabel htmlFor="subId">Subscription Id</FormLabel>
                 <FormControl id="subId">
                   <Input
                     type="text"
@@ -151,9 +147,7 @@ export const HistoryForm = () => {
                           "w-full justify-start text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
-                        disabled={
-                          form.watch("subId").length > 0 ? false : true
-                        }
+                        disabled={form.watch("subId").length > 0 ? false : true}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value?.from ? (
@@ -189,7 +183,11 @@ export const HistoryForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-[120px] mt-4 capitalize" disabled={btnLoad}>
+          <Button
+            type="submit"
+            className="w-[120px] mt-4 capitalize"
+            disabled={btnLoad}
+          >
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

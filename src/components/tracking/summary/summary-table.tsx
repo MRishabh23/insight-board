@@ -13,18 +13,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType, SummaryType } from "@/utils/types/common";
-import { UserContext } from "@/components/dashboard-layout-component";
 import { useSummaryQuery } from "@/utils/query";
 import { ArrowUpDown } from "lucide-react";
 
 export function SummaryTable() {
-  const username = React.useContext(UserContext);
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
-  const queryCarriers = searchParams.get("carriers")
-    ? searchParams.get("carriers")?.split(",")
-    : [];
-  let newCarrOpt: any = [];
+  const queryCarriers = React.useMemo(
+    () =>
+      searchParams.get("carriers")
+        ? searchParams.get("carriers")?.split(",")
+        : [],
+    [searchParams]
+  );
+  let newCarrOpt: string[] = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
@@ -337,12 +339,7 @@ export function SummaryTable() {
     },
   ];
 
-  const summaryQuery = useSummaryQuery(
-    username || "",
-    params,
-    newCarrOpt,
-    searchParams
-  );
+  const summaryQuery = useSummaryQuery(params, newCarrOpt, searchParams);
 
   if (summaryQuery.isPending) {
     return (
@@ -360,10 +357,10 @@ export function SummaryTable() {
     );
   }
 
-  if (summaryQuery.data && !summaryQuery.data?.data?.success) {
+  if (summaryQuery.data && !summaryQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-10">
-        <p className="text-red-500">{summaryQuery.data?.data?.message}</p>
+        <p className="text-red-500">{summaryQuery.data?.data}</p>
       </div>
     );
   }
