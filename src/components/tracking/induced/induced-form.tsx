@@ -18,8 +18,8 @@ import {
 } from "next/navigation";
 import {
   getCarriersList,
-  getQueueList,
-  getRefList,
+  getMonthList,
+  getYearList,
 } from "@/utils/pre-define-data/data";
 import {
   Select,
@@ -29,26 +29,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
-import { LatencyFormType, ParamType } from "@/utils/types/common";
-import { useLatencyForm } from "@/utils/schema";
+import { InducedFormType, ParamType } from "@/utils/types/common";
+import { useInducedForm } from "@/utils/schema";
 
-export const LatencyForm = () => {
+export const InducedForm = () => {
   const params = useParams<ParamType>();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const carriersOptions = React.useMemo(
     () => getCarriersList(params.mode),
     [params.mode]
   );
-  const queueOptions = React.useMemo(
-    () => getQueueList(params.mode),
-    [params.mode]
+  const monthsOptions = React.useMemo(
+    () => getMonthList(searchParams.get("year")!),
+    [searchParams]
   );
-  const refOptions = React.useMemo(
-    () => getRefList(params.mode),
-    [params.mode]
-  );
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const yearOptions = React.useMemo(() => getYearList(), []);
   const [btnLoad, setBtnLoad] = React.useState(false);
   const queryCarriers = React.useMemo(
     () =>
@@ -57,7 +54,14 @@ export const LatencyForm = () => {
         : [],
     [searchParams]
   );
+  const queryMonths = React.useMemo(
+    () =>
+      searchParams.get("months") ? searchParams.get("months")?.split(",") : [],
+    [searchParams]
+  );
+
   let newCarrOpt: any = [];
+  let newMonthOpt: any = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
@@ -71,40 +75,92 @@ export const LatencyForm = () => {
     });
   }
 
-  const form = useLatencyForm(newCarrOpt, searchParams);
+  if (queryMonths !== undefined && queryMonths.length > 0) {
+    queryMonths.map((month) => {
+      if (month) {
+        const monthObj = {
+          label: month,
+          value: month,
+        };
+        newMonthOpt.push(monthObj);
+      }
+    });
+  }
+
+  const form = useInducedForm(newCarrOpt, newMonthOpt, searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
     setBtnLoad(true);
-    setTimeout(() => {
-      const q = createQueryString(data);
-      router.push(pathname + "?" + q);
+    if (data.carriers.length === 0 && data.months.length === 0) {
+      form.setError("carriers", {
+        type: "custom",
+        message: "Select at least one carrier.",
+      });
+      form.setError("months", {
+        type: "custom",
+        message: "Select at least one month.",
+      });
       setBtnLoad(false);
-    }, 700);
+    } else if (data.carriers.length === 0) {
+      form.setError("carriers", {
+        type: "custom",
+        message: "Select at least one carrier.",
+      });
+      setBtnLoad(false);
+    } else if (data.months.length === 0) {
+      form.setError("months", {
+        type: "custom",
+        message: "Select at least one month.",
+      });
+      setBtnLoad(false);
+    } else {
+      setTimeout(() => {
+        const q = createQueryString(data);
+        router.push(pathname + "?" + q);
+        setBtnLoad(false);
+      }, 700);
+    }
   };
 
   const createQueryString = React.useCallback(
-    (data: LatencyFormType) => {
-      let str = "";
+    (data: InducedFormType) => {
+      let carrStr = "";
+      let monStr = "";
       if (data.carriers.length > 0) {
         data.carriers.map((carrier: any, index: number) => {
           if (index === data.carriers.length - 1) {
-            str += carrier.value;
+            carrStr += carrier.value;
           } else {
-            str += carrier.value + ",";
+            carrStr += carrier.value + ",";
           }
         });
       }
-      const latencyParams = new URLSearchParams(searchParams.toString());
-      if (str !== "") {
-        latencyParams.set("carriers", str);
-      } else {
-        latencyParams.set("carriers", "");
+      if (data.months.length > 0) {
+        data.months.map((month: any, index: number) => {
+          if (index === data.months.length - 1) {
+            monStr += month.value;
+          } else {
+            monStr += month.value + ",";
+          }
+        });
       }
-      latencyParams.set("queue", data.queue);
-      latencyParams.set("refType", data.refType);
+      const inducedParams = new URLSearchParams(searchParams.toString());
+      if (carrStr !== "") {
+        inducedParams.set("carriers", carrStr);
+      } else {
+        inducedParams.set("carriers", "");
+      }
 
-      return latencyParams.toString();
+      if (monStr !== "") {
+        inducedParams.set("months", monStr);
+      } else {
+        inducedParams.set("months", "");
+      }
+
+      inducedParams.set("year", data.year);
+
+      return inducedParams.toString();
     },
     [searchParams]
   );
@@ -120,7 +176,7 @@ export const LatencyForm = () => {
             control={form.control}
             name="carriers"
             render={({ field }) => (
-              <FormItem>
+              <FormItem aria-required>
                 <FormLabel htmlFor="carriers">Carriers</FormLabel>
                 <FormControl id="carriers">
                   <MultipleSelector
@@ -129,7 +185,7 @@ export const LatencyForm = () => {
                     defaultOptions={carriersOptions}
                     placeholder="Select Carriers you like..."
                     hidePlaceholderWhenSelected
-                    maxSelected={5}
+                    maxSelected={form.watch("months").length > 1 ? 1 : 3}
                     emptyIndicator={
                       <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                         no results found.
@@ -143,21 +199,21 @@ export const LatencyForm = () => {
           />
           <FormField
             control={form.control}
-            name="queue"
+            name="year"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel htmlFor="queue">Queue</FormLabel>
+                <FormLabel htmlFor="year">Year</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl id="queue">
+                  <FormControl id="year">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a queue..." />
+                      <SelectValue placeholder="Select a year..." />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {queueOptions.map((option) => (
+                    {yearOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -170,28 +226,25 @@ export const LatencyForm = () => {
           />
           <FormField
             control={form.control}
-            name="refType"
+            name="months"
             render={({ field }) => (
-              <FormItem className="mt-4">
-                <FormLabel htmlFor="refType">Reference Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl id="refType">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a reference type..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="ALL">All</SelectItem>
-                    {refOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <FormItem aria-required className="mt-4">
+                <FormLabel htmlFor="months">Months</FormLabel>
+                <FormControl id="months">
+                  <MultipleSelector
+                    value={field.value}
+                    onChange={field.onChange}
+                    defaultOptions={monthsOptions}
+                    placeholder="Select months you like..."
+                    hidePlaceholderWhenSelected
+                    maxSelected={form.watch("carriers").length > 1 ? 1 : 3}
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        no results found.
+                      </p>
+                    }
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

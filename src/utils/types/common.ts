@@ -175,4 +175,11 @@ export type ReferenceTableType = {
   error: string;
 };
 
+// induced related types
+export type InducedFormType = {
+  carriers: string[];
+  year: string;
+  months: string[];
+};
+
 // ************* dashboard types end ****************

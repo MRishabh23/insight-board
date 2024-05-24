@@ -5,6 +5,7 @@ import { ParamType } from "./types/common";
 import {
   getFetchHistoryAction,
   getHistoryAction,
+  getInducedAction,
   getLatencyAction,
   getReferenceAction,
   getReferenceAllAction,
@@ -261,6 +262,38 @@ export const useReferenceSubscriptionQuery = (
         env: params.env,
         mode: params.mode,
         subscriptionId: subscriptionId,
+      });
+      return response;
+    },
+    staleTime: 1000 * 60 * 30,
+  });
+
+  return query;
+};
+
+// induced query
+export const useInducedQuery = (
+  params: ParamType,
+  newCarrOpt: string[],
+  year: string,
+  months: string[]
+) => {
+  const query = useQuery({
+    queryKey: [
+      "summary",
+      `${params.mode}`,
+      `${params.env}`,
+      newCarrOpt,
+      year,
+      months,
+    ],
+    queryFn: async () => {
+      const response = await getInducedAction({
+        env: params.env,
+        mode: params.mode,
+        carriers: newCarrOpt,
+        year: year,
+        months: months,
       });
       return response;
     },

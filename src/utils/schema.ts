@@ -2,13 +2,12 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StatusType } from "./types/common";
-import { format } from "date-fns";
+import { format, getYear } from "date-fns";
 
 // current and previous dates
 const sD = new Date();
 export const nD = sD.setDate(sD.getDate() - 1);
 export const eD = new Date();
-
 
 // auth schema
 
@@ -186,7 +185,7 @@ export const useReferenceAllForm = (searchParams: any) => {
 
 const referenceFormSchema = z.object({
   carrier: z.string(),
-  reference: z.string()
+  reference: z.string(),
 });
 
 export const useReferenceForm = (searchParams: any) => {
@@ -210,6 +209,38 @@ export const useReferenceSubscriptionForm = (searchParams: any) => {
     resolver: zodResolver(referenceSubscriptionFormSchema),
     defaultValues: {
       subscriptionId: searchParams.get("subscriptionId") || "",
+    },
+  });
+
+  return form;
+};
+
+// induced schema
+const inducedOptionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
+const inducedFormSchema = z.object({
+  carriers: z
+    .array(inducedOptionSchema)
+    .max(3, "Please select up to 3 carriers"),
+  year: z.string(),
+  months: z.array(inducedOptionSchema).max(3, "Please select up to 3 months"),
+});
+
+export const useInducedForm = (
+  newCarrOpt: any,
+  newMonthopt: any,
+  searchParams: any
+) => {
+  const form = useForm<z.infer<typeof inducedFormSchema>>({
+    resolver: zodResolver(inducedFormSchema),
+    defaultValues: {
+      carriers: newCarrOpt,
+      year: searchParams.get("year") || getYear(new Date()).toString(),
+      months: newMonthopt,
     },
   });
 
