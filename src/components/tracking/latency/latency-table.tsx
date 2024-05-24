@@ -161,7 +161,11 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     accessorKey: "tenth",
     header: () => <TableHeadCustom>{">5days"}</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom className="text-red-500">{row.original.tenth || 0}</TableCellCustom>;
+      return (
+        <TableCellCustom className="text-red-500">
+          {row.original.tenth || 0}
+        </TableCellCustom>
+      );
     },
   },
 ];

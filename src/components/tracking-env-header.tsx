@@ -22,12 +22,8 @@ const TrackingEnvHeader = ({
 
   return (
     <>
-      <div
-        className="flex justify-between sm:justify-around items-center"
-      >
-        <h2 className="text-xl tracking-wider font-semibold">
-          DASHBOARDS
-        </h2>
+      <div className="flex justify-between sm:justify-around items-center">
+        <h2 className="text-xl tracking-wider font-semibold">DASHBOARDS</h2>
         <div className="flex justify-center items-center">
           <p className="underline text-lg tracking-wider">ENV :</p>
           <Tabs

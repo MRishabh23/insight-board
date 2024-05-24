@@ -3,6 +3,7 @@ import MainSummaryComponent from "@/components/tracking/summary/main-summary-com
 import MainHistoryComponent from "@/components/tracking/history/main-history-component";
 import MainLatencyComponent from "@/components/tracking/latency/main-latency-component";
 import MainReferenceComponent from "@/components/tracking/reference/main-reference-component";
+import MainInducedComponent from "@/components/tracking/induced/main-induced-component";
 
 const SlugPage = ({
   params,
@@ -28,6 +29,8 @@ const SlugPage = ({
         <MainLatencyComponent />
       ) : params.dash === "references" ? (
         <MainReferenceComponent />
+      ) : params.dash === "induced" ? (
+        <MainInducedComponent />
       ) : (
         <div>Coming soon...</div>
       )}

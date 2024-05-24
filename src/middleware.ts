@@ -8,7 +8,12 @@ export function middleware(request: NextRequest) {
 
   // public paths
   let isPublic = false;
-  if(path === "/signin" || path === "/signup" || path === "/demo" || path === "/forgot") {
+  if (
+    path === "/signin" ||
+    path === "/signup" ||
+    path === "/demo" ||
+    path === "/forgot"
+  ) {
     isPublic = true;
   }
   // get token
@@ -16,7 +21,7 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.has("token");
 
   //conditions
-  if(token && path === "/"){
+  if (token && path === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 

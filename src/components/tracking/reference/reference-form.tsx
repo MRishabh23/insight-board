@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -30,7 +30,10 @@ import { Input } from "@/components/ui/input";
 
 export const ReferenceForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = React.useMemo(() => getCarriersList(params.mode),[params.mode]);
+  const carriersOptions = React.useMemo(
+    () => getCarriersList(params.mode),
+    [params.mode]
+  );
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();

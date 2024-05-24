@@ -3,18 +3,18 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
+import { getYear } from "date-fns";
 
 const TrackingDashHeader = ({
   params,
 }: {
   params: { mode: string; env: string; dash: string };
 }) => {
-  
   const tabsRow1 = [
     {
       name: "Status",
       path: `/dashboard/tracking/${params.mode}/${params.env}/status`,
-      query: {}
+      query: {},
     },
     {
       name: "Summary",
@@ -23,7 +23,7 @@ const TrackingDashHeader = ({
         carriers: "",
         queue: "NORMAL",
         from: "",
-        to: ""
+        to: "",
       },
     },
     {
@@ -33,8 +33,8 @@ const TrackingDashHeader = ({
         subId: "",
         historyType: "DIFF",
         from: "",
-        to: ""
-      }
+        to: "",
+      },
     },
   ];
 
@@ -49,7 +49,7 @@ const TrackingDashHeader = ({
         refType: "BOOKING",
         refStatus: "ACTIVE",
         bucket: "",
-      }
+      },
     },
     {
       name: "Latency",
@@ -57,13 +57,17 @@ const TrackingDashHeader = ({
       query: {
         carriers: "",
         queue: "NORMAL",
-        refType: "ALL"
-      }
+        refType: "ALL",
+      },
     },
     {
       name: "Induced",
       path: `/dashboard/tracking/${params.mode}/${params.env}/induced`,
-      query: {}
+      query: {
+        carriers: "",
+        year: getYear(new Date()).toString(),
+        months: "",
+      },
     },
   ];
   const [tabVal, setTabVal] = React.useState(params.dash);
@@ -79,7 +83,10 @@ const TrackingDashHeader = ({
         <div className="w-full space-y-4 mt-6">
           <TabsList className="grid grid-cols-3">
             {tabsRow1.map((tab) => (
-              <Link key={tab.name} href={{ pathname: tab.path, query: tab.query }}>
+              <Link
+                key={tab.name}
+                href={{ pathname: tab.path, query: tab.query }}
+              >
                 <TabsTrigger value={tab.name.toLowerCase()} className="w-full">
                   {tab.name}
                 </TabsTrigger>

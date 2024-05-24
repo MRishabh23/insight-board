@@ -48,7 +48,9 @@ const ReferenceAllData = ({ ...props }) => {
       accessorKey: "carrier",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
       cell: ({ row }) => {
-        return <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>;
+        return (
+          <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>
+        );
       },
     },
     {

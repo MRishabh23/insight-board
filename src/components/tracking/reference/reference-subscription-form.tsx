@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import {
@@ -10,11 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReferenceSubscriptionFormType } from "@/utils/types/common";
 import { useReferenceSubscriptionForm } from "@/utils/schema";
 import { Input } from "@/components/ui/input";
