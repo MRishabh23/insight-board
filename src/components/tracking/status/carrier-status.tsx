@@ -6,6 +6,7 @@ import { CarrierStatusTable } from "./carrier-status-table";
 import { useParams } from "next/navigation";
 import { ParamType } from "@/utils/types/common";
 import { useStatusQuery } from "@/utils/query";
+import { Button } from "@/components/ui/button";
 
 export const CarrierStatus = () => {
   const params = useParams<ParamType>();
@@ -15,7 +16,7 @@ export const CarrierStatus = () => {
   if (carrierStatusQuery.isPending) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
-        <CgSpinnerAlt className="animate-spin text-lg mr-2" />
+        <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
   }
@@ -40,10 +41,24 @@ export const CarrierStatus = () => {
 
   return (
     <div>
-      <CarrierStatusTable
-        statusList={carrierStatusQuery.data || []}
-        params={params}
-      />
+      <div className="flex justify-end p-5">
+        <Button
+          onMouseDown={() => carrierStatusQuery.refetch()}
+          disabled={carrierStatusQuery.isFetching}
+        >
+          {carrierStatusQuery.isFetching ? "Fetching..." : "Refresh"}
+        </Button>
+      </div>
+      {carrierStatusQuery.isFetching ? (
+        <div className="h-full flex flex-col justify-center items-center">
+          <CgSpinnerAlt className="animate-spin text-lg" />
+        </div>
+      ) : (
+        <CarrierStatusTable
+          statusList={carrierStatusQuery.data || []}
+          params={params}
+        />
+      )}
     </div>
   );
 };

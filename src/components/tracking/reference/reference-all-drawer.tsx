@@ -39,7 +39,7 @@ function SheetCustomContent({ ...props }) {
   if (referenceInfoQuery.isPending) {
     return (
       <div className="h-full flex flex-col justify-center items-center mt-6">
-        <CgSpinnerAlt className="animate-spin text-lg mr-2" />
+        <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
   }
