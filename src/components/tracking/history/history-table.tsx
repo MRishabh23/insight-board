@@ -16,7 +16,7 @@ import { format, toDate } from "date-fns";
 import { ParamType, HistoryType } from "@/utils/types/common";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
-import { CustomDrawer } from "@/components/tracking/history/history-drawer-component";
+import { HistoryDrawer } from "@/components/tracking/history/history-drawer-component";
 
 export function HistoryTable() {
   const params = useParams<ParamType>();
@@ -124,7 +124,7 @@ const HistoryData = ({ ...props }) => {
           latestRes !== "No data"
         ) {
           return (
-            <CustomDrawer
+            <HistoryDrawer
               variant="warning"
               buttonTitle="Same as before"
               title="Response Sent"
@@ -140,7 +140,7 @@ const HistoryData = ({ ...props }) => {
           response !== "SAME_PAYLOAD"
         ) {
           return (
-            <CustomDrawer
+            <HistoryDrawer
               variant="success"
               buttonTitle="New events found"
               title="Response Sent"
@@ -188,7 +188,7 @@ const HistoryData = ({ ...props }) => {
           response === "SAME_PAYLOAD"
         ) {
           return (
-            <CustomDrawer
+            <HistoryDrawer
               variant="warning"
               buttonTitle="Same as before"
               title="Crawled Output"
@@ -204,7 +204,7 @@ const HistoryData = ({ ...props }) => {
           response === "No data"
         ) {
           return (
-            <CustomDrawer
+            <HistoryDrawer
               variant="normal"
               buttonTitle="Crawled JSON"
               title="Crawled Output"
@@ -222,7 +222,7 @@ const HistoryData = ({ ...props }) => {
           response !== "SAME_PAYLOAD"
         ) {
           return (
-            <CustomDrawer
+            <HistoryDrawer
               variant="success"
               buttonTitle="New events found"
               title="Crawled Output"
