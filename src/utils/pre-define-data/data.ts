@@ -268,4 +268,4 @@ export const getDaysList = () => {
 
 export const getAllCarriers = () => {
   return [...airCarriers, ...oceanCarriers, ...terminalCarriers];
-}
+};

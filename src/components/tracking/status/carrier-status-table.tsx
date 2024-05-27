@@ -44,7 +44,7 @@ import { useStatusMutation } from "@/utils/mutation";
 export function CarrierStatusTable({ ...props }) {
   return (
     <>
-      <TableDiv className="h-96">
+      <TableDiv className="h-[620px]">
         <TableTwo>
           <TableHeader className="sticky top-0 bg-white">
             <TableRow>
