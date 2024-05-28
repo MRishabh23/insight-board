@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getUserAction } from "@/app/actions";
+import { getUserAction } from "@/actions/auth-actions";
 
 const Profile = async () => {
   const { data, success } = await getUserAction();

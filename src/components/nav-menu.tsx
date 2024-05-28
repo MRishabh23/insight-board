@@ -9,6 +9,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Separator } from "./ui/separator";
 
 export function NavigationMenuComponent() {
   const components: {
@@ -58,12 +59,22 @@ export function NavigationMenuComponent() {
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        <Separator orientation="vertical" className="h-5 border-white" />
         <NavigationMenuItem>
           <Link
             href="/dashboard/profile"
             className={navigationMenuTriggerStyle()}
           >
             Profile
+          </Link>
+        </NavigationMenuItem>
+        <Separator orientation="vertical" className="h-5 border-white" />
+        <NavigationMenuItem>
+          <Link
+            href="/dashboard/issue"
+            className={navigationMenuTriggerStyle()}
+          >
+            Issues
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>

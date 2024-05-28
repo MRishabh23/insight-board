@@ -11,7 +11,7 @@ import JsonView from "@uiw/react-json-view";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { ScrollArea } from "../../ui/scroll-area";
 
-export function CustomDrawer({ ...props }) {
+export function HistoryDrawer({ ...props }) {
   return (
     <Sheet>
       <SheetTrigger asChild>

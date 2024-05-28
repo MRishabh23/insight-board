@@ -10,7 +10,7 @@ import { ParamType, ReferenceTableType } from "@/utils/types/common";
 import { useReferenceAllQuery } from "@/utils/query";
 import { format, toDate } from "date-fns";
 import { TableDataStaticComponent } from "@/components/data-table-static";
-import { CustomDrawerReference } from "./reference-all-drawer";
+import { ReferenceDrawer } from "./reference-all-drawer";
 import { cn } from "@/lib/utils";
 
 export function ReferenceAllTable() {
@@ -152,7 +152,7 @@ const ReferenceAllData = ({ ...props }) => {
       header: () => <TableHeadCustom>More Info</TableHeadCustom>,
       cell: ({ row }) => {
         return (
-          <CustomDrawerReference
+          <ReferenceDrawer
             variant="normal"
             buttonTitle="more info"
             title="Reference Information"
