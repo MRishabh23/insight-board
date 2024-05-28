@@ -3,17 +3,40 @@
 import { useQuery } from "@tanstack/react-query";
 import { ParamType } from "./types/common";
 import {
-  getFetchHistoryAction,
-  getHistoryAction,
-  getInducedAction,
-  getLatencyAction,
   getReferenceAction,
   getReferenceAllAction,
   getReferenceInfoAction,
   getReferenceSubscriptionAction,
+} from "@/actions/reference-actions";
+import {
+  getFetchHistoryAction,
+  getHistoryAction,
+} from "@/actions/history-actions";
+import {
+  getInducedAction,
+  getLatencyAction,
+} from "@/actions/latency-induced-actions";
+import {
   getStatusAction,
   getSummaryAction,
-} from "@/app/actions";
+} from "@/actions/status-summary-actions";
+import { getIssueAction } from "@/actions/issue-actions";
+
+// issue query
+export const useIssueQuery = (status: string) => {
+  const query = useQuery({
+    queryKey: ["issue", "PROD", `${status}`],
+    queryFn: async () => {
+      const response = await getIssueAction({
+        status: status,
+      });
+      return response;
+    },
+    staleTime: 1000 * 60 * 60 * 8,
+  });
+
+  return query;
+};
 
 // status query
 export const useStatusQuery = (params: ParamType) => {

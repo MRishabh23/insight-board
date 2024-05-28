@@ -49,6 +49,74 @@ export const useAuthForm = () => {
   return form;
 };
 
+// issue schema
+
+const issueFormSchema = z.object({
+  env: z.string(),
+  mode: z.string(),
+  carrier: z.string(),
+  status: z.string(),
+  severity: z.string(),
+  issue: z.string(),
+  description: z.string(),
+  polling_frequency: z
+    .number()
+    .min(1, { message: "Polling frequency must be at least 1" })
+    .max(10, { message: "Polling frequency must be less than 10" }),
+  default_emails: z.string(),
+  emails: z.string(),
+});
+
+type IssueValue = {
+  mode: string;
+  carrier: string;
+  status: string;
+  severity: string;
+  issue: string;
+  description: string;
+  polling_frequency: number;
+  default_emails: string;
+  emails: string;
+}
+
+export const useIssueForm = (issue: string, issueValue: IssueValue) => {
+  let defaultVal = {
+    env: "PROD",
+    mode: "",
+    carrier: "",
+    status: "ACTIVE",
+    severity: "",
+    issue: "",
+    description: "",
+    polling_frequency: 1,
+    default_emails: "yes",
+    emails: "",
+  }
+  
+  if(issue === "EDIT"){
+    defaultVal = {
+      ...defaultVal,
+      env: "PROD",
+      mode: issueValue.mode,
+      carrier: issueValue.carrier,
+      status: issueValue.status,
+      severity: issueValue.severity,
+      issue: issueValue.issue,
+      description: issueValue.description,
+      polling_frequency: issueValue.polling_frequency,
+      default_emails: issueValue.default_emails,
+      emails: issueValue.emails,
+    }
+  }
+  
+  const form = useForm<z.infer<typeof issueFormSchema>>({
+    resolver: zodResolver(issueFormSchema),
+    defaultValues: defaultVal,
+  });
+
+  return form;
+};
+
 // dashboards schema
 
 // status

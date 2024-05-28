@@ -6,8 +6,8 @@ import {
   resetAction,
   signInAction,
   signUpAction,
-  updateStatusAction,
-} from "@/app/actions";
+} from "@/actions/auth-actions";
+import { updateStatusAction } from "@/actions/status-summary-actions";
 
 // auth mutations
 

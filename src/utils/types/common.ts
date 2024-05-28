@@ -17,6 +17,45 @@ export type AuthType = {
 
 // ************* auth types end ****************
 
+// ************* Issues types start ****************
+
+export type IssueType = {
+  env: string;
+  mode: string;
+  carrier: string;
+  status: string;
+  severity: string;
+  issue: string;
+  description: string;
+  polling_frequency: number;
+  default_emails: string;
+  email: string;
+};
+
+export type IssueColumnType = {
+  issue_key: string;
+  value: IssueValue;
+  created_at: number;
+  modified_at: number;
+};
+
+export type IssueValue = {
+  env: string;
+  mode: string;
+  issue: string;
+  emails: string;
+  status: string;
+  carrier: string;
+  severity: string;
+  description: string;
+  polling_count: number;
+  default_emails: string;
+  polling_frequency: number;
+  notification_count: number;
+  last_ui_notification_sent_at: string;
+  last_polling_notification_sent_at: string;
+};
+
 // ************* dashboard types start ****************
 
 // status related types

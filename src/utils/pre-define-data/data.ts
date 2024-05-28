@@ -265,7 +265,3 @@ export const getYearList = () => {
 export const getDaysList = () => {
   return days;
 };
-
-export const getAllCarriers = () => {
-  return [...airCarriers, ...oceanCarriers, ...terminalCarriers];
-};
