@@ -223,7 +223,9 @@ export const getCarriersList = (mode: string) => {
     ? airCarriers
     : mode === "ocean"
     ? oceanCarriers
-    : terminalCarriers;
+    : mode === "terminal"
+    ? terminalCarriers
+    : [];
 };
 
 export const getQueueList = (mode: string) => {

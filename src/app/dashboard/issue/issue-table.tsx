@@ -11,6 +11,8 @@ import { useIssueQuery } from "@/utils/query";
 import { Button } from "@/components/ui/button";
 import { IssueDetailDrawer } from "./issue-detail-drawer";
 import { CreateEditIssueDrawer } from "./create-edit-issue-drawer";
+import { DeleteIssueForm } from "./delete-issue-dialog";
+import { NotificationIssueForm } from "./notification-issue-dialog";
 
 export function IssueTable({ ...props }) {
   const columns: ColumnDef<IssueColumnType>[] = [
@@ -91,7 +93,10 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return (
           <TableCellCustom>
-            {format(toDate(row.original.created_at), "do MMM yyyy, HH:mm:ss")}
+            {format(
+              toDate(+row.original.created_at - 19800000),
+              "do MMM yyyy, HH:mm:ss"
+            )}
           </TableCellCustom>
         );
       },
@@ -103,7 +108,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return (
           <TableCellCustom>
-            {format(toDate(row.original.modified_at), "do MMM yyyy, HH:mm:ss")}
+            {format(toDate(+row.original.modified_at - 19800000), "do MMM yyyy, HH:mm:ss")}
           </TableCellCustom>
         );
       },
@@ -134,6 +139,8 @@ export function IssueTable({ ...props }) {
             buttonTitle="Edit"
             title="Edit a issue"
             issue="EDIT"
+            tableType={props.type.toUpperCase()}
+            issueKey={row.original.issue_key}
             issueValue={row.original.value}
           />
         );
@@ -144,7 +151,25 @@ export function IssueTable({ ...props }) {
       accessorKey: "sendNotification",
       header: () => <TableHeadCustom>Send Notification</TableHeadCustom>,
       cell: ({ row }) => {
-        return <TableCellCustom>Send Notification</TableCellCustom>;
+        return (
+          <NotificationIssueForm
+            issueKey={row.original.issue_key}
+            tableType={props.type.toUpperCase()}
+          />
+        );
+      },
+    },
+    {
+      id: "delete",
+      accessorKey: "delete",
+      header: () => <TableHeadCustom>Delete</TableHeadCustom>,
+      cell: ({ row }) => {
+        return (
+          <DeleteIssueForm
+            issueKey={row.original.issue_key}
+            tableType={props.type.toUpperCase()}
+          />
+        );
       },
     },
   ];
@@ -157,7 +182,7 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="h-full flex flex-col justify-center items-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -165,7 +190,7 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.isError || issueQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="h-full flex flex-col justify-center items-center">
         <p className="text-red-500">Error: {issueQuery.error?.message}</p>
       </div>
     );
@@ -173,29 +198,15 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.data && !issueQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="h-full flex flex-col justify-center items-center">
         <p className="text-red-500">{issueQuery.data?.data}</p>
       </div>
     );
   }
 
   return (
-    <div className="h-full w-full mt-5 p-4 bg-white text-primary rounded-md">
-      <div className="flex justify-end p-5">
-        <Button
-          onMouseDown={() => issueQuery.refetch()}
-          disabled={issueQuery.isFetching}
-        >
-          {issueQuery.isFetching ? "Fetching..." : "Refresh"}
-        </Button>
-      </div>
-      {issueQuery.isFetching ? (
-        <div className="h-full flex flex-col justify-center items-center">
-          <CgSpinnerAlt className="animate-spin text-lg" />
-        </div>
-      ) : (
-        <TableDataStaticComponent data={issueQuery.data} columns={columns} />
-      )}
-    </div>
+    <>
+      <TableDataStaticComponent data={issueQuery.data} columns={columns} />
+    </>
   );
 }

@@ -4,11 +4,7 @@ import { getUserAction } from "./auth-actions";
 import { mainRequestAction } from "./main-actions";
 
 // get status action
-export const getIssueAction = async ({
-  status,
-}: {
-  status: string;
-}) => {
+export const getIssueAction = async ({ status }: { status: string }) => {
   try {
     const { data, success } = await getUserAction();
 
@@ -52,17 +48,33 @@ export const getIssueAction = async ({
   }
 };
 
-// update status action
-export const createIssueAction = async ({
+// create update status action
+export const createUpdateIssueAction = async ({
+  type,
+  issueKey,
   env,
   mode,
   carrier,
   status,
+  severity,
+  issue,
+  description,
+  polling_frequency,
+  default_emails,
+  emails,
 }: {
+  type: string;
+  issueKey: string;
   env: string;
   mode: string;
   carrier: string;
   status: string;
+  severity: string;
+  issue: string;
+  description: string;
+  polling_frequency: number;
+  default_emails: string;
+  emails: string;
 }) => {
   try {
     const { data, success } = await getUserAction();
@@ -71,13 +83,96 @@ export const createIssueAction = async ({
       throw new Error("User not found.");
     }
 
+    let issueType = "CREATE_ISSUE";
+    if (type === "EDIT") {
+      issueType = "UPDATE_ISSUE";
+    }
+
+    let reqData = {};
+
+    if(type === "EDIT"){
+      reqData = {
+        type: issueType,
+        username: data.username,
+        issue_key: issueKey,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        status: status,
+        severity: severity,
+        issue: issue,
+        description: description,
+        polling_frequency: polling_frequency,
+        default_emails: default_emails,
+        emails: emails,
+      }
+    }else{
+      reqData = {
+        type: issueType,
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        status: status,
+        severity: severity,
+        issue: issue,
+        description: description,
+        polling_frequency: polling_frequency,
+        default_emails: default_emails,
+        emails: emails,
+      }
+    }
+
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      if (type === "EDIT") {
+        throw new Error("While updating issue.");
+      } else {
+        throw new Error("While creating issue.");
+      }
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// delete issue action
+export const deleteIssueAction = async ({ type, issueKey }: { type: string, issueKey: string }) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let reqType = "SEND_ISSUE_NOTIFICATION";
+
+    if(type === "DELETE"){
+      reqType = "DELETE_ISSUE";
+    }
+
     const reqData = {
-      type: "UPDATE_CARRIER_STATUS",
+      type: reqType,
+      env: "PROD",
       username: data.username,
-      env: env.toUpperCase(),
-      mode: mode.toUpperCase(),
-      carrier: carrier,
-      status: status,
+      issueKey: issueKey,
     };
 
     const res: any = await mainRequestAction(reqData);
@@ -90,7 +185,11 @@ export const createIssueAction = async ({
     }
 
     if (!res?.success) {
-      throw new Error("Something went wrong while updating carrier status.");
+      if(type === "DELETE"){
+        throw new Error("While deleting issue.");
+      }else{
+        throw new Error("While sending notification.");
+      }
     }
 
     return {

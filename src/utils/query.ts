@@ -25,7 +25,7 @@ import { getIssueAction } from "@/actions/issue-actions";
 // issue query
 export const useIssueQuery = (status: string) => {
   const query = useQuery({
-    queryKey: ["issue", "PROD", `${status}`],
+    queryKey: ["issue", "PROD", status],
     queryFn: async () => {
       const response = await getIssueAction({
         status: status,

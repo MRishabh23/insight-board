@@ -25,6 +25,7 @@ const buttonVariants = cva(
         normal:
           "bg-blue-500 hover:bg-blue-400 text-white border border-blue-500",
         danger: "bg-red-500 hover:bg-red-400 text-white border border-red-500",
+        lessDanger: "bg-red-100 text-red-500 border border-red-500 hover:bg-red-50",
       },
       size: {
         default: "h-10 px-4 py-2",

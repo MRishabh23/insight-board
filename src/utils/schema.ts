@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StatusType } from "./types/common";
+import { IssueValueInternal, StatusType } from "./types/common";
 import { format, getYear } from "date-fns";
 
 // current and previous dates
@@ -67,19 +67,7 @@ const issueFormSchema = z.object({
   emails: z.string(),
 });
 
-type IssueValue = {
-  mode: string;
-  carrier: string;
-  status: string;
-  severity: string;
-  issue: string;
-  description: string;
-  polling_frequency: number;
-  default_emails: string;
-  emails: string;
-}
-
-export const useIssueForm = (issue: string, issueValue: IssueValue) => {
+export const useIssueForm = (issue: string, issueValue: IssueValueInternal) => {
   let defaultVal = {
     env: "PROD",
     mode: "",
@@ -91,9 +79,9 @@ export const useIssueForm = (issue: string, issueValue: IssueValue) => {
     polling_frequency: 1,
     default_emails: "yes",
     emails: "",
-  }
-  
-  if(issue === "EDIT"){
+  };
+
+  if (issue === "EDIT") {
     defaultVal = {
       ...defaultVal,
       env: "PROD",
@@ -106,12 +94,29 @@ export const useIssueForm = (issue: string, issueValue: IssueValue) => {
       polling_frequency: issueValue.polling_frequency,
       default_emails: issueValue.default_emails,
       emails: issueValue.emails,
-    }
+    };
   }
-  
+
   const form = useForm<z.infer<typeof issueFormSchema>>({
     resolver: zodResolver(issueFormSchema),
     defaultValues: defaultVal,
+  });
+
+  return form;
+};
+
+// issue delete notify schema
+
+const deleteNotifyIssueFormSchema = z.object({
+  issueKey: z.string(),
+});
+
+export const useDeleteNotifyIssueForm = () => {
+  const form = useForm<z.infer<typeof deleteNotifyIssueFormSchema>>({
+    resolver: zodResolver(deleteNotifyIssueFormSchema),
+    defaultValues: {
+      issueKey: "",
+    },
   });
 
   return form;
