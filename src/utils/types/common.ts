@@ -35,8 +35,8 @@ export type IssueType = {
 export type IssueColumnType = {
   issue_key: string;
   value: IssueValue;
-  created_at: number;
-  modified_at: number;
+  created_at: string |number;
+  modified_at: string | number;
 };
 
 export type IssueValue = {
@@ -55,6 +55,19 @@ export type IssueValue = {
   last_ui_notification_sent_at: string;
   last_polling_notification_sent_at: string;
 };
+
+export type IssueValueInternal = {
+  env: string;
+  mode: string;
+  carrier: string;
+  status: string;
+  severity: string;
+  issue: string;
+  description: string;
+  polling_frequency: number;
+  default_emails: string;
+  emails: string;
+}
 
 // ************* dashboard types start ****************
 

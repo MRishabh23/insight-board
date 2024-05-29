@@ -29,6 +29,7 @@ import {
 import { useIssueForm } from "@/utils/schema";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useIssueCUMutation } from "@/utils/mutation";
 
 export function CreateEditIssueDrawer({ ...props }) {
   return (
@@ -40,7 +41,7 @@ export function CreateEditIssueDrawer({ ...props }) {
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
-        <SheetCustomContent issue={props.issue} issueValue={props.issueValue} />
+        <SheetCustomContent issue={props.issue} tableType={props.tableType} issueKey={props.issueKey} issueValue={props.issueValue} />
       </SheetContent>
     </Sheet>
   );
@@ -49,7 +50,7 @@ export function CreateEditIssueDrawer({ ...props }) {
 function SheetCustomContent({ ...props }) {
   return (
     <ScrollArea className="w-full mt-5 my-scroll">
-      <AddIssueForm issue={props.issue} issueValue={props.issueValue} />
+      <AddIssueForm issue={props.issue} tableType={props.tableType} issueKey={props.issueKey} issueValue={props.issueValue} />
     </ScrollArea>
   );
 }
@@ -63,6 +64,8 @@ const AddIssueForm = ({ ...props }) => {
     () => getCarriersList(transportMode),
     [transportMode]
   );
+
+  const {mutate: server_CUIssue, isPending: isPending_CUIssue} = useIssueCUMutation(form, props.issue, props.issueKey, props.tableType);
 
   const onSubmit = (data: any) => {
     if (!data.mode) {
@@ -100,6 +103,7 @@ const AddIssueForm = ({ ...props }) => {
     ) {
       data.polling_frequency = parseInt(data.polling_frequency);
       console.log("submit data", data);
+      server_CUIssue(data);
     }
   };
 
@@ -347,16 +351,23 @@ const AddIssueForm = ({ ...props }) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full mt-4">
-            {props.issue === "CREATE" ? "Create" : "Update"}
-          </Button>
           {props.issue === "CREATE" && (
-            <Button
-              type="button"
-              onMouseDown={handleReset}
-              className="w-full mt-4"
-            >
-              Reset
+            <>
+              <Button type="submit" className="w-full mt-4" disabled={isPending_CUIssue}>
+                {isPending_CUIssue ? "Creating..." : "Create"}
+              </Button>
+              <Button
+                type="button"
+                onMouseDown={handleReset}
+                className="w-full mt-4"
+              >
+                Reset
+              </Button>
+            </>
+          )}
+          {props.issue === "EDIT" && (
+            <Button type="submit" className="w-full mt-4" disabled={isPending_CUIssue}>
+              {isPending_CUIssue ? "Updating..." : "Update"}
             </Button>
           )}
         </form>

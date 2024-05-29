@@ -28,6 +28,7 @@ export function IssueDetailDrawer({ ...props }) {
 }
 
 function SheetCustomContent({ ...props }) {
+  const defaultEmails = "rmailk@justransform.com";
   return (
     <ScrollArea className="w-full mt-5 my-scroll">
       <div className="p-1">
@@ -38,6 +39,18 @@ function SheetCustomContent({ ...props }) {
         <IssueInput label="Mode" value={props.data.mode.toUpperCase()} />
         <IssueInput label="Status" value={props.data.status} />
         <IssueInput label="Severity" value={props.data.severity} />
+        {props.data.default_emails === "yes" && (
+          <IssueInput
+            label="Default Emails"
+            value={defaultEmails}
+          />
+        )}
+        {props.data.emails && (
+          <IssueInput
+            label="Emails"
+            value={props.data.emails}
+          />
+        )}
         {props.data.last_ui_notification_sent_at && (
           <IssueInput
             label="Last Notification Sent"
