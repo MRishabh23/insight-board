@@ -72,6 +72,8 @@ export type IssueValueInternal = {
   emails: string;
 }
 
+// ************* Issues types end ****************
+
 // ************* dashboard types start ****************
 
 // status related types
