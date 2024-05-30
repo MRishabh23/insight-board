@@ -29,15 +29,17 @@ const Issue = () => {
             tableType={tabVal.toUpperCase()}
           />
         </div>
-        <TabsContent value="active" className="flex-1">
-          <div className="h-full w-full my-5 p-4 bg-white text-primary rounded-md">
-            <IssueTable type="active" />
-          </div>
+        <TabsContent
+          value="active"
+          className="flex-1 mt-6 p-4 bg-white text-primary rounded-md"
+        >
+          <IssueTable type="active" />
         </TabsContent>
-        <TabsContent value="closed" className="flex-1">
-          <div className="h-full w-full my-5 p-4 bg-white text-primary rounded-md">
-            <IssueTable type="closed" />
-          </div>
+        <TabsContent
+          value="closed"
+          className="flex-1 mt-6 p-4 bg-white text-primary rounded-md"
+        >
+          <IssueTable type="closed" />
         </TabsContent>
       </Tabs>
     </div>

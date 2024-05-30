@@ -199,7 +199,7 @@ export function IssueTable({ ...props }) {
   if (issueQuery.data && !issueQuery.data?.success) {
     return (
       <div className="h-full flex flex-col justify-center items-center">
-        <p className="text-red-500">{issueQuery.data?.data}</p>
+        <p className="text-xl font-bold">{issueQuery.data?.data}</p>
       </div>
     );
   }

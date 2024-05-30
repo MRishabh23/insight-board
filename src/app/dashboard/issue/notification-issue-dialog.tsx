@@ -31,7 +31,7 @@ export const NotificationIssueForm = ({ ...props }) => {
 
   const onSubmit = (data: any) => {
     if(data.issueKey === props.issueKey) {
-      console.log("onSubmit", data);
+      //console.log("onSubmit", data);
       server_notify(data.issueKey);
     }else{
       form.setError("issueKey", {

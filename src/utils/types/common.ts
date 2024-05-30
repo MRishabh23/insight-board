@@ -42,12 +42,15 @@ export type IssueColumnType = {
 export type IssueValue = {
   env: string;
   mode: string;
+  issueKey: string;
   issue: string;
   emails: string;
   status: string;
   carrier: string;
   severity: string;
   description: string;
+  created_by: string;
+  updated_by: string;
   polling_count: number;
   default_emails: string;
   polling_frequency: number;
@@ -68,6 +71,8 @@ export type IssueValueInternal = {
   default_emails: string;
   emails: string;
 }
+
+// ************* Issues types end ****************
 
 // ************* dashboard types start ****************
 
