@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export function IssueDetailDrawer({ ...props }) {
   return (
@@ -29,6 +30,9 @@ export function IssueDetailDrawer({ ...props }) {
 
 function SheetCustomContent({ ...props }) {
   const defaultEmails = "rmailk@justransform.com";
+  const additionalLinks = props.data.additional_links
+    ? props.data.additional_links.split(",")
+    : [];
   return (
     <ScrollArea className="w-full mt-5 my-scroll">
       <div className="p-1">
@@ -44,22 +48,22 @@ function SheetCustomContent({ ...props }) {
         <IssueInput label="Status" value={props.data.status} />
         <IssueInput label="Severity" value={props.data.severity} />
         {props.data.default_emails === "yes" && (
-          <IssueInput
-            label="Default Emails"
-            value={defaultEmails}
-          />
+          <IssueInput label="Default Emails" value={defaultEmails} />
         )}
         {props.data.emails && (
-          <IssueInput
-            label="Emails"
-            value={props.data.emails}
-          />
+          <IssueInput label="Emails" value={props.data.emails} />
         )}
         {props.data.last_ui_notification_sent_at && (
           <IssueInput
             label="Last Notification Sent"
             value={props.data.last_ui_notification_sent_at}
           />
+        )}
+        {additionalLinks.length > 0 && (
+          <div className="mt-3">
+            <Label className="text-base">Additional Links</Label>
+            <CustomLinkInput value={additionalLinks} />
+          </div>
         )}
       </div>
     </ScrollArea>
@@ -93,5 +97,19 @@ const IssueTextArea = ({
       <Label className="text-base">{label}</Label>
       <Textarea className="mt-2 h-40" value={value} readOnly />
     </div>
+  );
+};
+
+const CustomLinkInput = ({ value }: { value: any }) => {
+  return (
+    <ul className="mt-2">
+      {value.map((link: string, index: number) => (
+        <Link key={link} href={link} target="_blank">
+          <li className="p-2">
+            {index + 1}. <span className="underline hover:text-indigo-500">{link}</span>
+          </li>
+        </Link>
+      ))}
+    </ul>
   );
 };

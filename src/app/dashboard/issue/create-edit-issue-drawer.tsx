@@ -124,6 +124,7 @@ const AddIssueForm = ({ ...props }) => {
       polling_frequency: 1,
       default_emails: "yes",
       emails: "",
+      additional_links: ""
     });
   };
 
@@ -351,6 +352,21 @@ const AddIssueForm = ({ ...props }) => {
                 </FormLabel>
                 <FormControl id="emails">
                   <Input type="text" placeholder="Enter emails..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="additional_links"
+            render={({ field }) => (
+              <FormItem className="mt-4">
+                <FormLabel className="text-base" htmlFor="additional_links">
+                  Additional Links
+                </FormLabel>
+                <FormControl id="additional_links">
+                  <Input type="text" placeholder="Enter additional links..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

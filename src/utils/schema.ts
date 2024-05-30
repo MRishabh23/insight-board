@@ -65,6 +65,7 @@ const issueFormSchema = z.object({
     .max(10, { message: "Polling frequency must be less than 10" }),
   default_emails: z.string(),
   emails: z.string(),
+  additional_links: z.string(),
 });
 
 export const useIssueForm = (issue: string, issueValue: IssueValueInternal) => {
@@ -79,6 +80,7 @@ export const useIssueForm = (issue: string, issueValue: IssueValueInternal) => {
     polling_frequency: 1,
     default_emails: "yes",
     emails: "",
+    additional_links: "",
   };
 
   if (issue === "EDIT") {
@@ -94,6 +96,7 @@ export const useIssueForm = (issue: string, issueValue: IssueValueInternal) => {
       polling_frequency: issueValue.polling_frequency,
       default_emails: issueValue.default_emails,
       emails: issueValue.emails,
+      additional_links: issueValue.additional_links,
     };
   }
 

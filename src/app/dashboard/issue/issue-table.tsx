@@ -8,11 +8,11 @@ import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { format, toDate } from "date-fns";
 import { IssueColumnType } from "@/utils/types/common";
 import { useIssueQuery } from "@/utils/query";
-import { Button } from "@/components/ui/button";
 import { IssueDetailDrawer } from "./issue-detail-drawer";
 import { CreateEditIssueDrawer } from "./create-edit-issue-drawer";
 import { DeleteIssueForm } from "./delete-issue-dialog";
 import { NotificationIssueForm } from "./notification-issue-dialog";
+import { CloseIssueForm } from "./close-issue-dialog";
 
 export function IssueTable({ ...props }) {
   const columns: ColumnDef<IssueColumnType>[] = [
@@ -108,7 +108,10 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return (
           <TableCellCustom>
-            {format(toDate(+row.original.modified_at - 19800000), "do MMM yyyy, HH:mm:ss")}
+            {format(
+              toDate(+row.original.modified_at - 19800000),
+              "do MMM yyyy, HH:mm:ss"
+            )}
           </TableCellCustom>
         );
       },
@@ -160,6 +163,14 @@ export function IssueTable({ ...props }) {
       },
     },
     {
+      id: "close-issue",
+      accessorKey: "closeIssue",
+      header: () => <TableHeadCustom>Close</TableHeadCustom>,
+      cell: ({ row }) => {
+        return <CloseIssueForm issueKey={row.original.issue_key} />;
+      },
+    },
+    {
       id: "delete",
       accessorKey: "delete",
       header: () => <TableHeadCustom>Delete</TableHeadCustom>,
@@ -175,7 +186,7 @@ export function IssueTable({ ...props }) {
   ];
 
   if (props.type === "closed") {
-    columns.splice(9, 1);
+    columns.splice(9, 2);
   }
 
   const issueQuery = useIssueQuery(props.type.toUpperCase());
