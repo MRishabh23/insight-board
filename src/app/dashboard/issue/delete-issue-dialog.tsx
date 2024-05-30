@@ -27,7 +27,7 @@ export const DeleteIssueForm = ({ ...props }) => {
   const form = useDeleteNotifyIssueForm();
 
   const { mutate: server_delete, isPending: deletePending } =
-    useDeleteNotifyIssueMutation("DELETE", form, props.issueKey, props.tableType, setOpen);
+    useDeleteNotifyIssueMutation("DELETE", form, props.tableType, setOpen);
 
   const onSubmit = (data: any) => {
     if(data.issueKey === props.issueKey) {

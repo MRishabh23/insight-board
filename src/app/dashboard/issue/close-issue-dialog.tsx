@@ -19,20 +19,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useDeleteNotifyIssueForm } from "@/utils/schema";
-import { useDeleteNotifyIssueMutation } from "@/utils/mutation";
+import { useCloseIssueMutation } from "@/utils/mutation";
 
-export const NotificationIssueForm = ({ ...props }) => {
+export const CloseIssueForm = ({ ...props }) => {
   const [open, setOpen] = React.useState(false);
   const form = useDeleteNotifyIssueForm();
 
-  const { mutate: server_notify, isPending: notifyPending } =
-  useDeleteNotifyIssueMutation("NOTIFY", form, props.tableType, setOpen);
+  const { mutate: server_close, isPending: closePending } =
+    useCloseIssueMutation(form, setOpen);
 
   const onSubmit = (data: any) => {
-    if(data.issueKey === props.issueKey) {
+    if (data.issueKey === props.issueKey) {
       //console.log("onSubmit", data);
-      server_notify(data.issueKey);
-    }else{
+      server_close(data.issueKey);
+    } else {
       form.setError("issueKey", {
         type: "custom",
         message: "Issue key does not match.",
@@ -47,15 +47,15 @@ export const NotificationIssueForm = ({ ...props }) => {
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          Send Notification
-        </Button>
+        <Button variant="outline">Close</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Notification</DialogTitle>
+          <DialogTitle>Close Issue</DialogTitle>
           <DialogDescription>
-            Please enter the issue key <span className="font-bold text-black">{props.issueKey}</span> to send the notification for the issue.
+            Please enter the issue key{" "}
+            <span className="font-bold text-black">{props.issueKey}</span> to
+            close the issue.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -71,7 +71,7 @@ export const NotificationIssueForm = ({ ...props }) => {
                 name="issueKey"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="issueKey">Notification Text</FormLabel>
+                    <FormLabel htmlFor="issueKey">Close Text</FormLabel>
                     <FormControl id="issueKey">
                       <Input type="text" required {...field} />
                     </FormControl>
@@ -81,11 +81,11 @@ export const NotificationIssueForm = ({ ...props }) => {
               />
               <Button
                 type="submit"
-                variant="normal"
-                disabled={notifyPending}
+                variant="destructive"
+                disabled={closePending}
                 className={cn("w-full capitalize")}
               >
-                {notifyPending ? "Notifying..." : "Send"}
+                {closePending ? "Closing..." : "Close"}
               </Button>
             </form>
           </Form>

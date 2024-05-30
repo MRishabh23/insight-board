@@ -13,7 +13,11 @@ import {
   signUpAction,
 } from "@/actions/auth-actions";
 import { updateStatusAction } from "@/actions/status-summary-actions";
-import { createUpdateIssueAction, deleteIssueAction } from "@/actions/issue-actions";
+import {
+  closeIssueAction,
+  createUpdateIssueAction,
+  deleteNotifyIssueAction,
+} from "@/actions/issue-actions";
 
 // auth mutations
 
@@ -98,11 +102,21 @@ export const useResetSubmitMutation = (form: any) => {
 // issue mutation
 
 // create/update issue mutation
-export const useIssueCUMutation = (form: any, issue: string, issueKey: string, tableType: string, setOpen: any) => {
+export const useIssueCUMutation = (
+  form: any,
+  issue: string,
+  issueKey: string,
+  tableType: string,
+  setOpen: any
+) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: async (data: IssueValueInternal) =>
-      await createUpdateIssueAction({ ...data, type: issue, issueKey: issueKey }),
+      await createUpdateIssueAction({
+        ...data,
+        type: issue,
+        issueKey: issueKey,
+      }),
     onSuccess: async (data) => {
       if (!data.success) {
         toast.error(`Uh oh! Something went wrong.`, {
@@ -125,6 +139,7 @@ export const useIssueCUMutation = (form: any, issue: string, issueKey: string, t
             polling_frequency: 1,
             default_emails: "yes",
             emails: "",
+            additional_links: ""
           });
           setOpen(false);
         } else {
@@ -146,12 +161,47 @@ export const useIssueCUMutation = (form: any, issue: string, issueKey: string, t
   return submit;
 };
 
-// delete notify issue mutation
-export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, issueKey: string, tableType: string, setOpen: any) => {
+// close issue mutation
+export const useCloseIssueMutation = (form: any, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: async (issueKey: string) =>
-      await deleteIssueAction({ type: mutateType, issueKey: issueKey }),
+      await closeIssueAction({ issueKey: issueKey }),
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong.`, {
+          description: data.data,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["issue", "PROD", "ACTIVE"],
+        });
+        toast.success("Issue closed successfully.");
+        form.reset({ issueKey: "" });
+        setOpen(false);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong.`, {
+        description: error.message,
+      });
+    },
+  });
+
+  return submit;
+};
+
+// delete notify issue mutation
+export const useDeleteNotifyIssueMutation = (
+  mutateType: string,
+  form: any,
+  tableType: string,
+  setOpen: any
+) => {
+  const queryClient = useQueryClient();
+  const submit = useMutation({
+    mutationFn: async (issueKey: string) =>
+      await deleteNotifyIssueAction({ type: mutateType, issueKey: issueKey }),
     onSuccess: async (data) => {
       if (!data.success) {
         toast.error(`Uh oh! Something went wrong.`, {
@@ -161,9 +211,9 @@ export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, issu
         await queryClient.invalidateQueries({
           queryKey: ["issue", "PROD", tableType],
         });
-        if(mutateType === "DELETE"){
+        if (mutateType === "DELETE") {
           toast.success("Issue deleted successfully.");
-        }else{
+        } else {
           toast.success("Notification sent successfully.");
         }
         form.reset({ issueKey: "" });

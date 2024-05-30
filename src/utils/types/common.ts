@@ -53,6 +53,7 @@ export type IssueValue = {
   updated_by: string;
   polling_count: number;
   default_emails: string;
+  additional_links: string;
   polling_frequency: number;
   notification_count: number;
   last_ui_notification_sent_at: string;
@@ -70,6 +71,7 @@ export type IssueValueInternal = {
   polling_frequency: number;
   default_emails: string;
   emails: string;
+  additional_links: string;
 }
 
 // ************* Issues types end ****************

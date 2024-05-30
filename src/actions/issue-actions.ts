@@ -62,6 +62,7 @@ export const createUpdateIssueAction = async ({
   polling_frequency,
   default_emails,
   emails,
+  additional_links
 }: {
   type: string;
   issueKey: string;
@@ -75,6 +76,7 @@ export const createUpdateIssueAction = async ({
   polling_frequency: number;
   default_emails: string;
   emails: string;
+  additional_links: string;
 }) => {
   try {
     const { data, success } = await getUserAction();
@@ -105,6 +107,7 @@ export const createUpdateIssueAction = async ({
         polling_frequency: polling_frequency,
         default_emails: default_emails,
         emails: emails,
+        additional_links: additional_links,
       }
     }else{
       reqData = {
@@ -120,6 +123,7 @@ export const createUpdateIssueAction = async ({
         polling_frequency: polling_frequency,
         default_emails: default_emails,
         emails: emails,
+        additional_links: additional_links,
       }
     }
 
@@ -153,8 +157,49 @@ export const createUpdateIssueAction = async ({
   }
 };
 
-// delete issue action
-export const deleteIssueAction = async ({ type, issueKey }: { type: string, issueKey: string }) => {
+// close issue action
+export const closeIssueAction = async ({ issueKey }: { issueKey: string }) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "CLOSE_ISSUE",
+      env: "PROD",
+      username: data.username,
+      issueKey: issueKey,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (
+      !res?.success &&
+      (res?.data.includes("timed") || res?.data.includes("trusted"))
+    ) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      throw new Error("While closing issue.");
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// delete notify issue action
+export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string, issueKey: string }) => {
   try {
     const { data, success } = await getUserAction();
 
