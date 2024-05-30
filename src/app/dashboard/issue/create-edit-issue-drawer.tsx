@@ -32,8 +32,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useIssueCUMutation } from "@/utils/mutation";
 
 export function CreateEditIssueDrawer({ ...props }) {
+  const [open, setOpen] = React.useState(false);
+  const handleSheetOpen = () => {
+    setOpen(!open);
+  };
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={handleSheetOpen}>
       <SheetTrigger asChild>
         <Button variant={props.variant}>{props.buttonTitle}</Button>
       </SheetTrigger>
@@ -41,17 +45,17 @@ export function CreateEditIssueDrawer({ ...props }) {
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
-        <SheetCustomContent issue={props.issue} tableType={props.tableType} issueKey={props.issueKey} issueValue={props.issueValue} />
+        <ScrollArea className="w-full mt-5 my-scroll">
+          <AddIssueForm
+            issue={props.issue}
+            tableType={props.tableType}
+            issueKey={props.issueKey}
+            issueValue={props.issueValue}
+            setOpen={setOpen}
+          />
+        </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
-}
-
-function SheetCustomContent({ ...props }) {
-  return (
-    <ScrollArea className="w-full mt-5 my-scroll">
-      <AddIssueForm issue={props.issue} tableType={props.tableType} issueKey={props.issueKey} issueValue={props.issueValue} />
-    </ScrollArea>
   );
 }
 
@@ -65,7 +69,8 @@ const AddIssueForm = ({ ...props }) => {
     [transportMode]
   );
 
-  const {mutate: server_CUIssue, isPending: isPending_CUIssue} = useIssueCUMutation(form, props.issue, props.issueKey, props.tableType);
+  const { mutate: server_CUIssue, isPending: isPending_CUIssue } =
+    useIssueCUMutation(form, props.issue, props.issueKey, props.tableType, props.setOpen);
 
   const onSubmit = (data: any) => {
     if (!data.mode) {
@@ -102,7 +107,7 @@ const AddIssueForm = ({ ...props }) => {
       data.polling_frequency
     ) {
       data.polling_frequency = parseInt(data.polling_frequency);
-      console.log("submit data", data);
+      //console.log("submit data", data);
       server_CUIssue(data);
     }
   };
@@ -353,7 +358,11 @@ const AddIssueForm = ({ ...props }) => {
           />
           {props.issue === "CREATE" && (
             <>
-              <Button type="submit" className="w-full mt-4" disabled={isPending_CUIssue}>
+              <Button
+                type="submit"
+                className="w-full mt-4"
+                disabled={isPending_CUIssue}
+              >
                 {isPending_CUIssue ? "Creating..." : "Create"}
               </Button>
               <Button
@@ -366,7 +375,11 @@ const AddIssueForm = ({ ...props }) => {
             </>
           )}
           {props.issue === "EDIT" && (
-            <Button type="submit" className="w-full mt-4" disabled={isPending_CUIssue}>
+            <Button
+              type="submit"
+              className="w-full mt-4"
+              disabled={isPending_CUIssue}
+            >
               {isPending_CUIssue ? "Updating..." : "Update"}
             </Button>
           )}

@@ -185,10 +185,14 @@ export const deleteIssueAction = async ({ type, issueKey }: { type: string, issu
     }
 
     if (!res?.success) {
+      const dataErr = res?.data;
       if(type === "DELETE"){
         throw new Error("While deleting issue.");
       }else{
-        throw new Error("While sending notification.");
+        const errMsg = dataErr.includes("no emails are found")
+        ? dataErr
+        : "While sending notification.";
+        throw new Error(errMsg);
       }
     }
 

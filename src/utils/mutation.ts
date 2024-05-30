@@ -14,6 +14,7 @@ import {
 } from "@/actions/auth-actions";
 import { updateStatusAction } from "@/actions/status-summary-actions";
 import { createUpdateIssueAction, deleteIssueAction } from "@/actions/issue-actions";
+import { set } from "date-fns";
 
 // auth mutations
 
@@ -98,7 +99,7 @@ export const useResetSubmitMutation = (form: any) => {
 // issue mutation
 
 // create/update issue mutation
-export const useIssueCUMutation = (form: any, issue: string, issueKey: string, tableType: string) => {
+export const useIssueCUMutation = (form: any, issue: string, issueKey: string, tableType: string, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: async (data: IssueValueInternal) =>
@@ -110,6 +111,10 @@ export const useIssueCUMutation = (form: any, issue: string, issueKey: string, t
         });
       } else {
         if (issue === "CREATE") {
+          await queryClient.invalidateQueries({
+            queryKey: ["issue", "PROD", tableType],
+          });
+          toast.success("Issue created successfully.");
           form.reset({
             env: "PROD",
             mode: "",
@@ -122,15 +127,13 @@ export const useIssueCUMutation = (form: any, issue: string, issueKey: string, t
             default_emails: "yes",
             emails: "",
           });
-          await queryClient.invalidateQueries({
-            queryKey: ["issue", "PROD", tableType],
-          });
-          toast.success("Issue created successfully.");
+          setOpen(false);
         } else {
           await queryClient.invalidateQueries({
             queryKey: ["issue", "PROD", tableType],
           });
           toast.success("Issue updated Successfully.");
+          setOpen(false);
         }
       }
     },
@@ -156,7 +159,6 @@ export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, issu
           description: data.data,
         });
       } else {
-        form.reset({ issueKey: "" });
         await queryClient.invalidateQueries({
           queryKey: ["issue", "PROD", tableType],
         });
@@ -165,6 +167,7 @@ export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, issu
         }else{
           toast.success("Notification sent successfully.");
         }
+        form.reset({ issueKey: "" });
         setOpen(false);
       }
     },

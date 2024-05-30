@@ -31,7 +31,7 @@ export const DeleteIssueForm = ({ ...props }) => {
 
   const onSubmit = (data: any) => {
     if(data.issueKey === props.issueKey) {
-      console.log("onSubmit", data);
+      //console.log("onSubmit", data);
       server_delete(data.issueKey);
     }else{
       form.setError("issueKey", {
