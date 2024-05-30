@@ -30,7 +30,7 @@ export function IssueDetailDrawer({ ...props }) {
 
 function SheetCustomContent({ ...props }) {
   const defaultEmails = "rmailk@justransform.com";
-  const additionalLinks = props.data.additional_links
+  const additionalLinks = props.data.additional_links && props.data.additional_links.includes(",")
     ? props.data.additional_links.split(",")
     : [];
   return (
