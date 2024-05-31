@@ -1,23 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  AuthType,
-  StatusType,
-  ParamType,
-  IssueValueInternal,
-} from "./types/common";
+import { AuthType, StatusType, ParamType, IssueValueInternal } from "./types/common";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import {
-  resetAction,
-  signInAction,
-  signUpAction,
-} from "@/actions/auth-actions";
+import { resetAction, signInAction, signUpAction } from "@/actions/auth-actions";
 import { updateStatusAction } from "@/actions/status-summary-actions";
-import {
-  closeIssueAction,
-  createUpdateIssueAction,
-  deleteNotifyIssueAction,
-} from "@/actions/issue-actions";
+import { closeIssueAction, createUpdateIssueAction, deleteNotifyIssueAction } from "@/actions/issue-actions";
 
 // auth mutations
 
@@ -102,13 +89,7 @@ export const useResetSubmitMutation = (form: any) => {
 // issue mutation
 
 // create/update issue mutation
-export const useIssueCUMutation = (
-  form: any,
-  issue: string,
-  issueKey: string,
-  tableType: string,
-  setOpen: any
-) => {
+export const useIssueCUMutation = (form: any, issue: string, issueKey: string, tableType: string, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
     mutationFn: async (data: IssueValueInternal) =>
@@ -139,7 +120,7 @@ export const useIssueCUMutation = (
             polling_frequency: 1,
             default_emails: "yes",
             emails: "",
-            additional_links: ""
+            additional_links: "",
           });
           setOpen(false);
         } else {
@@ -165,8 +146,7 @@ export const useIssueCUMutation = (
 export const useCloseIssueMutation = (form: any, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
-    mutationFn: async (issueKey: string) =>
-      await closeIssueAction({ issueKey: issueKey }),
+    mutationFn: async (issueKey: string) => await closeIssueAction({ issueKey: issueKey }),
     onSuccess: async (data) => {
       if (!data.success) {
         toast.error(`Uh oh! Something went wrong.`, {
@@ -192,16 +172,10 @@ export const useCloseIssueMutation = (form: any, setOpen: any) => {
 };
 
 // delete notify issue mutation
-export const useDeleteNotifyIssueMutation = (
-  mutateType: string,
-  form: any,
-  tableType: string,
-  setOpen: any
-) => {
+export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, tableType: string, setOpen: any) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
-    mutationFn: async (issueKey: string) =>
-      await deleteNotifyIssueAction({ type: mutateType, issueKey: issueKey }),
+    mutationFn: async (issueKey: string) => await deleteNotifyIssueAction({ type: mutateType, issueKey: issueKey }),
     onSuccess: async (data) => {
       if (!data.success) {
         toast.error(`Uh oh! Something went wrong.`, {

@@ -14,16 +14,12 @@ export function InducedChart() {
   const searchParams = useSearchParams();
 
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   const queryMonths = React.useMemo(
-    () =>
-      searchParams.get("months") ? searchParams.get("months")?.split(",") : [],
-    [searchParams]
+    () => (searchParams.get("months") ? searchParams.get("months")?.split(",") : []),
+    [searchParams],
   );
 
   let newCarrOpt: string[] = [];
@@ -47,33 +43,21 @@ export function InducedChart() {
 
   if (!searchParams.get("carriers") || !searchParams.get("months")) {
     return (
-      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+      <div className="mt-10 flex items-center justify-center text-xl font-bold">
         Select a carrier and a month to view chart.
       </div>
     );
   }
 
-  return (
-    <InducedData
-      params={params}
-      carriers={newCarrOpt}
-      year={searchParams.get("year")}
-      months={newMonthOpt}
-    />
-  );
+  return <InducedData params={params} carriers={newCarrOpt} year={searchParams.get("year")} months={newMonthOpt} />;
 }
 
 const InducedData = ({ ...props }) => {
-  const inducedQuery = useInducedQuery(
-    props.params,
-    props.carriers,
-    props.year,
-    props.months
-  );
+  const inducedQuery = useInducedQuery(props.params, props.carriers, props.year, props.months);
 
   if (inducedQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -81,7 +65,7 @@ const InducedData = ({ ...props }) => {
 
   if (inducedQuery.isError || inducedQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {inducedQuery.error?.message}</p>
       </div>
     );
@@ -89,7 +73,7 @@ const InducedData = ({ ...props }) => {
 
   if (inducedQuery.data && !inducedQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{inducedQuery.data?.data}</p>
       </div>
     );
@@ -130,33 +114,15 @@ const ChartData = ({ ...props }) => {
         },
       },
     }),
-    []
+    [],
   );
-  const dataSet = React.useMemo(
-    () => props.data.data && props.data.data[0],
-    [props.data.data]
-  );
+  const dataSet = React.useMemo(() => props.data.data && props.data.data[0], [props.data.data]);
   const chartKeys = React.useMemo(
-    () =>
-      props.data.data && props.data.data[0]
-        ? Object.keys(props.data.data[0])
-        : [],
-    [props.data.data]
+    () => (props.data.data && props.data.data[0] ? Object.keys(props.data.data[0]) : []),
+    [props.data.data],
   );
-  const bgArray = React.useMemo(
-    () => [
-      "LightSalmon",
-      "LightSkyBlue",
-      "MediumSeaGreen",
-      "LightPink",
-      "Peru",
-    ],
-    []
-  );
-  const borderArray = React.useMemo(
-    () => ["Salmon", "CornflowerBlue", "SeaGreen", "HotPink", "Sienna"],
-    []
-  );
+  const bgArray = React.useMemo(() => ["LightSalmon", "LightSkyBlue", "MediumSeaGreen", "LightPink", "Peru"], []);
+  const borderArray = React.useMemo(() => ["Salmon", "CornflowerBlue", "SeaGreen", "HotPink", "Sienna"], []);
 
   const labels: number[] = React.useMemo(() => getDaysList(), []);
 
@@ -176,7 +142,7 @@ const ChartData = ({ ...props }) => {
           }
         }
       }),
-    [bgArray, borderArray, chartKeys, dataSet]
+    [bgArray, borderArray, chartKeys, dataSet],
   );
 
   return (

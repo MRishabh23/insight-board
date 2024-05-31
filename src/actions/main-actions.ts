@@ -38,8 +38,8 @@ export const mainRequestAction = async (reqBody: any) => {
       data: error.message.includes("timeout")
         ? "Request timed out. Please try again."
         : error.message.includes("trusted")
-        ? "Request is not from trusted source."
-        : error.message,
+          ? "Request is not from trusted source."
+          : error.message,
       success: false,
     };
   }

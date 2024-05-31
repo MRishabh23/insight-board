@@ -6,13 +6,7 @@ import { mainRequestAction } from "./main-actions";
 // tracking actions
 
 // get status action
-export const getStatusAction = async ({
-  env,
-  mode,
-}: {
-  env: string;
-  mode: string;
-}) => {
+export const getStatusAction = async ({ env, mode }: { env: string; mode: string }) => {
   try {
     const { data, success } = await getUserAction();
 
@@ -29,10 +23,7 @@ export const getStatusAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -86,10 +77,7 @@ export const updateStatusAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -159,10 +147,7 @@ export const getSummaryAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 

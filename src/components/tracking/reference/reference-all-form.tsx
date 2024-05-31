@@ -1,50 +1,19 @@
 "use client";
 
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import {
-  getCarriersList,
-  getQueueList,
-  getRefList,
-} from "@/utils/pre-define-data/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getCarriersList, getQueueList, getRefList } from "@/utils/pre-define-data/data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ParamType, ReferenceAllFormType } from "@/utils/types/common";
 import { useReferenceAllForm } from "@/utils/schema";
 
 export const ReferenceAllForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = React.useMemo(
-    () => getCarriersList(params.mode),
-    [params.mode]
-  );
-  const queueOptions = React.useMemo(
-    () => getQueueList(params.mode),
-    [params.mode]
-  );
-  const refOptions = React.useMemo(
-    () => getRefList(params.mode),
-    [params.mode]
-  );
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
+  const queueOptions = React.useMemo(() => getQueueList(params.mode), [params.mode]);
+  const refOptions = React.useMemo(() => getRefList(params.mode), [params.mode]);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -86,27 +55,20 @@ export const ReferenceAllForm = () => {
 
       return referenceAllParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="carrier"
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor="carrier">Carrier</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  required
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value} required>
                   <FormControl id="carrier">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a carrier..." />
@@ -130,11 +92,7 @@ export const ReferenceAllForm = () => {
             render={({ field }) => (
               <FormItem className="mt-4">
                 <FormLabel htmlFor="refStatus">Status</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  required
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value} required>
                   <FormControl id="active">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a status..." />
@@ -206,11 +164,7 @@ export const ReferenceAllForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="w-[120px] mt-4 capitalize"
-            disabled={btnLoad}
-          >
+          <Button type="submit" className="mt-4 w-[120px] capitalize" disabled={btnLoad}>
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

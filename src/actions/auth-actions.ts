@@ -6,7 +6,6 @@ import bcryptjs from "bcryptjs";
 import { AuthType } from "@/utils/types/common";
 import { mainRequestAction } from "./main-actions";
 
-
 // auth actions
 
 // sign up action
@@ -24,10 +23,7 @@ export const signUpAction = async ({ username, password }: AuthType) => {
 
     let res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -58,10 +54,7 @@ export const signInAction = async ({ username, password }: AuthType) => {
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -120,10 +113,7 @@ export const resetAction = async ({ username, password }: AuthType) => {
 
     let res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 

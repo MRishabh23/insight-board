@@ -1,9 +1,4 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoCircle } from "@/components/icons/common";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
@@ -14,9 +9,7 @@ export const TableCellTooltip = ({ ...props }) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>{props.children}</TooltipTrigger>
-        <TooltipContent className="flex justify-center item-center">
-          {props.tip}
-        </TooltipContent>
+        <TooltipContent className="item-center flex justify-center">{props.tip}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );
@@ -27,7 +20,7 @@ export const TableCellTooltipScroll = ({ ...props }) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>{props.children}</TooltipTrigger>
-        <TooltipContent className="w-72 flex justify-center item-center text-wrap">
+        <TooltipContent className="item-center flex w-72 justify-center text-wrap">
           <ScrollArea className="h-32">{props.tip}</ScrollArea>
         </TooltipContent>
       </Tooltip>
@@ -42,7 +35,7 @@ export const TableHeaderTooltip = ({ ...props }) => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
-            <InfoCircle className="w-5 h-5" />
+            <InfoCircle className="h-5 w-5" />
           </TooltipTrigger>
           <TooltipContent>
             <p>{props.tip}</p>
@@ -59,7 +52,7 @@ export const TableHeaderTooltip = ({ ...props }) => {
 
 export const TableHeadCustom = ({ ...props }) => {
   return (
-    <div className={cn("flex justify-center items-center", props.className)}>
+    <div className={cn("flex items-center justify-center", props.className)}>
       <Button className="w-full" variant={"ghost"} onClick={props.onClick}>
         {props.children}
       </Button>
@@ -68,11 +61,7 @@ export const TableHeadCustom = ({ ...props }) => {
 };
 
 export const TableCellCustom = ({ ...props }) => {
-  return (
-    <div className={cn("flex justify-center items-center", props.className)}>
-      {props.children}
-    </div>
-  );
+  return <div className={cn("flex items-center justify-center", props.className)}>{props.children}</div>;
 };
 
 export const CommonTooltip = ({ ...props }) => {
@@ -80,9 +69,7 @@ export const CommonTooltip = ({ ...props }) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>{props.children}</TooltipTrigger>
-        <TooltipContent className="flex justify-center item-center">
-          {props.tip}
-        </TooltipContent>
+        <TooltipContent className="item-center flex justify-center">{props.tip}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

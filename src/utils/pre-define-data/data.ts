@@ -214,18 +214,11 @@ const year = [
 ];
 
 const days = [
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25, 26, 27, 28, 29, 30, 31,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
 ];
 
 export const getCarriersList = (mode: string) => {
-  return mode === "air"
-    ? airCarriers
-    : mode === "ocean"
-    ? oceanCarriers
-    : mode === "terminal"
-    ? terminalCarriers
-    : [];
+  return mode === "air" ? airCarriers : mode === "ocean" ? oceanCarriers : mode === "terminal" ? terminalCarriers : [];
 };
 
 export const getQueueList = (mode: string) => {
@@ -237,11 +230,7 @@ export const getHistoryType = () => {
 };
 
 export const getRefList = (mode: string) => {
-  return mode === "air"
-    ? airRefType
-    : mode === "ocean"
-    ? oceanRefType
-    : terminalRefType;
+  return mode === "air" ? airRefType : mode === "ocean" ? oceanRefType : terminalRefType;
 };
 
 export const getMonthList = (year: string) => {

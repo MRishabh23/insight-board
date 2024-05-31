@@ -1,61 +1,27 @@
 "use client";
 
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import {
-  getCarriersList,
-  getQueueList,
-  getRefList,
-} from "@/utils/pre-define-data/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getCarriersList, getQueueList, getRefList } from "@/utils/pre-define-data/data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
 import { LatencyFormType, ParamType } from "@/utils/types/common";
 import { useLatencyForm } from "@/utils/schema";
 
 export const LatencyForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = React.useMemo(
-    () => getCarriersList(params.mode),
-    [params.mode]
-  );
-  const queueOptions = React.useMemo(
-    () => getQueueList(params.mode),
-    [params.mode]
-  );
-  const refOptions = React.useMemo(
-    () => getRefList(params.mode),
-    [params.mode]
-  );
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
+  const queueOptions = React.useMemo(() => getQueueList(params.mode), [params.mode]);
+  const refOptions = React.useMemo(() => getRefList(params.mode), [params.mode]);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   let newCarrOpt: any = [];
 
@@ -106,16 +72,13 @@ export const LatencyForm = () => {
 
       return latencyParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="carriers"
@@ -147,10 +110,7 @@ export const LatencyForm = () => {
             render={({ field }) => (
               <FormItem className="mt-4">
                 <FormLabel htmlFor="queue">Queue</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl id="queue">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a queue..." />
@@ -174,10 +134,7 @@ export const LatencyForm = () => {
             render={({ field }) => (
               <FormItem className="mt-4">
                 <FormLabel htmlFor="refType">Reference Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl id="refType">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a reference type..." />
@@ -196,11 +153,7 @@ export const LatencyForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="w-[120px] mt-4 capitalize"
-            disabled={btnLoad}
-          >
+          <Button type="submit" className="mt-4 w-[120px] capitalize" disabled={btnLoad}>
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

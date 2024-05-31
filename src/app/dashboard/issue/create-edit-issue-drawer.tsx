@@ -1,31 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { getCarriersList } from "@/utils/pre-define-data/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useIssueForm } from "@/utils/schema";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,7 +26,7 @@ export function CreateEditIssueDrawer({ ...props }) {
         <SheetHeader>
           <SheetTitle>{props.title}</SheetTitle>
         </SheetHeader>
-        <ScrollArea className="w-full mt-5 my-scroll">
+        <ScrollArea className="my-scroll mt-5 w-full">
           <AddIssueForm
             issue={props.issue}
             tableType={props.tableType}
@@ -64,13 +45,15 @@ const AddIssueForm = ({ ...props }) => {
 
   const transportMode = form.watch("mode");
 
-  const carrierOptions = React.useMemo(
-    () => getCarriersList(transportMode),
-    [transportMode]
-  );
+  const carrierOptions = React.useMemo(() => getCarriersList(transportMode), [transportMode]);
 
-  const { mutate: server_CUIssue, isPending: isPending_CUIssue } =
-    useIssueCUMutation(form, props.issue, props.issueKey, props.tableType, props.setOpen);
+  const { mutate: server_CUIssue, isPending: isPending_CUIssue } = useIssueCUMutation(
+    form,
+    props.issue,
+    props.issueKey,
+    props.tableType,
+    props.setOpen,
+  );
 
   const onSubmit = (data: any) => {
     if (!data.mode) {
@@ -124,17 +107,14 @@ const AddIssueForm = ({ ...props }) => {
       polling_frequency: 1,
       default_emails: "yes",
       emails: "",
-      additional_links: ""
+      additional_links: "",
     });
   };
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="env"
@@ -265,12 +245,7 @@ const AddIssueForm = ({ ...props }) => {
                   Issue
                 </FormLabel>
                 <FormControl id="issue">
-                  <Input
-                    type="text"
-                    placeholder="Type issue..."
-                    required
-                    {...field}
-                  />
+                  <Input type="text" placeholder="Type issue..." required {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -285,12 +260,7 @@ const AddIssueForm = ({ ...props }) => {
                   Description
                 </FormLabel>
                 <FormControl id="description">
-                  <Textarea
-                    className="h-36"
-                    placeholder="Describe issue..."
-                    required
-                    {...field}
-                  />
+                  <Textarea className="h-36" placeholder="Describe issue..." required {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -374,28 +344,16 @@ const AddIssueForm = ({ ...props }) => {
           />
           {props.issue === "CREATE" && (
             <>
-              <Button
-                type="submit"
-                className="w-full mt-4"
-                disabled={isPending_CUIssue}
-              >
+              <Button type="submit" className="mt-4 w-full" disabled={isPending_CUIssue}>
                 {isPending_CUIssue ? "Creating..." : "Create"}
               </Button>
-              <Button
-                type="button"
-                onMouseDown={handleReset}
-                className="w-full mt-4"
-              >
+              <Button type="button" onMouseDown={handleReset} className="mt-4 w-full">
                 Reset
               </Button>
             </>
           )}
           {props.issue === "EDIT" && (
-            <Button
-              type="submit"
-              className="w-full mt-4"
-              disabled={isPending_CUIssue}
-            >
+            <Button type="submit" className="mt-4 w-full" disabled={isPending_CUIssue}>
               {isPending_CUIssue ? "Updating..." : "Update"}
             </Button>
           )}

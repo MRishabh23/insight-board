@@ -20,9 +20,7 @@ export function IssueTable({ ...props }) {
       id: "issue",
       accessorKey: "issue",
       header: () => <TableHeadCustom className="w-32">Issue</TableHeadCustom>,
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.value.issue}</TableCellCustom>
-      ),
+      cell: ({ row }) => <TableCellCustom>{row.original.value.issue}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -34,24 +32,16 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         const status = row.original.value.status;
         const commonClass = "border p-[5px] rounded-sm";
-        let statusColor =
-          commonClass + " bg-green-50 border-green-500 text-green-500";
-        if (status === "CLOSED")
-          statusColor = commonClass + " bg-red-50 border-red-500 text-red-500";
-        return (
-          <TableCellCustom className={statusColor}>{status}</TableCellCustom>
-        );
+        let statusColor = commonClass + " bg-green-50 border-green-500 text-green-500";
+        if (status === "CLOSED") statusColor = commonClass + " bg-red-50 border-red-500 text-red-500";
+        return <TableCellCustom className={statusColor}>{status}</TableCellCustom>;
       },
     },
     {
       id: "mode",
       accessorKey: "mode",
       header: () => <TableHeadCustom>Mode</TableHeadCustom>,
-      cell: ({ row }) => (
-        <TableCellCustom>
-          {row.original.value.mode.toUpperCase()}
-        </TableCellCustom>
-      ),
+      cell: ({ row }) => <TableCellCustom>{row.original.value.mode.toUpperCase()}</TableCellCustom>,
     },
     {
       id: "severity",
@@ -60,31 +50,18 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         const severity = row.original.value.severity;
         const commonClass = "border p-[5px] rounded-sm";
-        let severityColor =
-          commonClass + " bg-red-50 border-red-500 text-red-500";
-        if (severity === "LOW")
-          severityColor =
-            commonClass + " bg-blue-50 border-blue-500 text-blue-500";
-        if (severity === "MEDIUM")
-          severityColor =
-            commonClass + " bg-yellow-50 border-yellow-500 text-yellow-500";
-        if (severity === "HIGH")
-          severityColor =
-            commonClass + " bg-orange-50 border-orange-500 text-orange-500";
-        return (
-          <TableCellCustom className={severityColor}>
-            {severity}
-          </TableCellCustom>
-        );
+        let severityColor = commonClass + " bg-red-50 border-red-500 text-red-500";
+        if (severity === "LOW") severityColor = commonClass + " bg-blue-50 border-blue-500 text-blue-500";
+        if (severity === "MEDIUM") severityColor = commonClass + " bg-yellow-50 border-yellow-500 text-yellow-500";
+        if (severity === "HIGH") severityColor = commonClass + " bg-orange-50 border-orange-500 text-orange-500";
+        return <TableCellCustom className={severityColor}>{severity}</TableCellCustom>;
       },
     },
     {
       id: "carrier",
       accessorKey: "carrier",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.value.carrier}</TableCellCustom>
-      ),
+      cell: ({ row }) => <TableCellCustom>{row.original.value.carrier}</TableCellCustom>,
     },
     {
       id: "created-at",
@@ -93,10 +70,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return (
           <TableCellCustom>
-            {format(
-              toDate(+row.original.created_at - 19800000),
-              "do MMM yyyy, HH:mm:ss"
-            )}
+            {format(toDate(+row.original.created_at - 19800000), "do MMM yyyy, HH:mm:ss")}
           </TableCellCustom>
         );
       },
@@ -108,10 +82,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return (
           <TableCellCustom>
-            {format(
-              toDate(+row.original.modified_at - 19800000),
-              "do MMM yyyy, HH:mm:ss"
-            )}
+            {format(toDate(+row.original.modified_at - 19800000), "do MMM yyyy, HH:mm:ss")}
           </TableCellCustom>
         );
       },
@@ -154,12 +125,7 @@ export function IssueTable({ ...props }) {
       accessorKey: "sendNotification",
       header: () => <TableHeadCustom>Send Notification</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <NotificationIssueForm
-            issueKey={row.original.issue_key}
-            tableType={props.type.toUpperCase()}
-          />
-        );
+        return <NotificationIssueForm issueKey={row.original.issue_key} tableType={props.type.toUpperCase()} />;
       },
     },
     {
@@ -175,12 +141,7 @@ export function IssueTable({ ...props }) {
       accessorKey: "delete",
       header: () => <TableHeadCustom>Delete</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <DeleteIssueForm
-            issueKey={row.original.issue_key}
-            tableType={props.type.toUpperCase()}
-          />
-        );
+        return <DeleteIssueForm issueKey={row.original.issue_key} tableType={props.type.toUpperCase()} />;
       },
     },
   ];
@@ -193,7 +154,7 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -201,7 +162,7 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.isError || issueQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {issueQuery.error?.message}</p>
       </div>
     );
@@ -209,7 +170,7 @@ export function IssueTable({ ...props }) {
 
   if (issueQuery.data && !issueQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="flex h-full flex-col items-center justify-center">
         <p className="text-xl font-bold">{issueQuery.data?.data}</p>
       </div>
     );

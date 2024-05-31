@@ -44,10 +44,7 @@ export const getHistoryAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -56,14 +53,14 @@ export const getHistoryAction = async ({
       const errMsg = dataErr.includes("Incorrect SubscriptionId")
         ? dataErr
         : dataErr.includes("Not Found")
-        ? dataErr
-        : dataErr.includes("No data available")
-        ? dataErr
-        : dataErr.includes("for this query")
-        ? dataErr
-        : dataErr.includes("created for next container journey")
-        ? dataErr
-        : "Something went wrong while fetching history.";
+          ? dataErr
+          : dataErr.includes("No data available")
+            ? dataErr
+            : dataErr.includes("for this query")
+              ? dataErr
+              : dataErr.includes("created for next container journey")
+                ? dataErr
+                : "Something went wrong while fetching history.";
       throw new Error(errMsg);
     }
 
@@ -109,10 +106,7 @@ export const getFetchHistoryAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 

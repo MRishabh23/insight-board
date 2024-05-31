@@ -19,7 +19,7 @@ export function ReferenceAllTable() {
 
   if (!searchParams.get("carrier")) {
     return (
-      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+      <div className="mt-10 flex items-center justify-center text-xl font-bold">
         Select a carrier to view references.
       </div>
     );
@@ -33,12 +33,8 @@ const ReferenceAllData = ({ ...props }) => {
     {
       id: "subscription-id",
       accessorKey: "subscriptionId",
-      header: () => (
-        <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
-      ),
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
-      ),
+      header: () => <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>,
+      cell: ({ row }) => <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -48,34 +44,30 @@ const ReferenceAllData = ({ ...props }) => {
       accessorKey: "carrier",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>
-        );
+        return <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>;
       },
     },
     {
       id: "ref-type",
       accessorKey: "refType",
-      header: () => (
-        <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>
-      ),
+      header: () => <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>,
       cell: ({ row }) => {
         let ref = row.original.subscriptionId;
         ref = ref.includes("BOOKING")
           ? "Booking"
           : ref.includes("BILL")
-          ? "BillOfLading"
-          : ref.includes("CONTAINER")
-          ? "Container"
-          : "AWB";
+            ? "BillOfLading"
+            : ref.includes("CONTAINER")
+              ? "Container"
+              : "AWB";
 
         let rType = ref.includes("Booking")
           ? "amber"
           : ref.includes("Bill")
-          ? "orange"
-          : ref.includes("Container")
-          ? "green"
-          : "blue";
+            ? "orange"
+            : ref.includes("Container")
+              ? "green"
+              : "blue";
         rType = "bg-" + rType + "-500";
 
         return (
@@ -90,9 +82,7 @@ const ReferenceAllData = ({ ...props }) => {
       accessorKey: "refNum",
       header: () => <TableHeadCustom>Reference Number</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>
-        );
+        return <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>;
       },
     },
     {
@@ -103,11 +93,7 @@ const ReferenceAllData = ({ ...props }) => {
         let status = props.searchParams.get("refStatus")!;
 
         return (
-          <TableCellCustom
-            className={cn(
-              status === "ACTIVE" ? "text-green-500" : "text-red-500"
-            )}
-          >
+          <TableCellCustom className={cn(status === "ACTIVE" ? "text-green-500" : "text-red-500")}>
             {status}
           </TableCellCustom>
         );
@@ -122,10 +108,10 @@ const ReferenceAllData = ({ ...props }) => {
         const qType = queue.includes("NORMAL")
           ? "Normal"
           : queue.includes("ADAPTIVE")
-          ? "Adaptive"
-          : queue.includes("RNF")
-          ? "RNF"
-          : "";
+            ? "Adaptive"
+            : queue.includes("RNF")
+              ? "RNF"
+              : "";
 
         return <TableCellCustom>{qType}</TableCellCustom>;
       },
@@ -138,10 +124,7 @@ const ReferenceAllData = ({ ...props }) => {
         const lastT = row.original.lastCrawledAt;
         let showT = "Not Crawled Yet";
         if (lastT !== "null") {
-          showT = format(
-            toDate(row.original.lastCrawledAt),
-            "do MMM yyyy, HH:mm:ss"
-          );
+          showT = format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss");
         }
         return <TableCellCustom>{showT}</TableCellCustom>;
       },
@@ -169,14 +152,11 @@ const ReferenceAllData = ({ ...props }) => {
     columns.splice(5, 2);
   }
 
-  const referenceAllQuery = useReferenceAllQuery(
-    props.params,
-    props.searchParams
-  );
+  const referenceAllQuery = useReferenceAllQuery(props.params, props.searchParams);
 
   if (referenceAllQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -184,23 +164,19 @@ const ReferenceAllData = ({ ...props }) => {
 
   if (referenceAllQuery.isError || referenceAllQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
-        <p className="text-red-500">
-          Error: {referenceAllQuery.error?.message}
-        </p>
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
+        <p className="text-red-500">Error: {referenceAllQuery.error?.message}</p>
       </div>
     );
   }
 
   if (referenceAllQuery.data && !referenceAllQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{referenceAllQuery.data?.data}</p>
       </div>
     );
   }
 
-  return (
-    <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />
-  );
+  return <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />;
 };

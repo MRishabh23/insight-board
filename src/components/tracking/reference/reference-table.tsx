@@ -15,12 +15,8 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "subscription-id",
     accessorKey: "subscriptionId",
-    header: () => (
-      <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>
-    ),
-    cell: ({ row }) => (
-      <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>
-    ),
+    header: () => <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>,
+    cell: ({ row }) => <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>,
     meta: {
       className: "sticky left-0 bg-white",
     },
@@ -36,18 +32,16 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "ref-type",
     accessorKey: "refType",
-    header: () => (
-      <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>
-    ),
+    header: () => <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>,
     cell: ({ row }) => {
       const ref = row.original.referenceType;
       let rType = ref.includes("BOOKING")
         ? "amber"
         : ref.includes("BILL")
-        ? "orange"
-        : ref.includes("CONTAINER")
-        ? "green"
-        : "blue";
+          ? "orange"
+          : ref.includes("CONTAINER")
+            ? "green"
+            : "blue";
       rType = "bg-" + rType + "-500";
 
       return (
@@ -82,10 +76,10 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
       const qType = queue.includes("NORMAL")
         ? "Normal"
         : queue.includes("ADAPTIVE")
-        ? "Adaptive"
-        : queue.includes("RNF")
-        ? "RNF"
-        : "";
+          ? "Adaptive"
+          : queue.includes("RNF")
+            ? "RNF"
+            : "";
 
       return <TableCellCustom>{qType}</TableCellCustom>;
     },
@@ -95,11 +89,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "createdAt",
     header: () => <TableHeadCustom>Created On</TableHeadCustom>,
     cell: ({ row }) => {
-      return (
-        <TableCellCustom>
-          {format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}
-        </TableCellCustom>
-      );
+      return <TableCellCustom>{format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
     },
   },
   {
@@ -107,9 +97,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "lastCrawledAt",
     header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
     cell: ({ row }) => (
-      <TableCellCustom>
-        {format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}
-      </TableCellCustom>
+      <TableCellCustom>{format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
     ),
   },
   {
@@ -117,11 +105,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "updatedAt",
     header: () => <TableHeadCustom>Updated At</TableHeadCustom>,
     cell: ({ row }) => {
-      return (
-        <TableCellCustom>
-          {format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}
-        </TableCellCustom>
-      );
+      return <TableCellCustom>{format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
     },
   },
 ];
@@ -132,7 +116,7 @@ export function ReferenceTable() {
 
   if (!searchParams.get("carrier") && !searchParams.get("reference")) {
     return (
-      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+      <div className="mt-10 flex items-center justify-center text-xl font-bold">
         Select a carrier and enter a reference to view data.
       </div>
     );
@@ -143,22 +127,15 @@ export function ReferenceTable() {
 
 const ReferenceData = ({ ...props }) => {
   const referenceId = React.useMemo(
-    () =>
-      `${props.searchParams.get("carrier")}_${props.searchParams.get(
-        "reference"
-      )}`,
-    [props.searchParams]
+    () => `${props.searchParams.get("carrier")}_${props.searchParams.get("reference")}`,
+    [props.searchParams],
   );
 
-  const referenceQuery = useReferenceQuery(
-    props.params,
-    props.searchParams.get("category"),
-    referenceId
-  );
+  const referenceQuery = useReferenceQuery(props.params, props.searchParams.get("category"), referenceId);
 
   if (referenceQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -166,7 +143,7 @@ const ReferenceData = ({ ...props }) => {
 
   if (referenceQuery.isError || referenceQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {referenceQuery.error?.message}</p>
       </div>
     );
@@ -174,13 +151,11 @@ const ReferenceData = ({ ...props }) => {
 
   if (referenceQuery.data && !referenceQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{referenceQuery.data?.data}</p>
       </div>
     );
   }
 
-  return (
-    <TableDataStaticComponent data={referenceQuery.data} columns={columns} />
-  );
+  return <TableDataStaticComponent data={referenceQuery.data} columns={columns} />;
 };

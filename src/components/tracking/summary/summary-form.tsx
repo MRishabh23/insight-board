@@ -1,36 +1,14 @@
 "use client";
 
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCarriersList, getQueueList } from "@/utils/pre-define-data/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format, startOfDay, subDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -39,24 +17,15 @@ import { useSummaryForm } from "@/utils/schema";
 
 export const SummaryForm = () => {
   const params = useParams<ParamType>();
-  const carriersOptions = React.useMemo(
-    () => getCarriersList(params.mode),
-    [params.mode]
-  );
-  const queueOptions = React.useMemo(
-    () => getQueueList(params.mode),
-    [params.mode]
-  );
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
+  const queueOptions = React.useMemo(() => getQueueList(params.mode), [params.mode]);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   let newCarrOpt: any = [];
 
@@ -113,16 +82,13 @@ export const SummaryForm = () => {
 
       return summaryParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="carriers"
@@ -154,10 +120,7 @@ export const SummaryForm = () => {
             render={({ field }) => (
               <FormItem className="mt-4">
                 <FormLabel htmlFor="queue">Queue</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl id="queue">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a queue..." />
@@ -179,7 +142,7 @@ export const SummaryForm = () => {
             control={form.control}
             name="range"
             render={({ field }) => (
-              <FormItem className="flex flex-col mt-6">
+              <FormItem className="mt-6 flex flex-col">
                 <FormLabel htmlFor="dateRange">Date Range</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -189,18 +152,15 @@ export const SummaryForm = () => {
                         variant={"outline"}
                         className={cn(
                           "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
+                          !field.value && "text-muted-foreground",
                         )}
-                        disabled={
-                          form.watch("carriers").length === 1 ? false : true
-                        }
+                        disabled={form.watch("carriers").length === 1 ? false : true}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {field.value?.from ? (
                           field.value?.to ? (
                             <>
-                              {format(field.value.from, "LLL dd, y")} -{" "}
-                              {format(field.value.to, "LLL dd, y")}
+                              {format(field.value.from, "LLL dd, y")} - {format(field.value.to, "LLL dd, y")}
                             </>
                           ) : (
                             format(field.value.from, "LLL dd, y")
@@ -229,11 +189,7 @@ export const SummaryForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="w-[120px] mt-4 capitalize"
-            disabled={btnLoad}
-          >
+          <Button type="submit" className="mt-4 w-[120px] capitalize" disabled={btnLoad}>
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

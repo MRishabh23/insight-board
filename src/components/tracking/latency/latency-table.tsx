@@ -15,9 +15,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     id: "carrier",
     accessorKey: "carrier",
     header: () => <TableHeadCustom className="w-32">Carrier</TableHeadCustom>,
-    cell: ({ row }) => (
-      <TableCellCustom>{row.original.carrier}</TableCellCustom>
-    ),
+    cell: ({ row }) => <TableCellCustom>{row.original.carrier}</TableCellCustom>,
     meta: {
       className: "sticky left-0 bg-white",
     },
@@ -25,18 +23,16 @@ export const columns: ColumnDef<LatencyTableType>[] = [
   {
     id: "ref-type",
     accessorKey: "refType",
-    header: () => (
-      <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>
-    ),
+    header: () => <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>,
     cell: ({ row }) => {
       const ref = row.original.refType;
       let rType = ref.includes("BOOKING")
         ? "amber"
         : ref.includes("BILL")
-        ? "orange"
-        : ref.includes("CONTAINER")
-        ? "green"
-        : "blue";
+          ? "orange"
+          : ref.includes("CONTAINER")
+            ? "green"
+            : "blue";
       rType = "bg-" + rType + "-500";
 
       return (
@@ -55,10 +51,10 @@ export const columns: ColumnDef<LatencyTableType>[] = [
       const qType = queue.includes("normal")
         ? "Normal"
         : queue.includes("adaptive")
-        ? "Adaptive"
-        : queue.includes("rnf")
-        ? "RNF"
-        : "";
+          ? "Adaptive"
+          : queue.includes("rnf")
+            ? "RNF"
+            : "";
 
       return <TableCellCustom>{qType}</TableCellCustom>;
     },
@@ -96,9 +92,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     id: "second",
     accessorKey: "second",
     header: () => <TableHeadCustom>1_2</TableHeadCustom>,
-    cell: ({ row }) => (
-      <TableCellCustom>{row.original.second || 0}</TableCellCustom>
-    ),
+    cell: ({ row }) => <TableCellCustom>{row.original.second || 0}</TableCellCustom>,
   },
   {
     id: "third",
@@ -161,11 +155,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     accessorKey: "tenth",
     header: () => <TableHeadCustom>{">5days"}</TableHeadCustom>,
     cell: ({ row }) => {
-      return (
-        <TableCellCustom className="text-red-500">
-          {row.original.tenth || 0}
-        </TableCellCustom>
-      );
+      return <TableCellCustom className="text-red-500">{row.original.tenth || 0}</TableCellCustom>;
     },
   },
 ];
@@ -175,11 +165,8 @@ export function LatencyTable() {
   const searchParams = useSearchParams();
 
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   let newCarrOpt: string[] = [];
 
@@ -193,31 +180,19 @@ export function LatencyTable() {
 
   if (!searchParams.get("carriers")) {
     return (
-      <div className="flex justify-center items-center mt-10 text-xl font-bold">
-        Select a carrier to view latency.
-      </div>
+      <div className="mt-10 flex items-center justify-center text-xl font-bold">Select a carrier to view latency.</div>
     );
   }
 
-  return (
-    <LatencyData
-      params={params}
-      carriers={newCarrOpt}
-      searchParams={searchParams}
-    />
-  );
+  return <LatencyData params={params} carriers={newCarrOpt} searchParams={searchParams} />;
 }
 
 const LatencyData = ({ ...props }) => {
-  const latencyQuery = useLatencyQuery(
-    props.params,
-    props.carriers,
-    props.searchParams
-  );
+  const latencyQuery = useLatencyQuery(props.params, props.carriers, props.searchParams);
 
   if (latencyQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -225,7 +200,7 @@ const LatencyData = ({ ...props }) => {
 
   if (latencyQuery.isError || latencyQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {latencyQuery.error?.message}</p>
       </div>
     );
@@ -233,13 +208,11 @@ const LatencyData = ({ ...props }) => {
 
   if (latencyQuery.data && !latencyQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{latencyQuery.data?.data}</p>
       </div>
     );
   }
 
-  return (
-    <TableDataDefaultComponent data={latencyQuery.data} columns={columns} />
-  );
+  return <TableDataDefaultComponent data={latencyQuery.data} columns={columns} />;
 };

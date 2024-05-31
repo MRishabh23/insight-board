@@ -5,11 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableDataStaticComponent } from "@/components/data-table-static";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
-import {
-  TableCellCustom,
-  TableCellTooltip,
-  TableHeadCustom,
-} from "@/components/table/common";
+import { TableCellCustom, TableCellTooltip, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType, SummaryType } from "@/utils/types/common";
@@ -20,11 +16,8 @@ export function SummaryTable() {
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   let newCarrOpt: string[] = [];
 
@@ -41,9 +34,7 @@ export function SummaryTable() {
       id: "carrier",
       accessorKey: "jtCarrierCode",
       header: () => <TableHeadCustom className="w-32">Carrier</TableHeadCustom>,
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.jtCarrierCode}</TableCellCustom>
-      ),
+      cell: ({ row }) => <TableCellCustom>{row.original.jtCarrierCode}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -57,14 +48,14 @@ export function SummaryTable() {
         const qType = queue.includes("NORMAL")
           ? "normal"
           : queue.includes("ADAPTIVE")
-          ? "adaptive"
-          : queue.includes("RNF")
-          ? "rnf"
-          : "";
+            ? "adaptive"
+            : queue.includes("RNF")
+              ? "rnf"
+              : "";
 
         return (
           <TableCellCustom>
-            <Badge className="capitalize bg-stone-500">{qType}</Badge>
+            <Badge className="bg-stone-500 capitalize">{qType}</Badge>
           </TableCellCustom>
         );
       },
@@ -74,16 +65,12 @@ export function SummaryTable() {
       accessorKey: "jtCrawledTotal",
       header: ({ column }) => {
         return (
-          <TableHeadCustom
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
+          <TableHeadCustom onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
             Active <ArrowUpDown className="ml-2 h-4 w-4" />
           </TableHeadCustom>
         );
       },
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.jtCrawledTotal}</TableCellCustom>
-      ),
+      cell: ({ row }) => <TableCellCustom>{row.original.jtCrawledTotal}</TableCellCustom>,
     },
     {
       id: "avg-age",
@@ -94,8 +81,7 @@ export function SummaryTable() {
         return (
           <TableCellCustom
             className={`${
-              (params.mode === "ocean" && age >= 90) ||
-              (params.mode === "air" && age >= 14)
+              (params.mode === "ocean" && age >= 90) || (params.mode === "air" && age >= 14)
                 ? "text-red-500"
                 : "text-inherit"
             }`}
@@ -108,12 +94,8 @@ export function SummaryTable() {
     {
       id: "last-run",
       accessorKey: "lastRunStartAt",
-      header: () => (
-        <TableHeadCustom className="w-32">Last Run</TableHeadCustom>
-      ),
-      cell: ({ row }) => (
-        <TableCellCustom>{row.original.lastRunStartAt} ago</TableCellCustom>
-      ),
+      header: () => <TableHeadCustom className="w-32">Last Run</TableHeadCustom>,
+      cell: ({ row }) => <TableCellCustom>{row.original.lastRunStartAt} ago</TableCellCustom>,
     },
     {
       id: "duration",
@@ -124,8 +106,7 @@ export function SummaryTable() {
         return (
           <TableCellCustom
             className={`${
-              (params.mode === "ocean" && durDiff >= 90) ||
-              (params.mode === "air" && durDiff >= 60)
+              (params.mode === "ocean" && durDiff >= 90) || (params.mode === "air" && durDiff >= 60)
                 ? "text-red-500"
                 : "text-inherit"
             }`}
@@ -157,8 +138,7 @@ export function SummaryTable() {
         return (
           <TableCellCustom
             className={`${
-              ((params.mode === "ocean" && rnfRatio > 20) ||
-                (params.mode === "air" && rnfRatio > 5)) &&
+              ((params.mode === "ocean" && rnfRatio > 20) || (params.mode === "air" && rnfRatio > 5)) &&
               !queue.includes("RNF")
                 ? "text-red-500"
                 : "text-inherit"
@@ -187,11 +167,7 @@ export function SummaryTable() {
                 </div>
               }
             >
-              <div
-                className={`${
-                  failRatio >= 3.0 ? "text-red-500" : "text-inherit"
-                }`}
-              >
+              <div className={`${failRatio >= 3.0 ? "text-red-500" : "text-inherit"}`}>
                 {row.original.failCount} ({failRatio}%)
               </div>
             </TableCellTooltip>
@@ -202,9 +178,7 @@ export function SummaryTable() {
     {
       id: "diff-rate",
       accessorKey: "getTotalDiffFound",
-      header: () => (
-        <TableHeadCustom className="w-32">DiffRate</TableHeadCustom>
-      ),
+      header: () => <TableHeadCustom className="w-32">DiffRate</TableHeadCustom>,
       cell: ({ row }) => {
         const diffRatio = row.original.diffRatio;
         return (
@@ -219,8 +193,7 @@ export function SummaryTable() {
             >
               <div
                 className={`${
-                  (params.mode === "ocean" && diffRatio >= 10.0) ||
-                  (params.mode === "air" && diffRatio >= 20.0)
+                  (params.mode === "ocean" && diffRatio >= 10.0) || (params.mode === "air" && diffRatio >= 20.0)
                     ? "text-red-500"
                     : "text-inherit"
                 }`}
@@ -245,9 +218,7 @@ export function SummaryTable() {
       accessorKey: "durationToLaunch",
       header: () => <TableHeadCustom>Duration To Launch</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>{row.original.durationToLaunch}</TableCellCustom>
-        );
+        return <TableCellCustom>{row.original.durationToLaunch}</TableCellCustom>;
       },
     },
     {
@@ -271,9 +242,7 @@ export function SummaryTable() {
       accessorKey: "toFKFailedNotSent",
       header: () => <TableHeadCustom>FK Timeout</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>{row.original.toFKFailedNotSent}</TableCellCustom>
-        );
+        return <TableCellCustom>{row.original.toFKFailedNotSent}</TableCellCustom>;
       },
     },
     {
@@ -293,12 +262,8 @@ export function SummaryTable() {
                 </div>
               }
             >
-              <div
-                className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}
-              >
-                {queue.includes("ADAPTIVE")
-                  ? `${row.original.hitRateCount} (${hitPer}%)`
-                  : "NA"}
+              <div className={`${hitPer >= 1.0 ? "text-red-500" : "text-inherit"}`}>
+                {queue.includes("ADAPTIVE") ? `${row.original.hitRateCount} (${hitPer}%)` : "NA"}
               </div>
             </TableCellTooltip>
           </TableCellCustom>
@@ -318,11 +283,7 @@ export function SummaryTable() {
       accessorKey: "start_time",
       header: () => <TableHeadCustom>Start Time</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>
-            {format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}
-          </TableCellCustom>
-        );
+        return <TableCellCustom>{format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
       },
     },
     {
@@ -330,11 +291,7 @@ export function SummaryTable() {
       accessorKey: "end_time",
       header: () => <TableHeadCustom>End Time</TableHeadCustom>,
       cell: ({ row }) => {
-        return (
-          <TableCellCustom>
-            {format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}
-          </TableCellCustom>
-        );
+        return <TableCellCustom>{format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
       },
     },
   ];
@@ -343,7 +300,7 @@ export function SummaryTable() {
 
   if (summaryQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -351,7 +308,7 @@ export function SummaryTable() {
 
   if (summaryQuery.isError || summaryQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {summaryQuery.error?.message}</p>
       </div>
     );
@@ -359,13 +316,11 @@ export function SummaryTable() {
 
   if (summaryQuery.data && !summaryQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{summaryQuery.data?.data}</p>
       </div>
     );
   }
 
-  return (
-    <TableDataStaticComponent data={summaryQuery.data} columns={columns} />
-  );
+  return <TableDataStaticComponent data={summaryQuery.data} columns={columns} />;
 }

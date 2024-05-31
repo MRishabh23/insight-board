@@ -5,12 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableDataStaticComponent } from "@/components/data-table-static";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
-import {
-  TableCellCustom,
-  TableCellTooltip,
-  TableCellTooltipScroll,
-  TableHeadCustom,
-} from "@/components/table/common";
+import { TableCellCustom, TableCellTooltip, TableCellTooltipScroll, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType, HistoryType } from "@/utils/types/common";
@@ -24,7 +19,7 @@ export function HistoryTable() {
 
   if (!searchParams.get("subId")) {
     return (
-      <div className="flex justify-center items-center mt-10 text-xl font-bold">
+      <div className="mt-10 flex items-center justify-center text-xl font-bold">
         Enter the Subscription Id to see history!
       </div>
     );
@@ -41,9 +36,7 @@ const HistoryData = ({ ...props }) => {
       id: "subscription-id",
       accessorKey: "subId",
       header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-      cell: () => (
-        <TableCellCustom>{props.searchParams.get("subId")}</TableCellCustom>
-      ),
+      cell: () => <TableCellCustom>{props.searchParams.get("subId")}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -54,12 +47,7 @@ const HistoryData = ({ ...props }) => {
       header: () => <TableHeadCustom>Created At</TableHeadCustom>,
       cell: ({ row }) => {
         return (
-          <TableCellCustom>
-            {format(
-              toDate(row.original.v.insertion_time),
-              "do MMM yyyy, HH:mm:ss"
-            )}
-          </TableCellCustom>
+          <TableCellCustom>{format(toDate(row.original.v.insertion_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
         );
       },
     },
@@ -68,22 +56,12 @@ const HistoryData = ({ ...props }) => {
       accessorKey: "crawl_status",
       header: () => <TableHeadCustom>Crawl Status</TableHeadCustom>,
       cell: ({ row }) => {
-        const status =
-          row.original.v.crawl_status === undefined
-            ? "No Data"
-            : row.original.v.crawl_status;
-        const tip =
-          row.original.v.error === "" ? "No error" : row.original.v.error;
+        const status = row.original.v.crawl_status === undefined ? "No Data" : row.original.v.crawl_status;
+        const tip = row.original.v.error === "" ? "No error" : row.original.v.error;
         return (
           <TableCellCustom>
             <TableCellTooltip tip={tip}>
-              <Badge
-                className={cn(
-                  status === "SUCCESS" ? "bg-green-400" : "bg-red-500"
-                )}
-              >
-                {status}
-              </Badge>
+              <Badge className={cn(status === "SUCCESS" ? "bg-green-400" : "bg-red-500")}>{status}</Badge>
             </TableCellTooltip>
           </TableCellCustom>
         );
@@ -100,9 +78,7 @@ const HistoryData = ({ ...props }) => {
       accessorKey: "responseSent",
       header: () => <TableHeadCustom>Response Sent</TableHeadCustom>,
       cell: ({ row }) => {
-        const response = row.original.v.fkMappedJsonResourceId
-          ? row.original.v.fkMappedJsonResourceId
-          : "No data";
+        const response = row.original.v.fkMappedJsonResourceId ? row.original.v.fkMappedJsonResourceId : "No data";
         const latestRes = row.original.v.latestFKMappedJsonResourceId
           ? row.original.v.latestFKMappedJsonResourceId
           : "No data";
@@ -110,9 +86,7 @@ const HistoryData = ({ ...props }) => {
         if (error) {
           return (
             <TableCellCustom>
-              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>
-                {error}
-              </TableCellTooltipScroll>
+              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>{error}</TableCellTooltipScroll>
             </TableCellCustom>
           );
         }
@@ -134,11 +108,7 @@ const HistoryData = ({ ...props }) => {
             />
           );
         }
-        if (
-          response !== "No data" &&
-          response !== "null" &&
-          response !== "SAME_PAYLOAD"
-        ) {
+        if (response !== "No data" && response !== "null" && response !== "SAME_PAYLOAD") {
           return (
             <HistoryDrawer
               variant="success"
@@ -150,12 +120,7 @@ const HistoryData = ({ ...props }) => {
             />
           );
         }
-        if (
-          response !== "No data" &&
-          response !== "null" &&
-          response === "SAME_PAYLOAD" &&
-          latestRes === ""
-        ) {
+        if (response !== "No data" && response !== "null" && response === "SAME_PAYLOAD" && latestRes === "") {
           return <TableCellCustom>SAME PAYLOAD</TableCellCustom>;
         }
         return <TableCellCustom>Unhandled</TableCellCustom>;
@@ -166,27 +131,17 @@ const HistoryData = ({ ...props }) => {
       accessorKey: "crawledOutput",
       header: () => <TableHeadCustom>Crawled Output</TableHeadCustom>,
       cell: ({ row }) => {
-        const response = row.original.v.fkMappedJsonResourceId
-          ? row.original.v.fkMappedJsonResourceId
-          : "No data";
-        const crawledRes = row.original.v.crawledJsonResourceId
-          ? row.original.v.crawledJsonResourceId
-          : "No data";
+        const response = row.original.v.fkMappedJsonResourceId ? row.original.v.fkMappedJsonResourceId : "No data";
+        const crawledRes = row.original.v.crawledJsonResourceId ? row.original.v.crawledJsonResourceId : "No data";
         const error = row.original.v.error;
         if (error) {
           return (
             <TableCellCustom>
-              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>
-                {error}
-              </TableCellTooltipScroll>
+              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>{error}</TableCellTooltipScroll>
             </TableCellCustom>
           );
         }
-        if (
-          crawledRes !== "No data" &&
-          crawledRes !== "null" &&
-          response === "SAME_PAYLOAD"
-        ) {
+        if (crawledRes !== "No data" && crawledRes !== "null" && response === "SAME_PAYLOAD") {
           return (
             <HistoryDrawer
               variant="warning"
@@ -198,11 +153,7 @@ const HistoryData = ({ ...props }) => {
             />
           );
         }
-        if (
-          crawledRes !== "No data" &&
-          crawledRes !== "null" &&
-          response === "No data"
-        ) {
+        if (crawledRes !== "No data" && crawledRes !== "null" && response === "No data") {
           return (
             <HistoryDrawer
               variant="normal"
@@ -239,7 +190,7 @@ const HistoryData = ({ ...props }) => {
 
   if (historyQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -247,7 +198,7 @@ const HistoryData = ({ ...props }) => {
 
   if (historyQuery.isError || historyQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {historyQuery.error?.message}</p>
       </div>
     );
@@ -255,13 +206,11 @@ const HistoryData = ({ ...props }) => {
 
   if (historyQuery.data && !historyQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{historyQuery.data?.data}</p>
       </div>
     );
   }
 
-  return (
-    <TableDataStaticComponent data={historyQuery.data} columns={columns} />
-  );
+  return <TableDataStaticComponent data={historyQuery.data} columns={columns} />;
 };

@@ -8,12 +8,7 @@ export function middleware(request: NextRequest) {
 
   // public paths
   let isPublic = false;
-  if (
-    path === "/signin" ||
-    path === "/signup" ||
-    path === "/demo" ||
-    path === "/forgot"
-  ) {
+  if (path === "/signin" || path === "/signup" || path === "/demo" || path === "/forgot") {
     isPublic = true;
   }
   // get token

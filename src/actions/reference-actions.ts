@@ -44,18 +44,13 @@ export const getReferenceAllAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("pass one carrier")
-        ? dataErr
-        : "Something went wrong while fetching references.";
+      const errMsg = dataErr.includes("pass one carrier") ? dataErr : "Something went wrong while fetching references.";
       throw new Error(errMsg);
     }
 
@@ -107,10 +102,7 @@ export const getReferenceInfoAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -161,18 +153,13 @@ export const getReferenceAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("pass one carrier")
-        ? dataErr
-        : "Something went wrong while fetching references.";
+      const errMsg = dataErr.includes("pass one carrier") ? dataErr : "Something went wrong while fetching references.";
       throw new Error(errMsg);
     }
 
@@ -215,10 +202,7 @@ export const getReferenceSubscriptionAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 

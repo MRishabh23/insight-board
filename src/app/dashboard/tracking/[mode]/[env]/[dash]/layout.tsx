@@ -13,7 +13,7 @@ interface EnvProps {
 
 export default function DashLayout({ children, params }: EnvProps) {
   return (
-    <div className={cn("h-full flex flex-col")}>
+    <div className={cn("flex h-full flex-col")}>
       <TrackingEnvHeader params={params} />
       <TrackingDashHeader params={params} />
       <div className={cn("flex-1 py-10")}>{children}</div>

@@ -1,33 +1,11 @@
 "use client";
 
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import {
-  getCarriersList,
-  getMonthList,
-  getYearList,
-} from "@/utils/pre-define-data/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getCarriersList, getMonthList, getYearList } from "@/utils/pre-define-data/data";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
 import { InducedFormType, ParamType } from "@/utils/types/common";
 import { useInducedForm } from "@/utils/schema";
@@ -37,27 +15,17 @@ export const InducedForm = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const carriersOptions = React.useMemo(
-    () => getCarriersList(params.mode),
-    [params.mode]
-  );
-  const monthsOptions = React.useMemo(
-    () => getMonthList(searchParams.get("year")!),
-    [searchParams]
-  );
+  const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
+  const monthsOptions = React.useMemo(() => getMonthList(searchParams.get("year")!), [searchParams]);
   const yearOptions = React.useMemo(() => getYearList(), []);
   const [btnLoad, setBtnLoad] = React.useState(false);
   const queryCarriers = React.useMemo(
-    () =>
-      searchParams.get("carriers")
-        ? searchParams.get("carriers")?.split(",")
-        : [],
-    [searchParams]
+    () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
+    [searchParams],
   );
   const queryMonths = React.useMemo(
-    () =>
-      searchParams.get("months") ? searchParams.get("months")?.split(",") : [],
-    [searchParams]
+    () => (searchParams.get("months") ? searchParams.get("months")?.split(",") : []),
+    [searchParams],
   );
 
   let newCarrOpt: any = [];
@@ -162,16 +130,13 @@ export const InducedForm = () => {
 
       return inducedParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="carriers"
@@ -203,10 +168,7 @@ export const InducedForm = () => {
             render={({ field }) => (
               <FormItem className="mt-4">
                 <FormLabel htmlFor="year">Year</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl id="year">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a year..." />
@@ -249,11 +211,7 @@ export const InducedForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="w-[120px] mt-4 capitalize"
-            disabled={btnLoad}
-          >
+          <Button type="submit" className="mt-4 w-[120px] capitalize" disabled={btnLoad}>
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

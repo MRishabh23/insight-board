@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useHistoryFetchQuery } from "@/utils/query";
 import JsonView from "@uiw/react-json-view";
 import { CgSpinnerAlt } from "react-icons/cg";
@@ -33,15 +27,11 @@ function SheetCustomContent({ ...props }) {
     resId = resId.replace("customfunction", "custom function");
   }
 
-  const fetchHistoryQuery = useHistoryFetchQuery(
-    props.params,
-    props.schedulerId,
-    resId
-  );
+  const fetchHistoryQuery = useHistoryFetchQuery(props.params, props.schedulerId, resId);
 
   if (fetchHistoryQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -49,17 +39,15 @@ function SheetCustomContent({ ...props }) {
 
   if (fetchHistoryQuery.isError || fetchHistoryQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
-        <p className="text-red-500">
-          Error: {fetchHistoryQuery.error?.message}
-        </p>
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
+        <p className="text-red-500">Error: {fetchHistoryQuery.error?.message}</p>
       </div>
     );
   }
 
   if (fetchHistoryQuery.data && !fetchHistoryQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{fetchHistoryQuery.data?.data}</p>
       </div>
     );
@@ -70,7 +58,7 @@ function SheetCustomContent({ ...props }) {
 
 function CustomView({ ...props }) {
   return (
-    <ScrollArea className="w-full mt-5 my-scroll">
+    <ScrollArea className="my-scroll mt-5 w-full">
       <JsonView value={props.data.data} />
     </ScrollArea>
   );

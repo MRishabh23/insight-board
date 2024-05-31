@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -30,16 +24,15 @@ export function IssueDetailDrawer({ ...props }) {
 
 function SheetCustomContent({ ...props }) {
   const defaultEmails = "rmailk@justransform.com";
-  const additionalLinks = props.data.additional_links && props.data.additional_links.includes(",")
-    ? props.data.additional_links.split(",")
-    : [];
+  const additionalLinks =
+    props.data.additional_links && props.data.additional_links.includes(",")
+      ? props.data.additional_links.split(",")
+      : [];
   return (
-    <ScrollArea className="w-full mt-5 my-scroll">
+    <ScrollArea className="my-scroll mt-5 w-full">
       <div className="p-1">
         <IssueInput label="Created By" value={props.data.created_by} />
-        {props.data.updated_by && (
-          <IssueInput label="Updated By" value={props.data.updated_by} />
-        )}
+        {props.data.updated_by && <IssueInput label="Updated By" value={props.data.updated_by} />}
         <IssueInput label="Issue" value={props.data.issue} />
         <IssueTextArea label="Description" value={props.data.description} />
         <IssueInput label="Carrier" value={props.data.carrier} />
@@ -47,17 +40,10 @@ function SheetCustomContent({ ...props }) {
         <IssueInput label="Mode" value={props.data.mode.toUpperCase()} />
         <IssueInput label="Status" value={props.data.status} />
         <IssueInput label="Severity" value={props.data.severity} />
-        {props.data.default_emails === "yes" && (
-          <IssueInput label="Default Emails" value={defaultEmails} />
-        )}
-        {props.data.emails && (
-          <IssueInput label="Emails" value={props.data.emails} />
-        )}
+        {props.data.default_emails === "yes" && <IssueInput label="Default Emails" value={defaultEmails} />}
+        {props.data.emails && <IssueInput label="Emails" value={props.data.emails} />}
         {props.data.last_ui_notification_sent_at && (
-          <IssueInput
-            label="Last Notification Sent"
-            value={props.data.last_ui_notification_sent_at}
-          />
+          <IssueInput label="Last Notification Sent" value={props.data.last_ui_notification_sent_at} />
         )}
         {additionalLinks.length > 0 && (
           <div className="mt-3">
@@ -70,13 +56,7 @@ function SheetCustomContent({ ...props }) {
   );
 }
 
-const IssueInput = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) => {
+const IssueInput = ({ label, value }: { label: string; value: string | number }) => {
   return (
     <div className="mt-3">
       <Label className="text-base">{label}</Label>
@@ -85,13 +65,7 @@ const IssueInput = ({
   );
 };
 
-const IssueTextArea = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) => {
+const IssueTextArea = ({ label, value }: { label: string; value: string | number }) => {
   return (
     <div className="mt-3">
       <Label className="text-base">{label}</Label>
