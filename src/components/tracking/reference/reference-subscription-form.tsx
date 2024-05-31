@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ReferenceSubscriptionFormType } from "@/utils/types/common";
@@ -41,16 +34,13 @@ export const ReferenceSubscriptionForm = () => {
 
       return refParams.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   return (
     <>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-5 rounded-md border border-gray-200 p-3"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 rounded-md border border-gray-200 p-3">
           <FormField
             control={form.control}
             name="subscriptionId"
@@ -58,22 +48,13 @@ export const ReferenceSubscriptionForm = () => {
               <FormItem>
                 <FormLabel htmlFor="subscriptionId">Subscription Id</FormLabel>
                 <FormControl id="subscriptionId">
-                  <Input
-                    type="text"
-                    placeholder="Enter subscriptionId..."
-                    required
-                    {...field}
-                  />
+                  <Input type="text" placeholder="Enter subscriptionId..." required {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="w-[120px] mt-4 capitalize"
-            disabled={btnLoad}
-          >
+          <Button type="submit" className="mt-4 w-[120px] capitalize" disabled={btnLoad}>
             {btnLoad ? "Submitting..." : "Submit"}
           </Button>
         </form>

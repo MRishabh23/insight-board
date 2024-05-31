@@ -7,8 +7,8 @@ interface DemoSection {
 
 export default function Demo() {
   return (
-    <div className="bg-primary h-full w-full">
-      <main className="flex flex-col 1lg:flex-row h-full p-10 gap-4">
+    <div className="h-full w-full bg-primary">
+      <main className="flex h-full flex-col gap-4 p-10 1lg:flex-row">
         <DemoSection className="h-1/5 1lg:h-full 1lg:w-1/3">
           <div>
             <p>Hello...</p>
@@ -25,14 +25,5 @@ export default function Demo() {
 }
 
 const DemoSection = ({ children, className }: DemoSection) => {
-  return (
-    <div
-      className={cn(
-        "h-1/5 1lg:h-full 1lg:w-1/3 bg-white rounded-md",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn("h-1/5 rounded-md bg-white 1lg:h-full 1lg:w-1/3", className)}>{children}</div>;
 };

@@ -2,21 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  DuelSplit,
-  DuelSplitTitle,
-  DuelSplitSection,
-} from "@/components/duel-split";
+import { DuelSplit, DuelSplitTitle, DuelSplitSection } from "@/components/duel-split";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useAuthForm } from "@/utils/schema";
@@ -29,8 +18,7 @@ const SignUp = () => {
   const eyeCss = "h-5 w-5";
   const linkCss = "text-blue-600 hover:text-blue-500 underline text-sm";
 
-  const { mutate: server_signUp, isPending: signUpPending } =
-    useSignUpSubmitMutation(form);
+  const { mutate: server_signUp, isPending: signUpPending } = useSignUpSubmitMutation(form);
 
   const onSubmit = async (data: AuthType) => {
     server_signUp(data);
@@ -42,17 +30,17 @@ const SignUp = () => {
 
   return (
     <DuelSplit>
-      <DuelSplitSection className="1lg:flex hidden bg-black">
+      <DuelSplitSection className="hidden bg-black 1lg:flex">
         <DuelSplitTitle>JUSTRANSFORM</DuelSplitTitle>
       </DuelSplitSection>
       <DuelSplitSection>
         <div className="flex flex-col">
           <div>
-            <div className="1lg:hidden flex justify-between items-center font-bold">
+            <div className="flex items-center justify-between font-bold 1lg:hidden">
               <p className="text-lg">JUSTRANSFORM</p>
               <span className="text-2xl">SignUp</span>
             </div>
-            <p className="hidden 1lg:block text-2xl font-bold">Sign up</p>
+            <p className="hidden text-2xl font-bold 1lg:block">Sign up</p>
           </div>
           <Form {...form}>
             <form
@@ -68,13 +56,7 @@ const SignUp = () => {
                       Username
                     </FormLabel>
                     <FormControl id="username">
-                      <Input
-                        type="text"
-                        required
-                        placeholder="Enter your username.."
-                        autoComplete="on"
-                        {...field}
-                      />
+                      <Input type="text" required placeholder="Enter your username.." autoComplete="on" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -97,17 +79,11 @@ const SignUp = () => {
                           autoComplete="off"
                           {...field}
                         />
-                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-black cursor-pointer">
+                        <div className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 text-black">
                           {showPassword ? (
-                            <LuEyeOff
-                              className={cn(eyeCss)}
-                              onClick={togglePassword}
-                            />
+                            <LuEyeOff className={cn(eyeCss)} onClick={togglePassword} />
                           ) : (
-                            <LuEye
-                              className={cn(eyeCss)}
-                              onClick={togglePassword}
-                            />
+                            <LuEye className={cn(eyeCss)} onClick={togglePassword} />
                           )}
                         </div>
                       </div>
@@ -116,11 +92,7 @@ const SignUp = () => {
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                disabled={signUpPending}
-                className="w-full capitalize"
-              >
+              <Button type="submit" disabled={signUpPending} className="w-full capitalize">
                 {signUpPending ? "Processing..." : "Sign Up"}
               </Button>
               <p>

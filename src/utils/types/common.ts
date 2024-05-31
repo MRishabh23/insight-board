@@ -35,7 +35,7 @@ export type IssueType = {
 export type IssueColumnType = {
   issue_key: string;
   value: IssueValue;
-  created_at: string |number;
+  created_at: string | number;
   modified_at: string | number;
 };
 
@@ -72,7 +72,7 @@ export type IssueValueInternal = {
   default_emails: string;
   emails: string;
   additional_links: string;
-}
+};
 
 // ************* Issues types end ****************
 

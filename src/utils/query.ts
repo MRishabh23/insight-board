@@ -8,18 +8,9 @@ import {
   getReferenceInfoAction,
   getReferenceSubscriptionAction,
 } from "@/actions/reference-actions";
-import {
-  getFetchHistoryAction,
-  getHistoryAction,
-} from "@/actions/history-actions";
-import {
-  getInducedAction,
-  getLatencyAction,
-} from "@/actions/latency-induced-actions";
-import {
-  getStatusAction,
-  getSummaryAction,
-} from "@/actions/status-summary-actions";
+import { getFetchHistoryAction, getHistoryAction } from "@/actions/history-actions";
+import { getInducedAction, getLatencyAction } from "@/actions/latency-induced-actions";
+import { getStatusAction, getSummaryAction } from "@/actions/status-summary-actions";
 import { getIssueAction } from "@/actions/issue-actions";
 
 // issue query
@@ -53,11 +44,7 @@ export const useStatusQuery = (params: ParamType) => {
 };
 
 // summary query
-export const useSummaryQuery = (
-  params: ParamType,
-  newCarrOpt: string[],
-  searchParams: any
-) => {
+export const useSummaryQuery = (params: ParamType, newCarrOpt: string[], searchParams: any) => {
   const query = useQuery({
     queryKey: [
       "summary",
@@ -115,19 +102,9 @@ export const useHistoryQuery = (params: ParamType, searchParams: any) => {
 };
 
 // history fetch query
-export const useHistoryFetchQuery = (
-  params: ParamType,
-  schedulerId: string,
-  resourceId: string
-) => {
+export const useHistoryFetchQuery = (params: ParamType, schedulerId: string, resourceId: string) => {
   const query = useQuery({
-    queryKey: [
-      "history-fetch",
-      `${params.mode}`,
-      `${params.env}`,
-      `${schedulerId}`,
-      `${resourceId}`,
-    ],
+    queryKey: ["history-fetch", `${params.mode}`, `${params.env}`, `${schedulerId}`, `${resourceId}`],
     queryFn: async () => {
       const response = await getFetchHistoryAction({
         env: params.env,
@@ -143,11 +120,7 @@ export const useHistoryFetchQuery = (
 };
 
 // latency fetch query
-export const useLatencyQuery = (
-  params: ParamType,
-  newCarrOpt: string[],
-  searchParams: any
-) => {
+export const useLatencyQuery = (params: ParamType, newCarrOpt: string[], searchParams: any) => {
   const query = useQuery({
     queryKey: [
       "latency",
@@ -206,11 +179,7 @@ export const useReferenceAllQuery = (params: ParamType, searchParams: any) => {
 };
 
 // reference info query
-export const useReferenceInfoQuery = (
-  params: ParamType,
-  searchParams: any,
-  reference: string
-) => {
+export const useReferenceInfoQuery = (params: ParamType, searchParams: any, reference: string) => {
   const query = useQuery({
     queryKey: [
       "reference-info",
@@ -239,19 +208,9 @@ export const useReferenceInfoQuery = (
 };
 
 // reference query
-export const useReferenceQuery = (
-  params: ParamType,
-  category: string,
-  referenceId: string
-) => {
+export const useReferenceQuery = (params: ParamType, category: string, referenceId: string) => {
   const query = useQuery({
-    queryKey: [
-      "reference-reference",
-      `${params.mode}`,
-      `${params.env}`,
-      `${category}`,
-      `${referenceId}`,
-    ],
+    queryKey: ["reference-reference", `${params.mode}`, `${params.env}`, `${category}`, `${referenceId}`],
     queryFn: async () => {
       const response = await getReferenceAction({
         env: params.env,
@@ -267,19 +226,9 @@ export const useReferenceQuery = (
 };
 
 // reference subscription query
-export const useReferenceSubscriptionQuery = (
-  params: ParamType,
-  category: string,
-  subscriptionId: string
-) => {
+export const useReferenceSubscriptionQuery = (params: ParamType, category: string, subscriptionId: string) => {
   const query = useQuery({
-    queryKey: [
-      "reference-subscription",
-      `${params.mode}`,
-      `${params.env}`,
-      `${category}`,
-      `${subscriptionId}`,
-    ],
+    queryKey: ["reference-subscription", `${params.mode}`, `${params.env}`, `${category}`, `${subscriptionId}`],
     queryFn: async () => {
       const response = await getReferenceSubscriptionAction({
         env: params.env,
@@ -295,21 +244,9 @@ export const useReferenceSubscriptionQuery = (
 };
 
 // induced query
-export const useInducedQuery = (
-  params: ParamType,
-  newCarrOpt: string[],
-  year: string,
-  months: string[]
-) => {
+export const useInducedQuery = (params: ParamType, newCarrOpt: string[], year: string, months: string[]) => {
   const query = useQuery({
-    queryKey: [
-      "summary",
-      `${params.mode}`,
-      `${params.env}`,
-      newCarrOpt,
-      year,
-      months,
-    ],
+    queryKey: ["summary", `${params.mode}`, `${params.env}`, newCarrOpt, year, months],
     queryFn: async () => {
       const response = await getInducedAction({
         env: params.env,

@@ -14,9 +14,9 @@ const Issue = () => {
         onValueChange={(value) => {
           setTabVal(value);
         }}
-        className="h-full flex flex-col"
+        className="flex h-full flex-col"
       >
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <TabsList>
             <TabsTrigger value="active">ACTIVE</TabsTrigger>
             <TabsTrigger value="closed">CLOSED</TabsTrigger>
@@ -29,16 +29,10 @@ const Issue = () => {
             tableType={tabVal.toUpperCase()}
           />
         </div>
-        <TabsContent
-          value="active"
-          className="flex-1 mt-6 p-4 bg-white text-primary rounded-md"
-        >
+        <TabsContent value="active" className="mt-6 flex-1 rounded-md bg-white p-4 text-primary">
           <IssueTable type="active" />
         </TabsContent>
-        <TabsContent
-          value="closed"
-          className="flex-1 mt-6 p-4 bg-white text-primary rounded-md"
-        >
+        <TabsContent value="closed" className="mt-6 flex-1 rounded-md bg-white p-4 text-primary">
           <IssueTable type="closed" />
         </TabsContent>
       </Tabs>

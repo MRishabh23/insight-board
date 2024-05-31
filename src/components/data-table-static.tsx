@@ -16,22 +16,9 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import MultipleSelector from "./multi-select";
 
 declare module "@tanstack/react-table" {
@@ -42,24 +29,16 @@ declare module "@tanstack/react-table" {
 
 export function TableDataStaticComponent({ ...props }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 5,
   });
   const data = React.useMemo(
-    () =>
-      Array.isArray(props.data.data)
-        ? props.data.data.length > 0
-          ? props.data.data
-          : []
-        : [],
-    [props.data.data]
+    () => (Array.isArray(props.data.data) ? (props.data.data.length > 0 ? props.data.data : []) : []),
+    [props.data.data],
   );
   const columns = React.useMemo(() => props.columns, [props.columns]);
 
@@ -110,7 +89,7 @@ export function TableDataStaticComponent({ ...props }) {
         }}
         value={(pagination.pageIndex + 1).toString()}
       >
-        <SelectTrigger className="p-0 h-9 w-20 focus:ring-0 justify-around">
+        <SelectTrigger className="h-9 w-20 justify-around p-0 focus:ring-0">
           <SelectValue placeholder="Choose a page..." />
         </SelectTrigger>
         <SelectContent>
@@ -139,30 +118,26 @@ export function TableDataStaticComponent({ ...props }) {
             setPagination((prev) => ({ ...prev, pageIndex: page }));
           }
         }}
-        className="w-24 h-10"
+        className="h-10 w-24"
         defaultOptions={tablePageCountMulti}
         placeholder="page..."
         hidePlaceholderWhenSelected
         maxSelected={1}
         emptyIndicator={
-          <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-            no results found.
-          </p>
+          <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">no results found.</p>
         }
       />
     );
   };
 
   return (
-    <div className="w-full mt-6">
+    <div className="mt-6 w-full">
       <div className="flex items-start justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          Total Items: {data.length}
-        </div>
+        <div className="flex-1 text-sm text-muted-foreground">Total Items: {data.length}</div>
         <div>
           <MultiSelectPage />
         </div>
-        <div className="space-x-2 flex justify-center items-center">
+        <div className="flex items-center justify-center space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -172,15 +147,9 @@ export function TableDataStaticComponent({ ...props }) {
             Previous
           </Button>
           <div className="text-sm text-muted-foreground">
-            {table.getState().pagination.pageIndex + 1} /{" "}
-            {table.getPageCount().toLocaleString()}
+            {table.getState().pagination.pageIndex + 1} / {table.getPageCount().toLocaleString()}
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>
@@ -192,18 +161,8 @@ export function TableDataStaticComponent({ ...props }) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className={cn(
-                        header.column.columnDef.meta?.className ?? ""
-                      )}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead key={header.id} className={cn(header.column.columnDef.meta?.className ?? "")}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -215,26 +174,15 @@ export function TableDataStaticComponent({ ...props }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        cell.column.columnDef.meta?.className ?? ""
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <TableCell key={cell.id} className={cn(cell.column.columnDef.meta?.className ?? "")}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -243,10 +191,8 @@ export function TableDataStaticComponent({ ...props }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          Total Items: {data.length}
-        </div>
-        <div className="space-x-2 flex justify-center items-center">
+        <div className="flex-1 text-sm text-muted-foreground">Total Items: {data.length}</div>
+        <div className="flex items-center justify-center space-x-2">
           <Button
             variant="outline"
             size="sm"
@@ -256,15 +202,9 @@ export function TableDataStaticComponent({ ...props }) {
             Previous
           </Button>
           <div className="text-sm text-muted-foreground">
-            {table.getState().pagination.pageIndex + 1} /{" "}
-            {table.getPageCount().toLocaleString()}
+            {table.getState().pagination.pageIndex + 1} / {table.getPageCount().toLocaleString()}
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>

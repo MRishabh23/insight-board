@@ -14,9 +14,7 @@ import { ReferenceSubscriptionTable } from "./reference-subscription-table";
 export default function MainReferenceComponent() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const [tabVal, setTabVal] = React.useState(
-    searchParams.get("category") || "all"
-  );
+  const [tabVal, setTabVal] = React.useState(searchParams.get("category") || "all");
 
   const row1 = [
     {

@@ -1,16 +1,6 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import {
-  LiaShipSolid,
-  LiaShippingFastSolid,
-  LiaLongArrowAltRightSolid,
-} from "react-icons/lia";
+import { LiaShipSolid, LiaShippingFastSolid, LiaLongArrowAltRightSolid } from "react-icons/lia";
 import { PiAirplaneTilt } from "react-icons/pi";
 
 const Dashboard = () => {
@@ -29,13 +19,13 @@ const Dashboard = () => {
     },
   ];
   return (
-    <div className="h-full px-6 flex flex-col justify-center items-center">
+    <div className="flex h-full flex-col items-center justify-center px-6">
       <Card className="w-[350px]">
         <CardHeader className="border-b">
           <CardTitle>Tracking</CardTitle>
           <CardDescription>To view data insights/metrics.</CardDescription>
         </CardHeader>
-        <CardContent className="p-3 flex flex-col gap-4">
+        <CardContent className="flex flex-col gap-4 p-3">
           {modeList.map((item) => (
             <Link
               key={item.mode}
@@ -43,7 +33,7 @@ const Dashboard = () => {
                 pathname: `/dashboard/tracking/${item.mode}/${item.env}/status`,
               }}
             >
-              <div className="flex justify-between items-center border rounded-full p-4 hover:bg-primary hover:text-primary-foreground">
+              <div className="flex items-center justify-between rounded-full border p-4 hover:bg-primary hover:text-primary-foreground">
                 <div className="flex items-center">
                   {item.mode === "ocean" ? (
                     <LiaShipSolid className="text-xl" />

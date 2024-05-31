@@ -153,9 +153,7 @@ const summaryOptionSchema = z.object({
 });
 
 const summaryFormSchema = z.object({
-  carriers: z
-    .array(summaryOptionSchema)
-    .max(5, "Please select up to 5 carriers"),
+  carriers: z.array(summaryOptionSchema).max(5, "Please select up to 5 carriers"),
   queue: z.string(),
   range: z
     .object({
@@ -217,9 +215,7 @@ const latencyOptionSchema = z.object({
 });
 
 const latencyFormSchema = z.object({
-  carriers: z
-    .array(latencyOptionSchema)
-    .max(5, "Please select up to 5 carriers"),
+  carriers: z.array(latencyOptionSchema).max(5, "Please select up to 5 carriers"),
   queue: z.string(),
   refType: z.string(),
 });
@@ -299,18 +295,12 @@ const inducedOptionSchema = z.object({
 });
 
 const inducedFormSchema = z.object({
-  carriers: z
-    .array(inducedOptionSchema)
-    .max(3, "Please select up to 3 carriers"),
+  carriers: z.array(inducedOptionSchema).max(3, "Please select up to 3 carriers"),
   year: z.string(),
   months: z.array(inducedOptionSchema).max(3, "Please select up to 3 months"),
 });
 
-export const useInducedForm = (
-  newCarrOpt: any,
-  newMonthopt: any,
-  searchParams: any
-) => {
+export const useInducedForm = (newCarrOpt: any, newMonthopt: any, searchParams: any) => {
   const form = useForm<z.infer<typeof inducedFormSchema>>({
     resolver: zodResolver(inducedFormSchema),
     defaultValues: {

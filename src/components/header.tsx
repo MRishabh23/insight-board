@@ -4,9 +4,9 @@ import { NavigationMenuComponent } from "./nav-menu";
 
 const Header = () => {
   return (
-    <header className="h-[70px] flex justify-between items-center px-4 border-b">
+    <header className="flex h-[70px] items-center justify-between border-b px-4">
       <div className="flex items-center gap-4">
-        <h2 className="text-2xl tracking-wide font-medium">
+        <h2 className="text-2xl font-medium tracking-wide">
           <Link href="/dashboard" className="block sm:hidden">
             JT
           </Link>

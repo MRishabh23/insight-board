@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "JT TRACKING",
-  description: "Multi-purpose Dashboard",
+  description: "Multi-purpose Dashboard!",
 };
 
 export default function RootLayout({ children }: Readonly<RootProps>) {

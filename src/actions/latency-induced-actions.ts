@@ -51,18 +51,13 @@ export const getLatencyAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("pass one carrier")
-        ? dataErr
-        : "Something went wrong while fetching latency.";
+      const errMsg = dataErr.includes("pass one carrier") ? dataErr : "Something went wrong while fetching latency.";
       throw new Error(errMsg);
     }
 
@@ -77,8 +72,6 @@ export const getLatencyAction = async ({
     };
   }
 };
-
-
 
 // get induced action
 export const getInducedAction = async ({
@@ -113,10 +106,7 @@ export const getInducedAction = async ({
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -125,8 +115,8 @@ export const getInducedAction = async ({
       const errMsg = dataErr.includes("least one carrier")
         ? dataErr
         : dataErr.includes("least one month")
-        ? dataErr
-        : "Something went wrong while fetching summary.";
+          ? dataErr
+          : "Something went wrong while fetching summary.";
       throw new Error(errMsg);
     }
 

@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useReferenceInfoQuery } from "@/utils/query";
 import JsonView from "@uiw/react-json-view";
 import { CgSpinnerAlt } from "react-icons/cg";
@@ -30,15 +24,11 @@ export function ReferenceDrawer({ ...props }) {
 function SheetCustomContent({ ...props }) {
   let resId = props.resource;
 
-  const referenceInfoQuery = useReferenceInfoQuery(
-    props.params,
-    props.searchParams,
-    resId
-  );
+  const referenceInfoQuery = useReferenceInfoQuery(props.params, props.searchParams, resId);
 
   if (referenceInfoQuery.isPending) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -46,17 +36,15 @@ function SheetCustomContent({ ...props }) {
 
   if (referenceInfoQuery.isError || referenceInfoQuery.error) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-6">
-        <p className="text-red-500">
-          Error: {referenceInfoQuery.error?.message}
-        </p>
+      <div className="mt-6 flex h-full flex-col items-center justify-center">
+        <p className="text-red-500">Error: {referenceInfoQuery.error?.message}</p>
       </div>
     );
   }
 
   if (referenceInfoQuery.data && !referenceInfoQuery.data?.success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center mt-10">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{referenceInfoQuery.data?.data}</p>
       </div>
     );
@@ -67,7 +55,7 @@ function SheetCustomContent({ ...props }) {
 
 function CustomView({ ...props }) {
   return (
-    <ScrollArea className="w-full mt-5 my-scroll">
+    <ScrollArea className="my-scroll mt-5 w-full">
       <JsonView value={props.data.data} />
     </ScrollArea>
   );

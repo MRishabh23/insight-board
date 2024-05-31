@@ -7,18 +7,18 @@ const Profile = async () => {
 
   if (!success) {
     return (
-      <div className="h-full flex flex-col justify-center items-center">
+      <div className="flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {data}</p>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex flex-col justify-center items-center">
+    <div className="flex h-full flex-col items-center justify-center">
       <Card className="w-[360px] sm:w-[450px]">
         <CardHeader className="border-b">
-          <div className="flex justify-between items-center">
-            <p className="text-2xl text-zinc-500 font-medium">User Profile</p>
+          <div className="flex items-center justify-between">
+            <p className="text-2xl font-medium text-zinc-500">User Profile</p>
             <Avatar>
               <AvatarFallback className="bg-primary text-primary-foreground">
                 {data?.username
@@ -32,11 +32,11 @@ const Profile = async () => {
           </div>
         </CardHeader>
         <CardContent className="space-y-5 pt-6">
-          <div className="flex  justify-between">
+          <div className="flex justify-between">
             <p className="font-semibold text-zinc-500">username: </p>
             <p className="text-blue-500">{data?.username}</p>
           </div>
-          <div className="flex  justify-between">
+          <div className="flex justify-between">
             <p className="font-semibold text-zinc-500">created: </p>
             <p className="text-blue-500">{data?.createdAt}</p>
           </div>

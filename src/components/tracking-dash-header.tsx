@@ -5,11 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { getYear } from "date-fns";
 
-const TrackingDashHeader = ({
-  params,
-}: {
-  params: { mode: string; env: string; dash: string };
-}) => {
+const TrackingDashHeader = ({ params }: { params: { mode: string; env: string; dash: string } }) => {
   const tabsRow1 = [
     {
       name: "Status",
@@ -80,13 +76,10 @@ const TrackingDashHeader = ({
           setTabVal(value);
         }}
       >
-        <div className="w-full space-y-4 mt-6">
+        <div className="mt-6 w-full space-y-4">
           <TabsList className="grid grid-cols-3">
             {tabsRow1.map((tab) => (
-              <Link
-                key={tab.name}
-                href={{ pathname: tab.path, query: tab.query }}
-              >
+              <Link key={tab.name} href={{ pathname: tab.path, query: tab.query }}>
                 <TabsTrigger value={tab.name.toLowerCase()} className="w-full">
                   {tab.name}
                 </TabsTrigger>
@@ -95,10 +88,7 @@ const TrackingDashHeader = ({
           </TabsList>
           <TabsList className="grid grid-cols-3">
             {tabsRow2.map((tab) => (
-              <Link
-                key={tab.name}
-                href={{ pathname: tab.path, query: tab.query }}
-              >
+              <Link key={tab.name} href={{ pathname: tab.path, query: tab.query }}>
                 <TabsTrigger value={tab.name.toLowerCase()} className="w-full">
                   {tab.name}
                 </TabsTrigger>

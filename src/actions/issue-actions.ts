@@ -21,18 +21,13 @@ export const getIssueAction = async ({ status }: { status: string }) => {
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("No issues found")
-        ? dataErr
-        : "Something went wrong while fetching issues.";
+      const errMsg = dataErr.includes("No issues found") ? dataErr : "Something went wrong while fetching issues.";
       throw new Error(errMsg);
     }
 
@@ -62,7 +57,7 @@ export const createUpdateIssueAction = async ({
   polling_frequency,
   default_emails,
   emails,
-  additional_links
+  additional_links,
 }: {
   type: string;
   issueKey: string;
@@ -92,7 +87,7 @@ export const createUpdateIssueAction = async ({
 
     let reqData = {};
 
-    if(type === "EDIT"){
+    if (type === "EDIT") {
       reqData = {
         type: issueType,
         username: data.username,
@@ -108,8 +103,8 @@ export const createUpdateIssueAction = async ({
         default_emails: default_emails,
         emails: emails,
         additional_links: additional_links,
-      }
-    }else{
+      };
+    } else {
       reqData = {
         type: issueType,
         username: data.username,
@@ -124,16 +119,12 @@ export const createUpdateIssueAction = async ({
         default_emails: default_emails,
         emails: emails,
         additional_links: additional_links,
-      }
+      };
     }
-
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -175,10 +166,7 @@ export const closeIssueAction = async ({ issueKey }: { issueKey: string }) => {
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
@@ -199,7 +187,7 @@ export const closeIssueAction = async ({ issueKey }: { issueKey: string }) => {
 };
 
 // delete notify issue action
-export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string, issueKey: string }) => {
+export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string; issueKey: string }) => {
   try {
     const { data, success } = await getUserAction();
 
@@ -209,7 +197,7 @@ export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string
 
     let reqType = "SEND_ISSUE_NOTIFICATION";
 
-    if(type === "DELETE"){
+    if (type === "DELETE") {
       reqType = "DELETE_ISSUE";
     }
 
@@ -222,21 +210,16 @@ export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string
 
     const res: any = await mainRequestAction(reqData);
 
-    if (
-      !res?.success &&
-      (res?.data.includes("timed") || res?.data.includes("trusted"))
-    ) {
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
       throw new Error(res.data);
     }
 
     if (!res?.success) {
       const dataErr = res?.data;
-      if(type === "DELETE"){
+      if (type === "DELETE") {
         throw new Error("While deleting issue.");
-      }else{
-        const errMsg = dataErr.includes("no emails are found")
-        ? dataErr
-        : "While sending notification.";
+      } else {
+        const errMsg = dataErr.includes("no emails are found") ? dataErr : "While sending notification.";
         throw new Error(errMsg);
       }
     }
