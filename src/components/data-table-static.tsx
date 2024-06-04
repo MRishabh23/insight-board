@@ -20,6 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import MultipleSelector from "./multi-select";
+import { Input } from "./ui/input";
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -36,9 +37,26 @@ export function TableDataStaticComponent({ ...props }) {
     pageIndex: 0,
     pageSize: 5,
   });
-  const data = React.useMemo(
+  const [inputValue, setInputValue] = React.useState("");
+  const tableType = React.useMemo(() => props.tableType, [props.tableType]);
+  const propData = React.useMemo(
     () => (Array.isArray(props.data.data) ? (props.data.data.length > 0 ? props.data.data : []) : []),
     [props.data.data],
+  );
+  const [data, setData] = React.useState(propData);
+  const handleFilter = React.useCallback(
+    (e: any) => {
+      setInputValue(e.target.value);
+      if (e.target.value === "") {
+        setData(propData);
+      } else {
+        const newData = data.filter((item: any) => {
+          return item.k.includes(e.target.value);
+        });
+        setData(newData);
+      }
+    },
+    [data, propData],
   );
   const columns = React.useMemo(() => props.columns, [props.columns]);
 
@@ -132,6 +150,16 @@ export function TableDataStaticComponent({ ...props }) {
 
   return (
     <div className="mt-6 w-full">
+      {tableType === "history" && (
+        <div>
+          <Input
+            placeholder="Filter schedulerId..."
+            value={inputValue ?? ""}
+            onChange={(event) => handleFilter(event)}
+            className="max-w-sm"
+          />
+        </div>
+      )}
       <div className="flex items-start justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">Total Items: {data.length}</div>
         <div>

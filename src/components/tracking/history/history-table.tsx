@@ -212,5 +212,5 @@ const HistoryData = ({ ...props }) => {
     );
   }
 
-  return <TableDataStaticComponent data={historyQuery.data} columns={columns} />;
+  return <TableDataStaticComponent tableType="history" data={historyQuery.data} columns={columns} />;
 };
