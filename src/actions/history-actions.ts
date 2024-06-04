@@ -29,7 +29,18 @@ export const getHistoryAction = async ({
     }
 
     let reqData = {};
-    if (startTime != "" && endTime != "") {
+    if (historyType === "DIFF") {
+      reqData = {
+        type: "GET_REFERENCE_HISTORY",
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode.toUpperCase(),
+        subscriptionId: subscriptionId,
+        historyType: historyType,
+        startTime: "",
+        endTime: "",
+      };
+    } else if (historyType === "ALL" && startTime !== "" && endTime !== "") {
       reqData = {
         type: "GET_REFERENCE_HISTORY",
         username: data.username,

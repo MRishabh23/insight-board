@@ -46,11 +46,19 @@ export const SummaryForm = () => {
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
     setBtnLoad(true);
-    setTimeout(() => {
-      const q = createQueryString(data);
-      router.push(pathname + "?" + q);
+    if (!data.range || !data.range.from || !data.range.to) {
+      form.setError("range", {
+        type: "custom",
+        message: "Start date and End date are required.",
+      });
       setBtnLoad(false);
-    }, 700);
+    } else {
+      setTimeout(() => {
+        const q = createQueryString(data);
+        router.push(pathname + "?" + q);
+        setBtnLoad(false);
+      }, 700);
+    }
   };
 
   const createQueryString = React.useCallback(
