@@ -23,6 +23,7 @@ export const useIssueQuery = (status: string) => {
       });
       return response;
     },
+    gcTime: 1000 * 60 * 60 * 8,
     staleTime: 1000 * 60 * 60 * 8,
   });
 
@@ -37,7 +38,8 @@ export const useStatusQuery = (params: ParamType) => {
       const response = await getStatusAction(params);
       return response;
     },
-    staleTime: 1000 * 60 * 60 * 8,
+    gcTime: 1000 * 60 * 60 * 6,
+    staleTime: 1000 * 60 * 60 * 6,
   });
 
   return query;
@@ -66,6 +68,7 @@ export const useSummaryQuery = (params: ParamType, newCarrOpt: string[], searchP
       });
       return response;
     },
+    gcTime: 1000 * 60 * 30,
     staleTime: 1000 * 60 * 30,
   });
 
@@ -95,7 +98,8 @@ export const useHistoryQuery = (params: ParamType, searchParams: any) => {
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;
@@ -113,6 +117,7 @@ export const useHistoryFetchQuery = (params: ParamType, schedulerId: string, res
       });
       return response;
     },
+    gcTime: 1000 * 60 * 60 * 24,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
@@ -140,6 +145,7 @@ export const useLatencyQuery = (params: ParamType, newCarrOpt: string[], searchP
       });
       return response;
     },
+    gcTime: 1000 * 60 * 30,
     staleTime: 1000 * 60 * 30,
   });
 
@@ -172,7 +178,8 @@ export const useReferenceAllQuery = (params: ParamType, searchParams: any) => {
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;
@@ -201,7 +208,8 @@ export const useReferenceInfoQuery = (params: ParamType, searchParams: any, refe
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;
@@ -219,7 +227,8 @@ export const useReferenceQuery = (params: ParamType, category: string, reference
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;
@@ -237,7 +246,8 @@ export const useReferenceSubscriptionQuery = (params: ParamType, category: strin
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;
@@ -257,7 +267,8 @@ export const useInducedQuery = (params: ParamType, newCarrOpt: string[], year: s
       });
       return response;
     },
-    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60 * 12,
+    staleTime: 1000 * 60 * 60 * 12,
   });
 
   return query;
