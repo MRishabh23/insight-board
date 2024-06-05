@@ -4,17 +4,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreateEditIssueDrawer } from "./create-edit-issue-drawer";
 import { IssueTable } from "./issue-table";
 import React from "react";
+import { IssueAccordion } from "@/components/utils/accord";
 
 const Issue = () => {
   const [tabVal, setTabVal] = React.useState("active");
   return (
     <div className="h-full w-full">
+      <div className="rounded-md bg-white p-4">
+        <IssueAccordion />
+      </div>
       <Tabs
         value={tabVal}
         onValueChange={(value) => {
           setTabVal(value);
         }}
-        className="flex h-full flex-col"
+        className="mt-4 flex h-full flex-col"
       >
         <div className="flex items-center justify-between">
           <TabsList>
