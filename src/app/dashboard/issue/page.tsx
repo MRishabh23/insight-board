@@ -33,10 +33,10 @@ const Issue = () => {
             tableType={tabVal.toUpperCase()}
           />
         </div>
-        <TabsContent value="active" className="mt-6 flex-1 rounded-md bg-white p-4 text-primary">
+        <TabsContent value="active" className="mb-6 mt-6 flex-1 rounded-md bg-white p-4 text-primary">
           <IssueTable type="active" />
         </TabsContent>
-        <TabsContent value="closed" className="mt-6 flex-1 rounded-md bg-white p-4 text-primary">
+        <TabsContent value="closed" className="mb-6 mt-6 flex-1 rounded-md bg-white p-4 text-primary">
           <IssueTable type="closed" />
         </TabsContent>
       </Tabs>
