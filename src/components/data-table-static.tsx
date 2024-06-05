@@ -37,7 +37,8 @@ export function TableDataStaticComponent({ ...props }) {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [inputValue, setInputValue] = React.useState("");
+
+  const inputValue = React.useRef("");
   const tableType = React.useMemo(() => props.tableType, [props.tableType]);
   const propData = React.useMemo(
     () => (Array.isArray(props.data.data) ? (props.data.data.length > 0 ? props.data.data : []) : []),
@@ -46,17 +47,17 @@ export function TableDataStaticComponent({ ...props }) {
   const [data, setData] = React.useState(propData);
   const handleFilter = React.useCallback(
     (e: any) => {
-      setInputValue(e.target.value);
+      inputValue.current = e.target.value;
       if (e.target.value === "") {
         setData(propData);
       } else {
-        const newData = data.filter((item: any) => {
+        const newData = propData.filter((item: any) => {
           return item.k.includes(e.target.value);
         });
         setData(newData);
       }
     },
-    [data, propData],
+    [propData],
   );
   const columns = React.useMemo(() => props.columns, [props.columns]);
 
@@ -154,7 +155,7 @@ export function TableDataStaticComponent({ ...props }) {
         <div>
           <Input
             placeholder="Filter schedulerId..."
-            value={inputValue ?? ""}
+            value={inputValue.current ?? ""}
             onChange={(event) => handleFilter(event)}
             className="max-w-sm"
           />

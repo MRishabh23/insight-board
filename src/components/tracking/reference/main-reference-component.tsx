@@ -10,6 +10,7 @@ import { ReferenceForm } from "./reference-form";
 import { ReferenceTable } from "./reference-table";
 import { ReferenceSubscriptionForm } from "./reference-subscription-form";
 import { ReferenceSubscriptionTable } from "./reference-subscription-table";
+import { AllReferenceAccordion, ReferenceAccordion, SubscriptionAccordion } from "@/components/utils/accord";
 
 export default function MainReferenceComponent() {
   const params = useParams();
@@ -70,18 +71,21 @@ export default function MainReferenceComponent() {
       </TabsList>
       <TabsContent value="all">
         <div className="flex flex-col">
+          <AllReferenceAccordion />
           <ReferenceAllForm />
           <ReferenceAllTable />
         </div>
       </TabsContent>
       <TabsContent value="subscription">
         <div className="flex flex-col">
+          <SubscriptionAccordion />
           <ReferenceSubscriptionForm />
           <ReferenceSubscriptionTable />
         </div>
       </TabsContent>
       <TabsContent value="reference">
         <div className="flex flex-col">
+          <ReferenceAccordion />
           <ReferenceForm />
           <ReferenceTable />
         </div>

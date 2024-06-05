@@ -15,7 +15,7 @@ export const CarrierStatus = () => {
 
   if (carrierStatusQuery.isPending) {
     return (
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <CgSpinnerAlt className="animate-spin text-lg" />
       </div>
     );
@@ -23,7 +23,7 @@ export const CarrierStatus = () => {
 
   if (carrierStatusQuery.isError || carrierStatusQuery.error) {
     return (
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">Error: {carrierStatusQuery.error?.message}</p>
       </div>
     );
@@ -31,7 +31,7 @@ export const CarrierStatus = () => {
 
   if (carrierStatusQuery.data && !carrierStatusQuery.data?.success) {
     return (
-      <div className="flex h-full flex-col items-center justify-center">
+      <div className="mt-10 flex h-full flex-col items-center justify-center">
         <p className="text-red-500">{carrierStatusQuery.data?.data}</p>
       </div>
     );
