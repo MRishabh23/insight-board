@@ -45,6 +45,17 @@ export function TableDataStaticComponent({ ...props }) {
     [props.data.data],
   );
   const [data, setData] = React.useState(propData);
+
+  React.useEffect(() => {
+    let ignore = false;
+    if (!ignore) {
+      setData(propData);
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [propData]);
+
   const handleFilter = React.useCallback(
     (e: any) => {
       inputValue.current = e.target.value;
