@@ -18,25 +18,27 @@ export function CreateEditIssueDrawer({ ...props }) {
     setOpen(!open);
   };
   return (
-    <Sheet open={open} onOpenChange={handleSheetOpen}>
-      <SheetTrigger asChild>
-        <Button variant={props.variant}>{props.buttonTitle}</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{props.title}</SheetTitle>
-        </SheetHeader>
-        <ScrollArea className="my-scroll mt-5 w-full">
-          <AddIssueForm
-            issue={props.issue}
-            tableType={props.tableType}
-            issueKey={props.issueKey}
-            issueValue={props.issueValue}
-            setOpen={setOpen}
-          />
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
+    <div className="flex items-center justify-center">
+      <Sheet open={open} onOpenChange={handleSheetOpen}>
+        <SheetTrigger asChild>
+          <Button variant={props.variant}>{props.buttonTitle}</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{props.title}</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="my-scroll mt-5 w-full">
+            <AddIssueForm
+              issue={props.issue}
+              tableType={props.tableType}
+              issueKey={props.issueKey}
+              issueValue={props.issueValue}
+              setOpen={setOpen}
+            />
+          </ScrollArea>
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 

@@ -42,44 +42,46 @@ export const NotificationIssueForm = ({ ...props }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">Send Notification</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Notification</DialogTitle>
-          <DialogDescription>
-            Please enter the issue key <span className="font-bold text-black">{props.issueKey}</span> to send the
-            notification for the issue.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className={cn("mt-5 space-y-5 rounded-md border border-gray-200 p-3")}
-            >
-              <FormField
-                control={form.control}
-                name="issueKey"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="issueKey">Notification Text</FormLabel>
-                    <FormControl id="issueKey">
-                      <Input type="text" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" variant="normal" disabled={notifyPending} className={cn("w-full capitalize")}>
-                {notifyPending ? "Notifying..." : "Send"}
-              </Button>
-            </form>
-          </Form>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div className="flex items-center justify-center">
+      <Dialog open={open} onOpenChange={handleOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline">Send Notification</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>
+              Please enter the issue key <span className="font-bold text-black">{props.issueKey}</span> to send the
+              notification for the issue.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className={cn("mt-5 space-y-5 rounded-md border border-gray-200 p-3")}
+              >
+                <FormField
+                  control={form.control}
+                  name="issueKey"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="issueKey">Notification Text</FormLabel>
+                      <FormControl id="issueKey">
+                        <Input type="text" required {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" variant="normal" disabled={notifyPending} className={cn("w-full capitalize")}>
+                  {notifyPending ? "Notifying..." : "Send"}
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
