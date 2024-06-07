@@ -36,7 +36,7 @@ const HistoryData = ({ ...props }) => {
       id: "subscription-id",
       accessorKey: "subId",
       header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-      cell: () => <TableCellCustom>{props.searchParams.get("subId")}</TableCellCustom>,
+      cell: () => <TableCellCustom className="w-80">{props.searchParams.get("subId")}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -100,7 +100,7 @@ const HistoryData = ({ ...props }) => {
           return (
             <HistoryDrawer
               variant="warning"
-              buttonTitle="Same as before"
+              buttonTitle="Same"
               title="Response Sent"
               params={props.params}
               schedulerId={row.original.k}
@@ -112,7 +112,7 @@ const HistoryData = ({ ...props }) => {
           return (
             <HistoryDrawer
               variant="success"
-              buttonTitle="New events found"
+              buttonTitle="New events"
               title="Response Sent"
               params={props.params}
               schedulerId={row.original.k}
@@ -145,7 +145,7 @@ const HistoryData = ({ ...props }) => {
           return (
             <HistoryDrawer
               variant="warning"
-              buttonTitle="Same as before"
+              buttonTitle="Same"
               title="Crawled Output"
               params={props.params}
               schedulerId={row.original.k}
@@ -175,7 +175,7 @@ const HistoryData = ({ ...props }) => {
           return (
             <HistoryDrawer
               variant="success"
-              buttonTitle="New events found"
+              buttonTitle="New events"
               title="Crawled Output"
               params={props.params}
               schedulerId={row.original.k}

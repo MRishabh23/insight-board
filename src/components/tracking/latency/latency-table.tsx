@@ -14,7 +14,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
   {
     id: "carrier",
     accessorKey: "carrier",
-    header: () => <TableHeadCustom className="w-32">Carrier</TableHeadCustom>,
+    header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
     cell: ({ row }) => <TableCellCustom>{row.original.carrier}</TableCellCustom>,
     meta: {
       className: "sticky left-0 bg-white",
@@ -23,7 +23,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
   {
     id: "ref-type",
     accessorKey: "refType",
-    header: () => <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>,
+    header: () => <TableHeadCustom>Reference Type</TableHeadCustom>,
     cell: ({ row }) => {
       const ref = row.original.refType;
       let rType = ref.includes("BOOKING")
