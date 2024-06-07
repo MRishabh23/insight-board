@@ -52,7 +52,7 @@ export const TableHeaderTooltip = ({ ...props }) => {
 
 export const TableHeadCustom = ({ ...props }) => {
   return (
-    <div className={cn("flex items-center justify-center", props.className)}>
+    <div className={cn("flex w-32 items-center justify-center", props.className)}>
       <Button className="w-full" variant={"ghost"} onClick={props.onClick}>
         {props.children}
       </Button>
@@ -61,7 +61,7 @@ export const TableHeadCustom = ({ ...props }) => {
 };
 
 export const TableCellCustom = ({ ...props }) => {
-  return <div className={cn("flex items-center justify-center", props.className)}>{props.children}</div>;
+  return <div className={cn("flex w-32 items-center justify-center", props.className)}>{props.children}</div>;
 };
 
 export const CommonTooltip = ({ ...props }) => {
