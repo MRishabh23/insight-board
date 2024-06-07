@@ -247,7 +247,7 @@ const AddIssueForm = ({ ...props }) => {
                   Issue
                 </FormLabel>
                 <FormControl id="issue">
-                  <Input type="text" placeholder="Type issue..." required {...field} />
+                  <Textarea className="h-24" placeholder="Type issue..." required {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
