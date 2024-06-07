@@ -17,13 +17,19 @@ import { CloseIssueForm } from "./close-issue-dialog";
 export function IssueTable({ ...props }) {
   const columns: ColumnDef<IssueColumnType>[] = [
     {
-      id: "issue",
-      accessorKey: "issue",
-      header: () => <TableHeadCustom className="w-32">Issue</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.value.issue}</TableCellCustom>,
+      id: "issue-key",
+      accessorKey: "issueKey",
+      header: () => <TableHeadCustom>Issue Id</TableHeadCustom>,
+      cell: ({ row }) => <TableCellCustom>{row.original.value.issueKey}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
+    },
+    {
+      id: "issue",
+      accessorKey: "issue",
+      header: () => <TableHeadCustom>Issue</TableHeadCustom>,
+      cell: ({ row }) => <TableCellCustom>{row.original.value.issue}</TableCellCustom>,
     },
     {
       id: "status",
@@ -147,7 +153,7 @@ export function IssueTable({ ...props }) {
   ];
 
   if (props.type === "closed") {
-    columns.splice(9, 2);
+    columns.splice(10, 2);
   }
 
   const issueQuery = useIssueQuery(props.type.toUpperCase());

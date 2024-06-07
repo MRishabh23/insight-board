@@ -26,9 +26,9 @@ export function CarrierStatusTable({ ...props }) {
         <TableTwo>
           <TableHeader className="sticky top-0 bg-white">
             <TableRow>
-              <TableHead>Carrier</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-center">Carrier</TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -36,9 +36,9 @@ export function CarrierStatusTable({ ...props }) {
             {Array.isArray(props.statusList.data) &&
               props.statusList.data.length > 0 &&
               props.statusList.data.map((item: StatusType) => (
-                <TableRow key={item.carrier}>
+                <TableRow key={item.carrier} className="text-center">
                   <TableCell className="font-semibold">{item.carrier}</TableCell>
-                  <TableCell className="">
+                  <TableCell>
                     <Badge
                       className={cn(
                         "tracking-wide",

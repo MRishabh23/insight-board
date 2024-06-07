@@ -15,8 +15,8 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "subscription-id",
     accessorKey: "subscriptionId",
-    header: () => <TableHeadCustom className="w-32">Subscription Id</TableHeadCustom>,
-    cell: ({ row }) => <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>,
+    header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
+    cell: ({ row }) => <TableCellCustom className="w-80">{row.original.subscriptionId}</TableCellCustom>,
     meta: {
       className: "sticky left-0 bg-white",
     },
@@ -32,7 +32,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
   {
     id: "ref-type",
     accessorKey: "refType",
-    header: () => <TableHeadCustom className="w-32">Reference Type</TableHeadCustom>,
+    header: () => <TableHeadCustom>Reference Type</TableHeadCustom>,
     cell: ({ row }) => {
       const ref = row.original.referenceType;
       let rType = ref.includes("BOOKING")

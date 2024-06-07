@@ -33,7 +33,7 @@ export function SummaryTable() {
     {
       id: "carrier",
       accessorKey: "jtCarrierCode",
-      header: () => <TableHeadCustom className="w-32">Carrier</TableHeadCustom>,
+      header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.jtCarrierCode}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
@@ -94,7 +94,7 @@ export function SummaryTable() {
     {
       id: "last-run",
       accessorKey: "lastRunStartAt",
-      header: () => <TableHeadCustom className="w-32">Last Run</TableHeadCustom>,
+      header: () => <TableHeadCustom>Last Run</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.lastRunStartAt} ago</TableCellCustom>,
     },
     {
@@ -119,7 +119,7 @@ export function SummaryTable() {
     {
       id: "success",
       accessorKey: "successCount",
-      header: () => <TableHeadCustom className="w-32">Success</TableHeadCustom>,
+      header: () => <TableHeadCustom>Success</TableHeadCustom>,
       cell: ({ row }) => {
         return (
           <TableCellCustom>
@@ -152,7 +152,7 @@ export function SummaryTable() {
     {
       id: "fail",
       accessorKey: "failCount",
-      header: () => <TableHeadCustom className="w-32">Fail</TableHeadCustom>,
+      header: () => <TableHeadCustom>Fail</TableHeadCustom>,
       cell: ({ row }) => {
         const failRatio = row.original.failureRatio;
         return (
@@ -178,7 +178,7 @@ export function SummaryTable() {
     {
       id: "diff-rate",
       accessorKey: "getTotalDiffFound",
-      header: () => <TableHeadCustom className="w-32">DiffRate</TableHeadCustom>,
+      header: () => <TableHeadCustom>DiffRate</TableHeadCustom>,
       cell: ({ row }) => {
         const diffRatio = row.original.diffRatio;
         return (

@@ -8,17 +8,19 @@ import Link from "next/link";
 
 export function IssueDetailDrawer({ ...props }) {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant={props.variant}>{props.buttonTitle}</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{props.title}</SheetTitle>
-        </SheetHeader>
-        <SheetCustomContent data={props.data} />
-      </SheetContent>
-    </Sheet>
+    <div className="flex items-center justify-center">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant={props.variant}>{props.buttonTitle}</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{props.title}</SheetTitle>
+          </SheetHeader>
+          <SheetCustomContent data={props.data} />
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 

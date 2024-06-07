@@ -9,7 +9,7 @@ import { IssueAccordion } from "@/components/utils/accord";
 const Issue = () => {
   const [tabVal, setTabVal] = React.useState("active");
   return (
-    <div className="h-full w-full">
+    <div className="w-full">
       <div className="rounded-md bg-white p-4">
         <IssueAccordion />
       </div>

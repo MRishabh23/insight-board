@@ -7,17 +7,19 @@ import { ScrollArea } from "../../ui/scroll-area";
 
 export function HistoryDrawer({ ...props }) {
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant={props.variant}>{props.buttonTitle}</Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>{props.title}</SheetTitle>
-        </SheetHeader>
-        <SheetCustomContent {...props} />
-      </SheetContent>
-    </Sheet>
+    <div className="w-32 flex items-center justify-center">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant={props.variant}>{props.buttonTitle}</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>{props.title}</SheetTitle>
+          </SheetHeader>
+          <SheetCustomContent {...props} />
+        </SheetContent>
+      </Sheet>
+    </div>
   );
 }
 
