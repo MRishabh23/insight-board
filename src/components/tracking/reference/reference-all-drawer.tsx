@@ -7,7 +7,7 @@ import { ScrollArea } from "../../ui/scroll-area";
 
 export function ReferenceDrawer({ ...props }) {
   return (
-    <div className="w-32 flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant={props.variant}>{props.buttonTitle}</Button>

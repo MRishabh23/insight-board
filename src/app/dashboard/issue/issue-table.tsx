@@ -26,12 +26,6 @@ export function IssueTable({ ...props }) {
       },
     },
     {
-      id: "issue",
-      accessorKey: "issue",
-      header: () => <TableHeadCustom>Issue</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.value.issue}</TableCellCustom>,
-    },
-    {
       id: "status",
       accessorKey: "status",
       header: () => <TableHeadCustom>Status</TableHeadCustom>,
