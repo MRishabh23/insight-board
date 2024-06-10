@@ -15,7 +15,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     id: "carrier",
     accessorKey: "carrier",
     header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-    cell: ({ row }) => <TableCellCustom>{row.original.carrier}</TableCellCustom>,
+    cell: ({ row }) => <TableCellCustom className="text-[15px] font-semibold">{row.original.carrier}</TableCellCustom>,
     meta: {
       className: "sticky left-0 bg-white",
     },

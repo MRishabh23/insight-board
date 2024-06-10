@@ -36,7 +36,7 @@ const HistoryData = ({ ...props }) => {
       id: "subscription-id",
       accessorKey: "subId",
       header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-      cell: () => <TableCellCustom>{props.searchParams.get("subId")}</TableCellCustom>,
+      cell: () => <TableCellCustom className="font-semibold">{props.searchParams.get("subId")}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },

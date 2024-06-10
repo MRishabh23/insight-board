@@ -34,7 +34,7 @@ const ReferenceAllData = ({ ...props }) => {
       id: "subscription-id",
       accessorKey: "subscriptionId",
       header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.subscriptionId}</TableCellCustom>,
+      cell: ({ row }) => <TableCellCustom className="font-semibold">{row.original.subscriptionId}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
