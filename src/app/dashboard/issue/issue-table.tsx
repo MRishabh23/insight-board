@@ -20,7 +20,7 @@ export function IssueTable({ ...props }) {
       id: "issue-key",
       accessorKey: "issueKey",
       header: () => <TableHeadCustom>Issue Id</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.value.issueKey}</TableCellCustom>,
+      cell: ({ row }) => <TableCellCustom className="font-semibold">{row.original.value.issueKey}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },
