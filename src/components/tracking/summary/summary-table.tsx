@@ -34,7 +34,7 @@ export function SummaryTable() {
       id: "carrier",
       accessorKey: "jtCarrierCode",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.jtCarrierCode}</TableCellCustom>,
+      cell: ({ row }) => <TableCellCustom className="text-[15px] font-semibold">{row.original.jtCarrierCode}</TableCellCustom>,
       meta: {
         className: "sticky left-0 bg-white",
       },

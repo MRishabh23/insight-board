@@ -23,6 +23,10 @@ export function IssueAccordion() {
       <li>By clicking more details button you can find additional details for the issue.</li>
       <li>By clicking the edit button you can update the issue.</li>
       <li>
+        You can add Emails and Additional Links. If there are more than one, add them as comma separated. e.g.
+        abc@xyz.com,def@xyz.com OR link1,link2
+      </li>
+      <li>
         Send Notification, Close, and Delete buttons will show an additional modal to confirm whether you want to
         proceed with the clicked option.
       </li>
