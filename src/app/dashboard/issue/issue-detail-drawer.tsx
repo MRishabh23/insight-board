@@ -34,6 +34,7 @@ function SheetCustomContent({ ...props }) {
   return (
     <ScrollArea className="my-scroll mt-5 w-full">
       <div className="p-1">
+        {props.data.closed_at && <IssueInput label="Closed At" value={props.data.closed_at} />}
         <IssueInput label="Created By" value={props.data.created_by} />
         {props.data.updated_by && <IssueInput label="Updated By" value={props.data.updated_by} />}
         <IssueTextArea label="Issue" value={props.data.issue} />
