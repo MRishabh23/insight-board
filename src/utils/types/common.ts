@@ -51,6 +51,7 @@ export type IssueValue = {
   description: string;
   created_by: string;
   updated_by: string;
+  closed_at: string;
   polling_count: number;
   default_emails: string;
   additional_links: string;
