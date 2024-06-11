@@ -19,7 +19,7 @@ const TrackingEnvHeader = ({ params }: { params: { mode: string; env: string; da
   return (
     <>
       <div className="flex items-center justify-between sm:justify-around">
-        <h2 className="text-xl font-semibold tracking-wider">DASHBOARDS</h2>
+        <h2 className="text-xl font-semibold tracking-wider">{params.mode.toUpperCase()} DASHBOARDS</h2>
         <div className="flex items-center justify-center">
           <p className="text-lg tracking-wider underline">ENV :</p>
           <Tabs
