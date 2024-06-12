@@ -57,14 +57,14 @@ export function NavigationMenuComponent() {
         </NavigationMenuItem>
         <Separator orientation="vertical" className="h-5 border-white" />
         <NavigationMenuItem>
-          <Link href="/dashboard/profile" className={navigationMenuTriggerStyle()}>
-            Profile
+          <Link href="/dashboard/issue" className={navigationMenuTriggerStyle()}>
+            Issues
           </Link>
         </NavigationMenuItem>
         <Separator orientation="vertical" className="h-5 border-white" />
         <NavigationMenuItem>
-          <Link href="/dashboard/issue" className={navigationMenuTriggerStyle()}>
-            Issues
+          <Link href="/dashboard/profile" className={navigationMenuTriggerStyle()}>
+            Profile
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
