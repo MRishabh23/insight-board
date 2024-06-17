@@ -42,7 +42,7 @@ const TrackingDashHeader = ({ params }: { params: { mode: string; env: string; d
         category: "all",
         carrier: "",
         queue: "NORMAL",
-        refType: "BOOKING",
+        refType: params.mode === "ocean" ? "BOOKING" : params.mode === "air" ? "AWB" : "CONTAINER",
         refStatus: "ACTIVE",
         bucket: "",
       },
