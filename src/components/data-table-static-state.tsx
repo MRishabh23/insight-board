@@ -28,7 +28,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export function TableDataStaticComponent({ ...props }) {
+export function TableDataStaticStateComponent({ ...props }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -38,11 +38,38 @@ export function TableDataStaticComponent({ ...props }) {
     pageSize: 5,
   });
 
-  const data = React.useMemo(
+  const inputValue = React.useRef("");
+  const tableType = React.useMemo(() => props.tableType, [props.tableType]);
+  const propData = React.useMemo(
     () => (Array.isArray(props.data.data) ? (props.data.data.length > 0 ? props.data.data : []) : []),
     [props.data.data],
   );
+  const [data, setData] = React.useState(propData);
 
+  React.useEffect(() => {
+    let ignore = false;
+    if (!ignore) {
+      setData(propData);
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [propData]);
+
+  const handleFilter = React.useCallback(
+    (e: any) => {
+      inputValue.current = e.target.value;
+      if (e.target.value === "") {
+        setData(propData);
+      } else {
+        const newData = propData.filter((item: any) => {
+          return item.k.includes(e.target.value);
+        });
+        setData(newData);
+      }
+    },
+    [propData],
+  );
   const columns = React.useMemo(() => props.columns, [props.columns]);
 
   const table = useReactTable({
@@ -135,6 +162,16 @@ export function TableDataStaticComponent({ ...props }) {
 
   return (
     <div className="mt-6 w-full">
+      {tableType === "history" && (
+        <div>
+          <Input
+            placeholder="Filter schedulerId..."
+            value={inputValue.current ?? ""}
+            onChange={(event) => handleFilter(event)}
+            className="max-w-sm"
+          />
+        </div>
+      )}
       <div className="flex items-start justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">Total Items: {data.length}</div>
         <div>

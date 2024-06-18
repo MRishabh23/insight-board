@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableDataStaticComponent } from "@/components/data-table-static";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableCellTooltip, TableCellTooltipScroll, TableHeadCustom } from "@/components/table/common";
@@ -12,6 +11,7 @@ import { ParamType, HistoryType } from "@/utils/types/common";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
 import { HistoryDrawer } from "@/components/tracking/history/history-drawer-component";
+import { TableDataStaticStateComponent } from "@/components/data-table-static-state";
 
 export function HistoryTable() {
   const params = useParams<ParamType>();
@@ -212,5 +212,5 @@ const HistoryData = ({ ...props }) => {
     );
   }
 
-  return <TableDataStaticComponent tableType="history" data={historyQuery.data} columns={columns} />;
+  return <TableDataStaticStateComponent tableType="history" data={historyQuery.data} columns={columns} />;
 };

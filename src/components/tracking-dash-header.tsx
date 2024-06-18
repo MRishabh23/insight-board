@@ -28,6 +28,7 @@ const TrackingDashHeader = ({ params }: { params: { mode: string; env: string; d
       query: {
         subId: "",
         historyType: "DIFF",
+        includeRange: "NO",
         from: "",
         to: "",
       },

@@ -40,17 +40,30 @@ export const getHistoryAction = async ({
         startTime: "",
         endTime: "",
       };
-    } else if (historyType === "ALL" && startTime !== "" && endTime !== "") {
-      reqData = {
-        type: "GET_REFERENCE_HISTORY",
-        username: data.username,
-        env: env.toUpperCase(),
-        mode: mode.toUpperCase(),
-        subscriptionId: subscriptionId,
-        historyType: historyType,
-        startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
-        endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
-      };
+    } else if (historyType === "ALL") {
+      if (startTime !== "" && endTime !== "") {
+        reqData = {
+          type: "GET_REFERENCE_HISTORY",
+          username: data.username,
+          env: env.toUpperCase(),
+          mode: mode.toUpperCase(),
+          subscriptionId: subscriptionId,
+          historyType: historyType,
+          startTime: `${startTime} 00:00:00`, //startTime + " 00:00:00",
+          endTime: `${endTime} 23:59:59`, //endTime + " 23:59:59"
+        };
+      } else {
+        reqData = {
+          type: "GET_REFERENCE_HISTORY",
+          username: data.username,
+          env: env.toUpperCase(),
+          mode: mode.toUpperCase(),
+          subscriptionId: subscriptionId,
+          historyType: historyType,
+          startTime: "",
+          endTime: "",
+        };
+      }
     }
 
     const res: any = await mainRequestAction(reqData);

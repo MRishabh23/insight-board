@@ -183,6 +183,7 @@ export const useSummaryForm = (newCarrOpt: any, searchParams: any) => {
 const historyFormSchema = z.object({
   subId: z.string(),
   historyType: z.string(),
+  includeRange: z.string(),
   range: z
     .object({
       from: z.date(),
@@ -197,6 +198,7 @@ export const useHistoryForm = (searchParams: any) => {
     defaultValues: {
       subId: searchParams.get("subId") || "",
       historyType: searchParams.get("historyType") || "DIFF",
+      includeRange: searchParams.get("includeRange") || "NO",
       range: {
         from: new Date(searchParams.get("from") || format(nD, "yyyy-MM-dd")),
         to: new Date(searchParams.get("to") || format(eD, "yyyy-MM-dd")),
