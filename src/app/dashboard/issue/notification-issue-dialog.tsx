@@ -66,7 +66,7 @@ export const NotificationIssueForm = ({ ...props }) => {
                   name="issueKey"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="issueKey">Notification Text</FormLabel>
+                      <FormLabel htmlFor="issueKey">Issue Key</FormLabel>
                       <FormControl id="issueKey">
                         <Input type="text" required {...field} />
                       </FormControl>

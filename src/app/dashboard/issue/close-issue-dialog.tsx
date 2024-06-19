@@ -61,7 +61,7 @@ export const CloseIssueForm = ({ ...props }) => {
                   name="issueKey"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="issueKey">Close Text</FormLabel>
+                      <FormLabel htmlFor="issueKey">Issue Key</FormLabel>
                       <FormControl id="issueKey">
                         <Input type="text" required {...field} />
                       </FormControl>

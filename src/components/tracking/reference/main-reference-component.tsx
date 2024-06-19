@@ -26,7 +26,7 @@ export default function MainReferenceComponent() {
         category: "all",
         carrier: "",
         queue: "NORMAL",
-        refType: "BOOKING",
+        refType: params.mode === "ocean" ? "BOOKING" : params.mode === "air" ? "AWB" : "CONTAINER",
         refStatus: "ACTIVE",
         bucket: "",
       },
@@ -46,7 +46,7 @@ export default function MainReferenceComponent() {
       path: `/dashboard/tracking/${params.mode}/${params.env}/references`,
       query: {
         category: "reference",
-        carrier: "",
+        refCarrier: "",
         reference: "",
       },
     },

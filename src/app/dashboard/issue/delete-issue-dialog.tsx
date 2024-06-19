@@ -69,7 +69,7 @@ export const DeleteIssueForm = ({ ...props }) => {
                   name="issueKey"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel htmlFor="issueKey">Delete Text</FormLabel>
+                      <FormLabel htmlFor="issueKey">Issue Key</FormLabel>
                       <FormControl id="issueKey">
                         <Input type="text" required {...field} />
                       </FormControl>

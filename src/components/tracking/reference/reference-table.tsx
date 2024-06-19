@@ -114,7 +114,7 @@ export function ReferenceTable() {
   const params = useParams<ParamType>();
   const searchParams = useSearchParams();
 
-  if (!searchParams.get("carrier") && !searchParams.get("reference")) {
+  if (!searchParams.get("refCarrier") && !searchParams.get("reference")) {
     return (
       <div className="mt-10 flex items-center justify-center text-xl font-bold">
         Select a carrier and enter a reference to view data.
@@ -127,7 +127,7 @@ export function ReferenceTable() {
 
 const ReferenceData = ({ ...props }) => {
   const referenceId = React.useMemo(
-    () => `${props.searchParams.get("carrier")}_${props.searchParams.get("reference")}`,
+    () => `${props.searchParams.get("refCarrier")}_${props.searchParams.get("reference")}`,
     [props.searchParams],
   );
 

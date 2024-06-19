@@ -34,7 +34,7 @@ export const ReferenceForm = () => {
     (data: ReferenceFormType) => {
       const refParams = new URLSearchParams(searchParams.toString());
 
-      refParams.set("carrier", data.carrier);
+      refParams.set("refCarrier", data.carrier);
       refParams.set("reference", data.reference);
 
       return refParams.toString();
