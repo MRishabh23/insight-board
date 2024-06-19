@@ -11,7 +11,7 @@ import { ParamType, HistoryType } from "@/utils/types/common";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
 import { HistoryDrawer } from "@/components/tracking/history/history-drawer-component";
-import { TableDataStaticStateComponent } from "@/components/data-table-static-state";
+import { TableDataStaticStateComponent } from "@/components/data-table-static";
 
 export function HistoryTable() {
   const params = useParams<ParamType>();
