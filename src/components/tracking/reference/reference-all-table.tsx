@@ -178,5 +178,5 @@ const ReferenceAllData = ({ ...props }) => {
     );
   }
 
-  return <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />;
+  return <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />
 };

@@ -84,6 +84,7 @@ export const useHistoryQuery = (params: ParamType, searchParams: any) => {
       `${params.env}`,
       `${searchParams.get("subId")}`,
       `${searchParams.get("historyType")}`,
+      `${searchParams.get("includeRange")}`,
       `${searchParams.get("from")}`,
       `${searchParams.get("to")}`,
     ],

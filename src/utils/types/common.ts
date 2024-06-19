@@ -176,6 +176,7 @@ type ErrorMsg = {
 export type HistoryFormType = {
   subId: string;
   historyType: string;
+  includeRange: string;
   range: {
     from: Date;
     to: Date;

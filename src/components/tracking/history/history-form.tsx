@@ -58,7 +58,8 @@ export const HistoryForm = () => {
       const historyParams = new URLSearchParams(searchParams.toString());
       historyParams.set("subId", data.subId);
       historyParams.set("historyType", data.historyType);
-      if (data.subId.length > 1 && data.historyType === "ALL") {
+      historyParams.set("includeRange", data.includeRange);
+      if (data.subId.length > 1 && data.includeRange === "YES") {
         historyParams.set("from", format(data.range.from, "yyyy-MM-dd"));
         historyParams.set("to", format(data.range.to, "yyyy-MM-dd"));
       } else {
@@ -112,7 +113,30 @@ export const HistoryForm = () => {
               </FormItem>
             )}
           />
-          {form.watch("historyType") === "ALL" && (
+          {form.watch().historyType === "ALL" && (
+            <FormField
+              control={form.control}
+              name="includeRange"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormLabel htmlFor="includeRange">Include Range</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl id="includeRange">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Does range needed..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="NO">No</SelectItem>
+                      <SelectItem value="YES">Yes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {form.watch("includeRange") === "YES" && (
             <FormField
               control={form.control}
               name="range"
