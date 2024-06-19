@@ -19,7 +19,7 @@ export const ReferenceAllForm = () => {
   const router = useRouter();
   const [btnLoad, setBtnLoad] = React.useState(false);
 
-  const form = useReferenceAllForm(searchParams);
+  const form = useReferenceAllForm(params, searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);

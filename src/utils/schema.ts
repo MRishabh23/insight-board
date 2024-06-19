@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IssueValueInternal, StatusType } from "./types/common";
+import { IssueValueInternal, ParamType, StatusType } from "./types/common";
 import { format, getYear } from "date-fns";
+import React from "react";
 
 // current and previous dates
 const sD = new Date();
@@ -243,13 +244,13 @@ const referenceAllFormSchema = z.object({
   refStatus: z.string(),
 });
 
-export const useReferenceAllForm = (searchParams: any) => {
+export const useReferenceAllForm = (params: ParamType, searchParams: any) => {
   const form = useForm<z.infer<typeof referenceAllFormSchema>>({
     resolver: zodResolver(referenceAllFormSchema),
     defaultValues: {
       carrier: searchParams.get("carrier") || "",
       queue: searchParams.get("queue") || "NORMAL",
-      refType: searchParams.get("refType") || "BOOKING",
+      refType: searchParams.get("refType") ? searchParams.get("refType") : params.mode === "ocean" ? "BOOKING" : params.mode === "air" ? "AWB" : "CONTAINER",
       refStatus: searchParams.get("refStatus") || "ACTIVE",
     },
   });
@@ -266,7 +267,7 @@ export const useReferenceForm = (searchParams: any) => {
   const form = useForm<z.infer<typeof referenceFormSchema>>({
     resolver: zodResolver(referenceFormSchema),
     defaultValues: {
-      carrier: searchParams.get("carrier") || "",
+      carrier: searchParams.get("refCarrier") || "",
       reference: searchParams.get("reference") || "",
     },
   });
