@@ -64,7 +64,7 @@ const AddIssueForm = ({ ...props }) => {
         message: "Please select a mode.",
       });
     }
-    if (!data.carrier) {
+    if (data.mode !== "all" && !data.carrier) {
       form.setError("carrier", {
         type: "custom",
         message: "Please select a carrier.",
@@ -82,15 +82,7 @@ const AddIssueForm = ({ ...props }) => {
         message: "Please select a severity.",
       });
     }
-    if (
-      data.mode &&
-      data.carrier &&
-      data.status &&
-      data.severity &&
-      data.issue &&
-      data.description &&
-      data.polling_frequency
-    ) {
+    if (data.mode && data.status && data.severity && data.issue && data.description && data.polling_frequency) {
       data.polling_frequency = parseInt(data.polling_frequency);
       //console.log("submit data", data);
       server_CUIssue(data);
@@ -151,6 +143,7 @@ const AddIssueForm = ({ ...props }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="all">ALL</SelectItem>
                     <SelectItem value="air">AIR</SelectItem>
                     <SelectItem value="ocean">OCEAN</SelectItem>
                     <SelectItem value="terminal">TERMINAL</SelectItem>
@@ -160,36 +153,38 @@ const AddIssueForm = ({ ...props }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="carrier"
-            render={({ field }) => (
-              <FormItem className="mt-4">
-                <FormLabel className="text-base" htmlFor="carrier">
-                  Carrier
-                </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={props.issue === "CREATE" ? false : true}
-                >
-                  <FormControl id="carrier">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a carrier..." />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {carrierOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {form.watch("mode") !== "all" && (
+            <FormField
+              control={form.control}
+              name="carrier"
+              render={({ field }) => (
+                <FormItem className="mt-4">
+                  <FormLabel className="text-base" htmlFor="carrier">
+                    Carrier
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={props.issue === "CREATE" ? false : true}
+                  >
+                    <FormControl id="carrier">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a carrier..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {carrierOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="status"

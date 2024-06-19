@@ -39,7 +39,7 @@ function SheetCustomContent({ ...props }) {
         {props.data.updated_by && <IssueInput label="Updated By" value={props.data.updated_by} />}
         <IssueTextArea label="Issue" value={props.data.issue} />
         <IssueTextArea label="Description" value={props.data.description} />
-        <IssueInput label="Carrier" value={props.data.carrier} />
+        {props.data.carrier && <IssueInput label="Carrier" value={props.data.carrier} />}
         <IssueInput label="Environment" value={props.data.env} />
         <IssueInput label="Mode" value={props.data.mode.toUpperCase()} />
         <IssueInput label="Status" value={props.data.status} />

@@ -61,7 +61,10 @@ export function IssueTable({ ...props }) {
       id: "carrier",
       accessorKey: "carrier",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom>{row.original.value.carrier}</TableCellCustom>,
+      cell: ({ row }) => {
+        const carrier = row.original.value.carrier;
+        return <TableCellCustom>{carrier ? carrier : "-"}</TableCellCustom>;
+      },
     },
     {
       id: "created-at",
