@@ -34,7 +34,9 @@ export function SummaryTable() {
       id: "carrier",
       accessorKey: "jtCarrierCode",
       header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom className="text-[15px] font-semibold">{row.original.jtCarrierCode}</TableCellCustom>,
+      cell: ({ row }) => (
+        <TableCellCustom className="text-[15px] font-semibold">{row.original.jtCarrierCode}</TableCellCustom>
+      ),
       meta: {
         className: "sticky left-0 bg-white",
       },
@@ -133,6 +135,7 @@ export function SummaryTable() {
       accessorKey: "getReferenceNotFound",
       header: () => <TableHeadCustom>RNF (404)</TableHeadCustom>,
       cell: ({ row }) => {
+        const rnfCount = row.original.getReferenceNotFound;
         const rnfRatio = row.original.getReferenceNotFoundPercentage;
         const queue = row.original.queueType;
         return (
@@ -144,7 +147,7 @@ export function SummaryTable() {
                 : "text-inherit"
             }`}
           >
-            {row.original.getReferenceNotFound}
+            {rnfCount} ({rnfRatio}%)
           </TableCellCustom>
         );
       },
