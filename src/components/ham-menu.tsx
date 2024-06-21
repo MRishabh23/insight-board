@@ -11,15 +11,15 @@ export function HamburgerMenuComponent() {
   }[] = [
     {
       title: "Ocean Dashboard",
-      path: "/dashboard/tracking/ocean/prod/status",
+      path: "/dashboard/tracking/ocean/prod/summary",
     },
     {
       title: "Air Dashboard",
-      path: "/dashboard/tracking/air/prod/status",
+      path: "/dashboard/tracking/air/prod/summary",
     },
     {
       title: "Terminal Dashboard",
-      path: "/dashboard/tracking/terminal/dev/status",
+      path: "/dashboard/tracking/terminal/dev/summary",
     },
   ];
   return (
@@ -70,7 +70,15 @@ function PopoverMenu({ ...props }) {
             <li key={component.title}>
               <SheetClose asChild>
                 <Link
-                  href={component.path}
+                  href={{
+                    pathname: component.path,
+                    query: {
+                      carriers: "",
+                      queue: "NORMAL",
+                      from: "",
+                      to: "",
+                    },
+                  }}
                   className="text-[14px] font-medium text-muted-foreground hover:text-foreground"
                 >
                   {component.title}
