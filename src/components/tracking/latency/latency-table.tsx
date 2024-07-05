@@ -19,6 +19,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     meta: {
       className: "sticky left-0 bg-white",
     },
+    enableSorting: false,
   },
   {
     id: "ref-type",
@@ -41,6 +42,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
         </TableCellCustom>
       );
     },
+    enableSorting: false,
   },
   {
     id: "queue",
@@ -58,6 +60,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
 
       return <TableCellCustom>{qType}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "total",
@@ -79,6 +82,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
         (row.original.tenth || 0);
       return <TableCellCustom>{totalC}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "first",
@@ -87,12 +91,14 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.first || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "second",
     accessorKey: "second",
     header: () => <TableHeadCustom>1_2</TableHeadCustom>,
     cell: ({ row }) => <TableCellCustom>{row.original.second || 0}</TableCellCustom>,
+    enableSorting: false,
   },
   {
     id: "third",
@@ -101,6 +107,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.third || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "fourth",
@@ -109,6 +116,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.fourth || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "fifth",
@@ -117,6 +125,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.fifth || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "sixth",
@@ -125,6 +134,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.sixth || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "seventh",
@@ -133,6 +143,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.seventh || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "eight",
@@ -141,6 +152,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.eight || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "ninth",
@@ -149,6 +161,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.ninth || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "tenth",
@@ -157,6 +170,7 @@ export const columns: ColumnDef<LatencyTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom className="text-red-500">{row.original.tenth || 0}</TableCellCustom>;
     },
+    enableSorting: false,
   },
 ];
 

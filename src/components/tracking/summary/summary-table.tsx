@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge";
 import { format, toDate } from "date-fns";
 import { ParamType, SummaryType } from "@/utils/types/common";
 import { useSummaryQuery } from "@/utils/query";
-import { ArrowUpDown } from "lucide-react";
 
 export function SummaryTable() {
   const params = useParams<ParamType>();
@@ -40,6 +39,9 @@ export function SummaryTable() {
       meta: {
         className: "sticky left-0 bg-white",
       },
+      enableSorting: true,
+      sortDescFirst: false,
+      sortUndefined: "last",
     },
     {
       id: "queue",
@@ -61,18 +63,16 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: false,
     },
     {
       id: "active",
       accessorKey: "jtCrawledTotal",
-      header: ({ column }) => {
-        return (
-          <TableHeadCustom onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-            Active <ArrowUpDown className="ml-2 h-4 w-4" />
-          </TableHeadCustom>
-        );
-      },
+      header: () => <TableHeadCustom>Active</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.jtCrawledTotal}</TableCellCustom>,
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "avg-age",
@@ -92,12 +92,16 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "last-run",
       accessorKey: "lastRunStartAt",
       header: () => <TableHeadCustom>Last Run</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.lastRunStartAt} ago</TableCellCustom>,
+      enableSorting: false,
     },
     {
       id: "duration",
@@ -117,6 +121,7 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: false,
     },
     {
       id: "success",
@@ -129,6 +134,9 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "rnf",
@@ -151,6 +159,9 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "fail",
@@ -177,6 +188,9 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "diff-rate",
@@ -207,6 +221,9 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "crawl-frequency",
@@ -215,6 +232,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.crawlFrequency}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "duration-to-launch",
@@ -223,6 +241,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.durationToLaunch}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "deliver-count",
@@ -231,6 +250,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.deliverCount}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "close-count",
@@ -239,6 +259,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.closeCount}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "fk-timeout",
@@ -247,6 +268,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.toFKFailedNotSent}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "hit-rate",
@@ -272,6 +294,9 @@ export function SummaryTable() {
           </TableCellCustom>
         );
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "scheduler-id",
@@ -280,6 +305,7 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.schedulerId}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "start-time",
@@ -288,6 +314,9 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{format(toDate(row.original.start_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "end-time",
@@ -296,6 +325,9 @@ export function SummaryTable() {
       cell: ({ row }) => {
         return <TableCellCustom>{format(toDate(row.original.end_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
   ];
 

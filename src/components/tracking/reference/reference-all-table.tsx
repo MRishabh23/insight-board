@@ -38,6 +38,7 @@ const ReferenceAllData = ({ ...props }) => {
       meta: {
         className: "sticky left-0 bg-white",
       },
+      enableSorting: false,
     },
     {
       id: "carrier",
@@ -46,6 +47,7 @@ const ReferenceAllData = ({ ...props }) => {
       cell: ({ row }) => {
         return <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "ref-type",
@@ -76,6 +78,7 @@ const ReferenceAllData = ({ ...props }) => {
           </TableCellCustom>
         );
       },
+      enableSorting: false,
     },
     {
       id: "ref-num",
@@ -84,6 +87,7 @@ const ReferenceAllData = ({ ...props }) => {
       cell: ({ row }) => {
         return <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "status",
@@ -98,6 +102,7 @@ const ReferenceAllData = ({ ...props }) => {
           </TableCellCustom>
         );
       },
+      enableSorting: false,
     },
     {
       id: "queue",
@@ -115,6 +120,7 @@ const ReferenceAllData = ({ ...props }) => {
 
         return <TableCellCustom>{qType}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "last-crawled-at",
@@ -128,6 +134,9 @@ const ReferenceAllData = ({ ...props }) => {
         }
         return <TableCellCustom>{showT}</TableCellCustom>;
       },
+      enableSorting: true,
+      sortDescFirst: true,
+      sortUndefined: "last",
     },
     {
       id: "more-info",
@@ -145,6 +154,7 @@ const ReferenceAllData = ({ ...props }) => {
           />
         );
       },
+      enableSorting: false,
     },
   ];
 
@@ -178,5 +188,5 @@ const ReferenceAllData = ({ ...props }) => {
     );
   }
 
-  return <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />
+  return <TableDataStaticComponent data={referenceAllQuery.data} columns={columns} />;
 };

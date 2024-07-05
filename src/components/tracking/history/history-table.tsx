@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingFn } from "@tanstack/react-table";
 import { useParams, useSearchParams } from "next/navigation";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableCellTooltip, TableCellTooltipScroll, TableHeadCustom } from "@/components/table/common";
 import { Badge } from "@/components/ui/badge";
-import { format, toDate } from "date-fns";
+import { format, getTime, toDate } from "date-fns";
 import { ParamType, HistoryType } from "@/utils/types/common";
 import { useHistoryQuery } from "@/utils/query";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,19 @@ export function HistoryTable() {
 const HistoryData = ({ ...props }) => {
   const historyQuery = useHistoryQuery(props.params, props.searchParams);
 
+  const sortSchedulerFn: SortingFn<HistoryType> = (rowA, rowB, _columnId) => {
+    const statusA = +rowA.original.k;
+    const statusB = +rowB.original.k;
+    return statusA - statusB;
+  };
+
+  const sortStatusFn: SortingFn<HistoryType> = (rowA, rowB, _columnId) => {
+    const statusA = rowA.original.v.crawl_status;
+    const statusB = rowB.original.v.crawl_status;
+    const statusOrder = ["SUCCESS", "FAILED"];
+    return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB);
+  };
+
   const columns: ColumnDef<HistoryType>[] = [
     {
       id: "subscription-id",
@@ -40,6 +53,7 @@ const HistoryData = ({ ...props }) => {
       meta: {
         className: "sticky left-0 bg-white",
       },
+      enableSorting: false,
     },
     {
       id: "created-at",
@@ -50,6 +64,7 @@ const HistoryData = ({ ...props }) => {
           <TableCellCustom>{format(toDate(row.original.v.insertion_time), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
         );
       },
+      enableSorting: false,
     },
     {
       id: "crawl-status",
@@ -66,12 +81,14 @@ const HistoryData = ({ ...props }) => {
           </TableCellCustom>
         );
       },
+      sortingFn: sortStatusFn,
     },
     {
       id: "scheduler-id",
       accessorKey: "schedulerId",
       header: () => <TableHeadCustom>Scheduler Id</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.k}</TableCellCustom>,
+      sortingFn: sortSchedulerFn,
     },
     {
       id: "response-sent",
@@ -125,6 +142,7 @@ const HistoryData = ({ ...props }) => {
         }
         return <TableCellCustom>Unhandled</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "crawled-output",
@@ -185,6 +203,7 @@ const HistoryData = ({ ...props }) => {
         }
         return <TableCellCustom>Unhandled</TableCellCustom>;
       },
+      enableSorting: false,
     },
   ];
 
