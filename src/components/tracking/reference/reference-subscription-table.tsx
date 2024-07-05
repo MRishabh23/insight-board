@@ -20,6 +20,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     meta: {
       className: "sticky left-0 bg-white",
     },
+    enableSorting: false,
   },
   {
     id: "carrier",
@@ -28,6 +29,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.carrier}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "ref-type",
@@ -50,6 +52,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
         </TableCellCustom>
       );
     },
+    enableSorting: false,
   },
   {
     id: "ref-num",
@@ -58,6 +61,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.referenceNumber}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "status",
@@ -66,6 +70,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{row.original.status}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "queue",
@@ -83,6 +88,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
 
       return <TableCellCustom>{qType}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "created-at",
@@ -91,6 +97,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
     },
+    enableSorting: false,
   },
   {
     id: "last-crawled-at",
@@ -99,6 +106,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => (
       <TableCellCustom>{format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
     ),
+    enableSorting: false,
   },
   {
     id: "updated-at",
@@ -107,6 +115,7 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     cell: ({ row }) => {
       return <TableCellCustom>{format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
     },
+    enableSorting: false,
   },
 ];
 

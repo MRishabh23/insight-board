@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, SortingFn } from "@tanstack/react-table";
 import { TableDataStaticComponent } from "@/components/data-table-static";
 import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
@@ -13,8 +13,35 @@ import { CreateEditIssueDrawer } from "./create-edit-issue-drawer";
 import { DeleteIssueForm } from "./delete-issue-dialog";
 import { NotificationIssueForm } from "./notification-issue-dialog";
 import { CloseIssueForm } from "./close-issue-dialog";
+import { Button } from "@/components/ui/button";
 
 export function IssueTable({ ...props }) {
+  const sortModeFn: SortingFn<IssueColumnType> = (rowA, rowB, _columnId) => {
+    const statusA = rowA.original.value.mode;
+    const statusB = rowB.original.value.mode;
+    const statusOrder = ["air", "ocean", "terminal"];
+    return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB);
+  };
+
+  const sortSeverityFn: SortingFn<IssueColumnType> = (rowA, rowB, _columnId) => {
+    const statusA = rowA.original.value.severity;
+    const statusB = rowB.original.value.severity;
+    const statusOrder = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
+    return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB);
+  };
+
+  const sortCreatedFn: SortingFn<IssueColumnType> = (rowA, rowB, _columnId) => {
+    const statusA = +rowA.original.created_at - 19800000;
+    const statusB = +rowB.original.created_at - 19800000;
+    return statusA - statusB;
+  };
+
+  const sortModifiedFn: SortingFn<IssueColumnType> = (rowA, rowB, _columnId) => {
+    const statusA = +rowA.original.modified_at - 19800000;
+    const statusB = +rowB.original.modified_at - 19800000;
+    return statusA - statusB;
+  };
+
   const columns: ColumnDef<IssueColumnType>[] = [
     {
       id: "issue-key",
@@ -24,6 +51,7 @@ export function IssueTable({ ...props }) {
       meta: {
         className: "sticky left-0 bg-white",
       },
+      enableSorting: false,
     },
     {
       id: "status",
@@ -36,12 +64,14 @@ export function IssueTable({ ...props }) {
         if (status === "CLOSED") statusColor = commonClass + " bg-red-50 border-red-500 text-red-500";
         return <TableCellCustom className={statusColor}>{status}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "mode",
       accessorKey: "mode",
       header: () => <TableHeadCustom>Mode</TableHeadCustom>,
       cell: ({ row }) => <TableCellCustom>{row.original.value.mode.toUpperCase()}</TableCellCustom>,
+      sortingFn: sortModeFn,
     },
     {
       id: "severity",
@@ -56,6 +86,7 @@ export function IssueTable({ ...props }) {
         if (severity === "HIGH") severityColor = commonClass + " bg-orange-50 border-orange-500 text-orange-500";
         return <TableCellCustom className={severityColor}>{severity}</TableCellCustom>;
       },
+      sortingFn: sortSeverityFn,
     },
     {
       id: "carrier",
@@ -65,6 +96,7 @@ export function IssueTable({ ...props }) {
         const carrier = row.original.value.carrier;
         return <TableCellCustom>{carrier ? carrier : "-"}</TableCellCustom>;
       },
+      enableSorting: false,
     },
     {
       id: "created-at",
@@ -77,6 +109,7 @@ export function IssueTable({ ...props }) {
           </TableCellCustom>
         );
       },
+      sortingFn: sortCreatedFn,
     },
     {
       id: "modified-at",
@@ -89,6 +122,7 @@ export function IssueTable({ ...props }) {
           </TableCellCustom>
         );
       },
+      sortingFn: sortModifiedFn,
     },
     {
       id: "more-detail",
@@ -104,6 +138,7 @@ export function IssueTable({ ...props }) {
           />
         );
       },
+      enableSorting: false,
     },
     {
       id: "edit",
@@ -122,6 +157,7 @@ export function IssueTable({ ...props }) {
           />
         );
       },
+      enableSorting: false,
     },
     {
       id: "send-notification",
@@ -130,6 +166,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return <NotificationIssueForm issueKey={row.original.issue_key} tableType={props.type.toUpperCase()} />;
       },
+      enableSorting: false,
     },
     {
       id: "close-issue",
@@ -138,6 +175,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return <CloseIssueForm issueKey={row.original.issue_key} />;
       },
+      enableSorting: false,
     },
     {
       id: "delete",
@@ -146,6 +184,7 @@ export function IssueTable({ ...props }) {
       cell: ({ row }) => {
         return <DeleteIssueForm issueKey={row.original.issue_key} tableType={props.type.toUpperCase()} />;
       },
+      enableSorting: false,
     },
   ];
 
@@ -181,7 +220,20 @@ export function IssueTable({ ...props }) {
 
   return (
     <>
-      <TableDataStaticComponent data={issueQuery.data} columns={columns} />
+      <div>
+        <div className="flex justify-end p-5">
+          <Button onMouseDown={() => issueQuery.refetch()} disabled={issueQuery.isFetching}>
+            {issueQuery.isFetching ? "Fetching..." : "Refresh"}
+          </Button>
+        </div>
+        {issueQuery.isFetching ? (
+          <div className="flex h-full flex-col items-center justify-center">
+            <CgSpinnerAlt className="animate-spin text-lg" />
+          </div>
+        ) : (
+          <TableDataStaticComponent data={issueQuery.data} columns={columns} />
+        )}
+      </div>
     </>
   );
 }
