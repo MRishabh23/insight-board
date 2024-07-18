@@ -183,9 +183,9 @@ export const SummaryForm = () => {
                     <Calendar
                       initialFocus
                       mode="range"
-                      max={15}
+                      max={45}
                       defaultMonth={field.value?.from}
-                      fromDate={startOfDay(subDays(new Date(), 14))}
+                      fromDate={startOfDay(subDays(new Date(), 44))}
                       toDate={new Date()}
                       selected={field.value}
                       onSelect={field.onChange}

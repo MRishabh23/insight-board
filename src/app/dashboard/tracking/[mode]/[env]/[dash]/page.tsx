@@ -6,11 +6,11 @@ import MainReferenceComponent from "@/components/tracking/reference/main-referen
 import MainInducedComponent from "@/components/tracking/induced/main-induced-component";
 
 const SlugPage = ({ params }: { params: { mode: string; env: string; dash: string } }) => {
-  if (params.mode === "terminal") {
-    return <div className="mt-10 flex items-center justify-center text-xl font-semibold">Coming soon...</div>;
-  }
+  // if (params.mode === "terminal") {
+  //   return <div className="mt-10 flex items-center justify-center text-xl font-semibold">Coming soon...</div>;
+  // }
 
-  if (params.mode === "air" && params.dash === "induced") {
+  if ((params.mode === "air" || params.mode === "terminal") && params.dash === "induced") {
     return <div className="mt-10 flex items-center justify-center text-xl font-semibold">Coming soon...</div>;
   }
 
