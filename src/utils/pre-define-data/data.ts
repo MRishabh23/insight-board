@@ -83,10 +83,34 @@ const airCarriers = [
 ];
 
 const terminalCarriers = [
-  { value: "LONGBEACH", label: "LONGBEACH" },
-  { value: "MAHER", label: "MAHER" },
-  { value: "WASHINGTON", label: "WASHINGTON" },
   { value: "WBCT", label: "WBCT" },
+  { value: "FENIX", label: "FENIX" },
+  { value: "HUSKY", label: "HUSKY" },
+  { value: "MAHER", label: "MAHER" },
+  { value: "CONLEY", label: "CONLEY" },
+  { value: "POMTOC", label: "POMTOC" },
+  { value: "BAYPORT", label: "BAYPORT" },
+  { value: "NORFOLK", label: "NORFOLK" },
+  { value: "LONGBEACH", label: "LONGBEACH" },
+  { value: "WASHINGTON", label: "WASHINGTON" },
+  { value: "BARBOURSCUT", label: "BARBOURSCUT" },
+  { value: "PORTOFTAMPA", label: "PORTOFTAMPA" },
+  { value: "BLOUNTISLAND", label: "BLOUNTISLAND" },
+  { value: "ITSLONGBEACH", label: "ITSLONGBEACH" },
+  { value: "SEAGIRTMARINE", label: "SEAGIRTMARINE" },
+  { value: "SSATERMINAL18", label: "SSATERMINAL18" },
+  { value: "SSATERMINAL30", label: "SSATERMINAL30" },
+  { value: "NAPOLEONAVENUE", label: "NAPOLEONAVENUE" },
+  { value: "TOTALTERMINALS", label: "TOTALTERMINALS" },
+  { value: "PACIFICCONTAINER", label: "PACIFICCONTAINER" },
+  { value: "SSATERMINALPIERA", label: "SSATERMINALPIERA" },
+  { value: "APMTERMINALSMIAMI", label: "APMTERMINALSMIAMI" },
+  { value: "APMTERMINALSMOBILE", label: "APMTERMINALSMOBILE" },
+  { value: "PORTNEWARKCONTAINER", label: "PORTNEWARKCONTAINER" },
+  { value: "APMCONTAINERTERMINAL", label: "APMCONTAINERTERMINAL" },
+  { value: "APMTERMINALELIZABETH", label: "APMTERMINALELIZABETH" },
+  { value: "FLORIDAINTERNATIONAL", label: "FLORIDAINTERNATIONAL" },
+  { value: "OAKLANDINTERNATIONAL", label: "OAKLANDINTERNATIONAL" },
 ];
 
 const oceanQueue = [

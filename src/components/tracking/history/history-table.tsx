@@ -103,7 +103,11 @@ const HistoryData = ({ ...props }) => {
         if (error) {
           return (
             <TableCellCustom>
-              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>{error}</TableCellTooltipScroll>
+              <TableCellTooltipScroll
+                tip={row.original.v.errorMsg.error ? row.original.v.errorMsg.error : row.original.v.errorMsg}
+              >
+                {error}
+              </TableCellTooltipScroll>
             </TableCellCustom>
           );
         }
@@ -140,6 +144,9 @@ const HistoryData = ({ ...props }) => {
         if (response !== "No data" && response !== "null" && response === "SAME_PAYLOAD" && latestRes === "") {
           return <TableCellCustom>SAME PAYLOAD</TableCellCustom>;
         }
+        if (response === "No data" || response === "null") {
+          return <TableCellCustom>PAYLOAD</TableCellCustom>;
+        }
         return <TableCellCustom>Unhandled</TableCellCustom>;
       },
       enableSorting: false,
@@ -155,7 +162,11 @@ const HistoryData = ({ ...props }) => {
         if (error) {
           return (
             <TableCellCustom>
-              <TableCellTooltipScroll tip={row.original.v.errorMsg.error}>{error}</TableCellTooltipScroll>
+              <TableCellTooltipScroll
+                tip={row.original.v.errorMsg.error ? row.original.v.errorMsg.error : row.original.v.errorMsg}
+              >
+                {error}
+              </TableCellTooltipScroll>
             </TableCellCustom>
           );
         }
@@ -194,6 +205,18 @@ const HistoryData = ({ ...props }) => {
             <HistoryDrawer
               variant="success"
               buttonTitle="New events"
+              title="Crawled Output"
+              params={props.params}
+              schedulerId={row.original.k}
+              resourceId={crawledRes}
+            />
+          );
+        }
+        if (crawledRes !== "No data" && crawledRes !== "null" && (response === "No data" || response === "null")) {
+          return (
+            <HistoryDrawer
+              variant="normal"
+              buttonTitle="Crawled JSON"
               title="Crawled Output"
               params={props.params}
               schedulerId={row.original.k}

@@ -20,6 +20,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
+  // if (token && path === "/dashboard/issue") {
+  //   return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+  // }
+
   if (token && isPublic) {
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
