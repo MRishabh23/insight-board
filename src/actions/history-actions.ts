@@ -84,7 +84,9 @@ export const getHistoryAction = async ({
               ? dataErr
               : dataErr.includes("created for next container journey")
                 ? dataErr
-                : "Something went wrong while fetching history.";
+                : dataErr.includes("Shipment is yet to be crawled")
+                  ? dataErr
+                  : "Something went wrong while fetching history.";
       throw new Error(errMsg);
     }
 
