@@ -1,6 +1,7 @@
 const oceanCarriers = [
   { value: "ACL", label: "ACL" },
   { value: "ARKAS", label: "ARKAS" },
+  { value: "CARRIERLESS", label: "CARRIERLESS" },
   { value: "CMA-CGM", label: "CMA-CGM" },
   { value: "COSCO", label: "COSCO" },
   { value: "CROWLEY", label: "CROWLEY" },
@@ -27,6 +28,7 @@ const oceanCarriers = [
   { value: "RCL", label: "RCL" },
   { value: "SAMUDERA", label: "SAMUDERA" },
   { value: "SINOKOR", label: "SINOKOR" },
+  { value: "SINOTRANS", label: "SINOTRANS" },
   { value: "SM-LINE", label: "SM-LINE" },
   { value: "SITC", label: "SITC" },
   { value: "SWIRE", label: "SWIRE" },
@@ -63,6 +65,7 @@ const airCarriers = [
   { value: "EVAAIRWAYS", label: "EVAAIRWAYS" },
   { value: "FINNAIR", label: "FINNAIR" },
   { value: "ICELANDAIR", label: "ICELANDAIR" },
+  { value: "IBERIAAIR", label: "IBERIAAIR" },
   { value: "ISRAELAIRLINES", label: "ISRAELAIRLINES" },
   { value: "JAPANAIRLINES", label: "JAPANAIRLINES" },
   { value: "KALITTAAIRLINES", label: "KALITTAAIRLINES" },
@@ -92,18 +95,23 @@ const terminalCarriers = [
   { value: "BAYPORT", label: "BAYPORT" },
   { value: "NORFOLK", label: "NORFOLK" },
   { value: "LONGBEACH", label: "LONGBEACH" },
+  { value: "BENENUTTER", label: "BENENUTTER" },
   { value: "WASHINGTON", label: "WASHINGTON" },
   { value: "BARBOURSCUT", label: "BARBOURSCUT" },
   { value: "PORTOFTAMPA", label: "PORTOFTAMPA" },
   { value: "BLOUNTISLAND", label: "BLOUNTISLAND" },
   { value: "ITSLONGBEACH", label: "ITSLONGBEACH" },
+  { value: "PIERCECOUNTY", label: "PIERCECOUNTY" },
   { value: "SEAGIRTMARINE", label: "SEAGIRTMARINE" },
   { value: "SSATERMINAL18", label: "SSATERMINAL18" },
   { value: "SSATERMINAL30", label: "SSATERMINAL30" },
+  { value: "TRAPACOAKLAND", label: "TRAPACOAKLAND" },
   { value: "NAPOLEONAVENUE", label: "NAPOLEONAVENUE" },
   { value: "TOTALTERMINALS", label: "TOTALTERMINALS" },
+  { value: "EVERPORTANGELES", label: "EVERPORTANGELES" },
   { value: "PACIFICCONTAINER", label: "PACIFICCONTAINER" },
   { value: "SSATERMINALPIERA", label: "SSATERMINALPIERA" },
+  { value: "TRAPACLOSANGELES", label: "TRAPACLOSANGELES" },
   { value: "APMTERMINALSMIAMI", label: "APMTERMINALSMIAMI" },
   { value: "APMTERMINALSMOBILE", label: "APMTERMINALSMOBILE" },
   { value: "PORTNEWARKCONTAINER", label: "PORTNEWARKCONTAINER" },
@@ -111,6 +119,42 @@ const terminalCarriers = [
   { value: "APMTERMINALELIZABETH", label: "APMTERMINALELIZABETH" },
   { value: "FLORIDAINTERNATIONAL", label: "FLORIDAINTERNATIONAL" },
   { value: "OAKLANDINTERNATIONAL", label: "OAKLANDINTERNATIONAL" },
+];
+
+const sortedTerminalCarriers = [
+  { value: "APMCONTAINERTERMINAL", label: "APMCONTAINERTERMINAL" },
+  { value: "APMTERMINALELIZABETH", label: "APMTERMINALELIZABETH" },
+  { value: "APMTERMINALSMIAMI", label: "APMTERMINALSMIAMI" },
+  { value: "APMTERMINALSMOBILE", label: "APMTERMINALSMOBILE" },
+  { value: "BARBOURSCUT", label: "BARBOURSCUT" },
+  { value: "BAYPORT", label: "BAYPORT" },
+  { value: "BENENUTTER", label: "BENENUTTER" },
+  { value: "BLOUNTISLAND", label: "BLOUNTISLAND" },
+  { value: "CONLEY", label: "CONLEY" },
+  { value: "EVERPORTANGELES", label: "EVERPORTANGELES" },
+  { value: "FENIX", label: "FENIX" },
+  { value: "FLORIDAINTERNATIONAL", label: "FLORIDAINTERNATIONAL" },
+  { value: "HUSKY", label: "HUSKY" },
+  { value: "ITSLONGBEACH", label: "ITSLONGBEACH" },
+  { value: "LONGBEACH", label: "LONGBEACH" },
+  { value: "MAHER", label: "MAHER" },
+  { value: "NAPOLEONAVENUE", label: "NAPOLEONAVENUE" },
+  { value: "NORFOLK", label: "NORFOLK" },
+  { value: "OAKLANDINTERNATIONAL", label: "OAKLANDINTERNATIONAL" },
+  { value: "PACIFICCONTAINER", label: "PACIFICCONTAINER" },
+  { value: "PIERCECOUNTY", label: "PIERCECOUNTY" },
+  { value: "POMTOC", label: "POMTOC" },
+  { value: "PORTNEWARKCONTAINER", label: "PORTNEWARKCONTAINER" },
+  { value: "PORTOFTAMPA", label: "PORTOFTAMPA" },
+  { value: "SEAGIRTMARINE", label: "SEAGIRTMARINE" },
+  { value: "SSATERMINAL18", label: "SSATERMINAL18" },
+  { value: "SSATERMINAL30", label: "SSATERMINAL30" },
+  { value: "SSATERMINALPIERA", label: "SSATERMINALPIERA" },
+  { value: "TOTALTERMINALS", label: "TOTALTERMINALS" },
+  { value: "TRAPACLOSANGELES", label: "TRAPACLOSANGELES" },
+  { value: "TRAPACOAKLAND", label: "TRAPACOAKLAND" },
+  { value: "WASHINGTON", label: "WASHINGTON" },
+  { value: "WBCT", label: "WBCT" },
 ];
 
 const oceanQueue = [
@@ -242,7 +286,13 @@ const days = [
 ];
 
 export const getCarriersList = (mode: string) => {
-  return mode === "air" ? airCarriers : mode === "ocean" ? oceanCarriers : mode === "terminal" ? terminalCarriers : [];
+  return mode === "air"
+    ? airCarriers
+    : mode === "ocean"
+      ? oceanCarriers
+      : mode === "terminal"
+        ? sortedTerminalCarriers
+        : [];
 };
 
 export const getQueueList = (mode: string) => {

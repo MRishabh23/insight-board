@@ -56,6 +56,26 @@ const HistoryData = ({ ...props }) => {
       enableSorting: false,
     },
     {
+      id: "transaction-id",
+      accessorKey: "transactionId",
+      header: () => <TableHeadCustom>Transaction Id</TableHeadCustom>,
+      cell: ({ row }) => {
+        const tnId = row.original.v.transactionId ? row.original.v.transactionId : "N/A";
+        return <TableCellCustom>{tnId}</TableCellCustom>;
+      },
+      enableSorting: false,
+    },
+    {
+      id: "queue-name",
+      accessorKey: "QueueName",
+      header: () => <TableHeadCustom>Queue</TableHeadCustom>,
+      cell: ({ row }) => {
+        const q = row.original.v.QueueName ? row.original.v.QueueName : "N/A";
+        return <TableCellCustom>{q}</TableCellCustom>;
+      },
+      enableSorting: false,
+    },
+    {
       id: "created-at",
       accessorKey: "insertion_time",
       header: () => <TableHeadCustom>Created At</TableHeadCustom>,
