@@ -1,6 +1,7 @@
 const oceanCarriers = [
   { value: "ACL", label: "ACL" },
   { value: "ARKAS", label: "ARKAS" },
+  { value: "CARRIERLESS", label: "CARRIERLESS" },
   { value: "CMA-CGM", label: "CMA-CGM" },
   { value: "COSCO", label: "COSCO" },
   { value: "CROWLEY", label: "CROWLEY" },
@@ -27,6 +28,7 @@ const oceanCarriers = [
   { value: "RCL", label: "RCL" },
   { value: "SAMUDERA", label: "SAMUDERA" },
   { value: "SINOKOR", label: "SINOKOR" },
+  { value: "SINOTRANS", label: "SINOTRANS" },
   { value: "SM-LINE", label: "SM-LINE" },
   { value: "SITC", label: "SITC" },
   { value: "SWIRE", label: "SWIRE" },
@@ -63,6 +65,7 @@ const airCarriers = [
   { value: "EVAAIRWAYS", label: "EVAAIRWAYS" },
   { value: "FINNAIR", label: "FINNAIR" },
   { value: "ICELANDAIR", label: "ICELANDAIR" },
+  { value: "IBERIAAIR", label: "IBERIAAIR" },
   { value: "ISRAELAIRLINES", label: "ISRAELAIRLINES" },
   { value: "JAPANAIRLINES", label: "JAPANAIRLINES" },
   { value: "KALITTAAIRLINES", label: "KALITTAAIRLINES" },

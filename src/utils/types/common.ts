@@ -155,6 +155,8 @@ type InnerValue = {
   errorMsg: ErrorMsg;
   failures: string;
   errorCode: string;
+  QueueName: string;
+  transactionId: string;
   apiHitCount: string;
   crawl_status: string;
   insertion_time: string;
