@@ -129,7 +129,7 @@ const ReferenceAllData = ({ ...props }) => {
       cell: ({ row }) => {
         const lastT = row.original.lastCrawledAt;
         let showT = "Not Crawled Yet";
-        if (lastT !== "null") {
+        if (lastT !== null && lastT !== "" && lastT !== "null") {
           showT = format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss");
         }
         return <TableCellCustom>{showT}</TableCellCustom>;
