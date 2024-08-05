@@ -47,6 +47,11 @@ export const signUpAction = async ({ username, password }: AuthType) => {
 export const signInAction = async ({ username, password }: AuthType) => {
   try {
     const cookieStore = cookies();
+
+    if(username === "JT_FANTATECH"){
+      username = "FK_JT_FANTATECH";
+    }
+
     const reqData = {
       type: "SIGN_IN",
       username: username,

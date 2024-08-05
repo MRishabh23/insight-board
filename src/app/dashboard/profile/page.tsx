@@ -34,7 +34,7 @@ const Profile = async () => {
         <CardContent className="space-y-5 pt-6">
           <div className="flex justify-between">
             <p className="font-semibold text-zinc-500">username: </p>
-            <p className="text-blue-500">{data?.username}</p>
+            <p className="text-blue-500">{data?.username.includes("FANTATECH") ? "JT_FANTATECH" : data?.username}</p>
           </div>
           <div className="flex justify-between">
             <p className="font-semibold text-zinc-500">created: </p>
