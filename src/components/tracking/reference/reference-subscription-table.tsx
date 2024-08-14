@@ -95,7 +95,12 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "createdAt",
     header: () => <TableHeadCustom>Created On</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{format(toDate(row.original.createdAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
+      const time = row.original.createdAt;
+      let showT = "";
+      if (time !== null && time !== "" && time !== "null") {
+        showT = format(toDate(time), "do MMM yyyy, HH:mm:ss");
+      }
+      return <TableCellCustom>{showT}</TableCellCustom>;
     },
     enableSorting: false,
   },
@@ -103,9 +108,14 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     id: "last-crawled-at",
     accessorKey: "lastCrawledAt",
     header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
-    cell: ({ row }) => (
-      <TableCellCustom>{format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>
-    ),
+    cell: ({ row }) => {
+      const time = row.original.lastCrawledAt;
+      let showT = "";
+      if (time !== null && time !== "" && time !== "null") {
+        showT = format(toDate(time), "do MMM yyyy, HH:mm:ss");
+      }
+      return <TableCellCustom>{showT}</TableCellCustom>;
+    },
     enableSorting: false,
   },
   {
@@ -113,7 +123,12 @@ export const columns: ColumnDef<ReferenceTableType>[] = [
     accessorKey: "updatedAt",
     header: () => <TableHeadCustom>Updated At</TableHeadCustom>,
     cell: ({ row }) => {
-      return <TableCellCustom>{format(toDate(row.original.updatedAt), "do MMM yyyy, HH:mm:ss")}</TableCellCustom>;
+      const time = row.original.updatedAt;
+      let showT = "";
+      if (time !== null && time !== "" && time !== "null") {
+        showT = format(toDate(time), "do MMM yyyy, HH:mm:ss");
+      }
+      return <TableCellCustom>{showT}</TableCellCustom>;
     },
     enableSorting: false,
   },
