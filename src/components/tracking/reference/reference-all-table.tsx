@@ -127,10 +127,10 @@ const ReferenceAllData = ({ ...props }) => {
       accessorKey: "lastCrawledAt",
       header: () => <TableHeadCustom>Last Crawled At</TableHeadCustom>,
       cell: ({ row }) => {
-        const lastT = row.original.lastCrawledAt;
-        let showT = "Not Crawled Yet";
-        if (lastT !== null && lastT !== "" && lastT !== "null") {
-          showT = format(toDate(row.original.lastCrawledAt), "do MMM yyyy, HH:mm:ss");
+        const time = row.original.lastCrawledAt;
+        let showT = "";
+        if (time !== null && time !== "" && time !== "null") {
+          showT = format(toDate(time), "do MMM yyyy, HH:mm:ss");
         }
         return <TableCellCustom>{showT}</TableCellCustom>;
       },
