@@ -86,11 +86,8 @@ export function LatencyAccordion() {
 export function InducedAccordion() {
   return (
     <CommonAccordion>
-      <li>Select a carrier and a month the see induced latency.</li>
-      <li>Either you can select multiple carriers or you can select multiple months.</li>
-      <li>For both carriers and months the max selection limit is 3.</li>
-      <li>If multiple carriers are selected then you can only select one month.</li>
-      <li>If multiple months are selected then you can only select one carrier.</li>
+      <li>Select a carrier the see induced latency.</li>
+      <li>You can select multiple carriers at max 3.</li>
     </CommonAccordion>
   );
 }
