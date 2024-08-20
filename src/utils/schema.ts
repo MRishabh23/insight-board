@@ -300,16 +300,14 @@ const inducedOptionSchema = z.object({
 const inducedFormSchema = z.object({
   carriers: z.array(inducedOptionSchema).max(3, "Please select up to 3 carriers"),
   year: z.string(),
-  months: z.array(inducedOptionSchema).max(3, "Please select up to 3 months"),
 });
 
-export const useInducedForm = (newCarrOpt: any, newMonthopt: any, searchParams: any) => {
+export const useInducedForm = (newCarrOpt: any, searchParams: any) => {
   const form = useForm<z.infer<typeof inducedFormSchema>>({
     resolver: zodResolver(inducedFormSchema),
     defaultValues: {
       carriers: newCarrOpt,
       year: searchParams.get("year") || getYear(new Date()).toString(),
-      months: newMonthopt,
     },
   });
 

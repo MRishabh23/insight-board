@@ -242,7 +242,11 @@ export type ReferenceTableType = {
 export type InducedFormType = {
   carriers: string[];
   year: string;
-  months: string[];
+};
+
+export type InducedChartType = {
+  date: string;
+  latency: number;
 };
 
 // ************* dashboard types end ****************
