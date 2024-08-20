@@ -255,16 +255,15 @@ export const useReferenceSubscriptionQuery = (params: ParamType, category: strin
 };
 
 // induced query
-export const useInducedQuery = (params: ParamType, newCarrOpt: string[], year: string, months: string[]) => {
+export const useInducedQuery = (params: ParamType, newCarrOpt: string[], year: string) => {
   const query = useQuery({
-    queryKey: ["summary", `${params.mode}`, `${params.env}`, newCarrOpt, year, months],
+    queryKey: ["summary", `${params.mode}`, `${params.env}`, newCarrOpt, year],
     queryFn: async () => {
       const response = await getInducedAction({
         env: params.env,
         mode: params.mode,
         carriers: newCarrOpt,
         year: year,
-        months: months,
       });
       return response;
     },

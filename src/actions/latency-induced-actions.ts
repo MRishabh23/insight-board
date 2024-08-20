@@ -79,13 +79,11 @@ export const getInducedAction = async ({
   mode,
   carriers,
   year,
-  months,
 }: {
   env: string;
   mode: string;
   carriers: string[];
   year: string;
-  months: string[];
 }) => {
   try {
     const { data, success } = await getUserAction();
@@ -101,7 +99,6 @@ export const getInducedAction = async ({
       mode: mode.toUpperCase(),
       carriers: carriers,
       year: year,
-      months: months,
     };
 
     const res: any = await mainRequestAction(reqData);
@@ -112,11 +109,7 @@ export const getInducedAction = async ({
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("least one carrier")
-        ? dataErr
-        : dataErr.includes("least one month")
-          ? dataErr
-          : "Something went wrong while fetching summary.";
+      const errMsg = dataErr.includes("least one carrier") ? dataErr : "Something went wrong while fetching summary.";
       throw new Error(errMsg);
     }
 

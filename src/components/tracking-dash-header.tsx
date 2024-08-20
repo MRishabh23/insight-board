@@ -63,7 +63,6 @@ const TrackingDashHeader = ({ params }: { params: { mode: string; env: string; d
       query: {
         carriers: "",
         year: getYear(new Date()).toString(),
-        months: "",
       },
     },
   ];
@@ -73,7 +72,7 @@ const TrackingDashHeader = ({ params }: { params: { mode: string; env: string; d
     <>
       <Tabs
         value={tabVal}
-        onValueChange={(value) => {
+        onValueChange={(value: any) => {
           setTabVal(value);
         }}
       >

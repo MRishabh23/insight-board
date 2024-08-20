@@ -4,7 +4,7 @@ import React from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
-import { getCarriersList, getMonthList, getYearList } from "@/utils/pre-define-data/data";
+import { getCarriersList, getYearList } from "@/utils/pre-define-data/data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MultipleSelector from "@/components/multi-select";
 import { InducedFormType, ParamType } from "@/utils/types/common";
@@ -16,20 +16,14 @@ export const InducedForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
-  const monthsOptions = React.useMemo(() => getMonthList(searchParams.get("year")!), [searchParams]);
   const yearOptions = React.useMemo(() => getYearList(), []);
   const [btnLoad, setBtnLoad] = React.useState(false);
   const queryCarriers = React.useMemo(
     () => (searchParams.get("carriers") ? searchParams.get("carriers")?.split(",") : []),
     [searchParams],
   );
-  const queryMonths = React.useMemo(
-    () => (searchParams.get("months") ? searchParams.get("months")?.split(",") : []),
-    [searchParams],
-  );
 
   let newCarrOpt: any = [];
-  let newMonthOpt: any = [];
 
   if (queryCarriers !== undefined && queryCarriers.length > 0) {
     queryCarriers.map((carrier) => {
@@ -43,43 +37,15 @@ export const InducedForm = () => {
     });
   }
 
-  if (queryMonths !== undefined && queryMonths.length > 0) {
-    queryMonths.map((month) => {
-      if (month) {
-        const monthObj = {
-          label: month,
-          value: month,
-        };
-        newMonthOpt.push(monthObj);
-      }
-    });
-  }
-
-  const form = useInducedForm(newCarrOpt, newMonthOpt, searchParams);
+  const form = useInducedForm(newCarrOpt, searchParams);
 
   const onSubmit = (data: any) => {
     //console.log("submit data", data);
     setBtnLoad(true);
-    if (data.carriers.length === 0 && data.months.length === 0) {
+    if (data.carriers.length === 0) {
       form.setError("carriers", {
         type: "custom",
         message: "Select at least one carrier.",
-      });
-      form.setError("months", {
-        type: "custom",
-        message: "Select at least one month.",
-      });
-      setBtnLoad(false);
-    } else if (data.carriers.length === 0) {
-      form.setError("carriers", {
-        type: "custom",
-        message: "Select at least one carrier.",
-      });
-      setBtnLoad(false);
-    } else if (data.months.length === 0) {
-      form.setError("months", {
-        type: "custom",
-        message: "Select at least one month.",
       });
       setBtnLoad(false);
     } else {
@@ -94,7 +60,6 @@ export const InducedForm = () => {
   const createQueryString = React.useCallback(
     (data: InducedFormType) => {
       let carrStr = "";
-      let monStr = "";
       if (data.carriers.length > 0) {
         data.carriers.map((carrier: any, index: number) => {
           if (index === data.carriers.length - 1) {
@@ -104,26 +69,12 @@ export const InducedForm = () => {
           }
         });
       }
-      if (data.months.length > 0) {
-        data.months.map((month: any, index: number) => {
-          if (index === data.months.length - 1) {
-            monStr += month.value;
-          } else {
-            monStr += month.value + ",";
-          }
-        });
-      }
+
       const inducedParams = new URLSearchParams(searchParams.toString());
       if (carrStr !== "") {
         inducedParams.set("carriers", carrStr);
       } else {
         inducedParams.set("carriers", "");
-      }
-
-      if (monStr !== "") {
-        inducedParams.set("months", monStr);
-      } else {
-        inducedParams.set("months", "");
       }
 
       inducedParams.set("year", data.year);
@@ -150,7 +101,7 @@ export const InducedForm = () => {
                     defaultOptions={carriersOptions}
                     placeholder="Select Carriers you like..."
                     hidePlaceholderWhenSelected
-                    maxSelected={form.watch("months").length > 1 ? 1 : 3}
+                    maxSelected={3}
                     emptyIndicator={
                       <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
                         no results found.
@@ -182,31 +133,6 @@ export const InducedForm = () => {
                     ))}
                   </SelectContent>
                 </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="months"
-            render={({ field }) => (
-              <FormItem aria-required className="mt-4">
-                <FormLabel htmlFor="months">Months</FormLabel>
-                <FormControl id="months">
-                  <MultipleSelector
-                    value={field.value}
-                    onChange={field.onChange}
-                    defaultOptions={monthsOptions}
-                    placeholder="Select months you like..."
-                    hidePlaceholderWhenSelected
-                    maxSelected={form.watch("carriers").length > 1 ? 1 : 3}
-                    emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                        no results found.
-                      </p>
-                    }
-                  />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
