@@ -3,7 +3,7 @@ import { AuthType, StatusType, ParamType, IssueValueInternal } from "./types/com
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { resetAction, signInAction, signUpAction } from "@/actions/auth-actions";
-import { updateStatusAction } from "@/actions/status-summary-actions";
+import { closeStatusAction, deleteStatusAction, updateStatusAction } from "@/actions/status-summary-actions";
 import { closeIssueAction, createUpdateIssueAction, deleteNotifyIssueAction } from "@/actions/issue-actions";
 
 // auth mutations
@@ -233,6 +233,64 @@ export const useStatusMutation = (params: ParamType, setOpen: any) => {
     },
     onError: (error: any) => {
       toast.error(`Uh oh! Something went wrong, while updating status.`, {
+        description: error.message,
+      });
+    },
+  });
+
+  return submit;
+};
+
+// close status mutation
+export const useCloseStatusMutation = (form: any, setOpen: any, params: ParamType, carrier: string) => {
+  const queryClient = useQueryClient();
+  const submit = useMutation({
+    mutationFn: async (statusKey: string) => await closeStatusAction({ env: params.env, mode: params.mode, carrier: carrier, statusKey: statusKey }),
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong.`, {
+          description: data.data,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["status", params.env, params.mode, "ACTIVE"],
+        });
+        toast.success("Status closed successfully.");
+        form.reset({ statusKey: "" });
+        setOpen(false);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong.`, {
+        description: error.message,
+      });
+    },
+  });
+
+  return submit;
+};
+
+// delete status mutation
+export const useDeleteStatusMutation = (form: any, setOpen: any, params: ParamType, carrier: string, tableType: string) => {
+  const queryClient = useQueryClient();
+  const submit = useMutation({
+    mutationFn: async (statusKey: string) => await deleteStatusAction({ env: params.env, mode: params.mode, carrier: carrier, statusKey: statusKey }),
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong.`, {
+          description: data.data,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["status", params.env, params.mode, tableType],
+        });
+        toast.success("Status deleted successfully.");
+        form.reset({ statusKey: "" });
+        setOpen(false);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong.`, {
         description: error.message,
       });
     },

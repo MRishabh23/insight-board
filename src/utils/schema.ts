@@ -50,6 +50,23 @@ export const useAuthForm = () => {
   return form;
 };
 
+// status schema
+
+const closeDeleteStatusFormSchema = z.object({
+  statusKey: z.string(),
+});
+
+export const useCloseDeleteStatusForm = () => {
+  const form = useForm<z.infer<typeof closeDeleteStatusFormSchema>>({
+    resolver: zodResolver(closeDeleteStatusFormSchema),
+    defaultValues: {
+      statusKey: "",
+    },
+  });
+
+  return form;
+};
+
 // issue schema
 
 const issueFormSchema = z.object({

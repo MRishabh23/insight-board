@@ -6,7 +6,7 @@ import { mainRequestAction } from "./main-actions";
 // tracking actions
 
 // get status action
-export const getStatusAction = async ({ env, mode }: { env: string; mode: string }) => {
+export const getStatusAction = async ({ env, mode, status }: { env: string; mode: string; status: string }) => {
   try {
     const { data, success } = await getUserAction();
 
@@ -19,6 +19,7 @@ export const getStatusAction = async ({ env, mode }: { env: string; mode: string
       username: data.username,
       env: env.toUpperCase(),
       mode: mode.toUpperCase(),
+      status: status.toUpperCase(),
     };
 
     const res: any = await mainRequestAction(reqData);
@@ -28,12 +29,18 @@ export const getStatusAction = async ({ env, mode }: { env: string; mode: string
     }
 
     if (!res?.success) {
-      throw new Error("Something went wrong while fetching carrier status.");
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("operational")
+        ? dataErr
+        : dataErr.includes("history found")
+          ? dataErr
+          : "Something went wrong while fetching summary.";
+      throw new Error(errMsg);
     }
 
-    if (res?.success && res?.data?.includes("data not present")) {
-      throw new Error("Sufficient data not present.");
-    }
+    // if (res?.success && res?.data?.includes("data not present")) {
+    //   throw new Error("Sufficient data not present.");
+    // }
 
     return {
       data: res?.data,
@@ -83,6 +90,106 @@ export const updateStatusAction = async ({
 
     if (!res?.success) {
       throw new Error("Something went wrong while updating carrier status.");
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// close status action
+export const closeStatusAction = async ({
+  env,
+  mode,
+  carrier,
+  statusKey,
+}: {
+  env: string;
+  mode: string;
+  carrier: string;
+  statusKey: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "CLOSE_CARRIER_STATUS",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      carrier: carrier.toUpperCase(),
+      statusKey: statusKey,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      throw new Error("While closing status.");
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// delete status action
+export const deleteStatusAction = async ({
+  env,
+  mode,
+  carrier,
+  statusKey,
+}: {
+  env: string;
+  mode: string;
+  carrier: string;
+  statusKey: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "DELETE_CARRIER_STATUS",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      carrier: carrier.toUpperCase(),
+      statusKey: statusKey,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      throw new Error("While deleting status.");
     }
 
     return {
