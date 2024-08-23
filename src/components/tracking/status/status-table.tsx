@@ -7,16 +7,16 @@ import { CgSpinnerAlt } from "react-icons/cg";
 import { TableCellCustom, TableHeadCustom } from "@/components/table/common";
 import { format, toDate } from "date-fns";
 import { ParamType, StatusColumnType } from "@/utils/types/common";
-import { useIssueQuery, useStatusQuery } from "@/utils/query";
+import { useStatusQuery } from "@/utils/query";
 import { StatusDetailDrawer } from "./status-detail-drawer";
 import { CreateEditStatusDrawer } from "./create-edit-status-drawer";
 import { DeleteStatusForm } from "./delete-status-dialog";
 import { CloseStatusForm } from "./close-status-dialog";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function StatusTable({ ...props }) {
-
   const params = useParams<ParamType>();
 
   const sortCreatedFn: SortingFn<StatusColumnType> = (rowA, rowB, _columnId) => {
@@ -25,20 +25,14 @@ export function StatusTable({ ...props }) {
     return statusA - statusB;
   };
 
-  const sortModifiedFn: SortingFn<StatusColumnType> = (rowA, rowB, _columnId) => {
-    const statusA = +rowA.original.modified_at - 19800000;
-    const statusB = +rowB.original.modified_at - 19800000;
-    return statusA - statusB;
-  };
-
   const columns: ColumnDef<StatusColumnType>[] = [
     {
-      id: "status-key",
-      accessorKey: "statusKey",
-      header: () => <TableHeadCustom>Status Id</TableHeadCustom>,
-      cell: ({ row }) => <TableCellCustom className="font-semibold">{row.original.value.statusKey}</TableCellCustom>,
-      meta: {
-        className: "sticky left-0 bg-white",
+      id: "carrier",
+      accessorKey: "carrier",
+      header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+      cell: ({ row }) => {
+        const carrier = row.original.value.carrier;
+        return <TableCellCustom>{carrier ? carrier : "-"}</TableCellCustom>;
       },
       enableSorting: false,
     },
@@ -52,6 +46,34 @@ export function StatusTable({ ...props }) {
         let statusColor = commonClass + " bg-green-50 border-green-500 text-green-500";
         if (status === "CLOSED") statusColor = commonClass + " bg-red-50 border-red-500 text-red-500";
         return <TableCellCustom className={statusColor}>{status}</TableCellCustom>;
+      },
+      enableSorting: false,
+    },
+    {
+      id: "issue",
+      accessorKey: "issue",
+      header: () => <TableHeadCustom>Issue</TableHeadCustom>,
+      cell: ({ row }) => (
+        <TableCellCustom className="font-semibold">
+          <p className="w-32 truncate capitalize">{row.original.value.issue}</p>
+        </TableCellCustom>
+      ),
+      meta: {
+        className: "sticky left-0 bg-white",
+      },
+      enableSorting: false,
+    },
+    {
+      id: "impact",
+      accessorKey: "impact",
+      header: () => <TableHeadCustom>Impact</TableHeadCustom>,
+      cell: ({ row }) => (
+        <TableCellCustom className="font-semibold">
+          <p className="w-46 truncate capitalize">{row.original.value.impact}</p>
+        </TableCellCustom>
+      ),
+      meta: {
+        className: "sticky left-0 bg-white",
       },
       enableSorting: false,
     },
@@ -71,12 +93,11 @@ export function StatusTable({ ...props }) {
       enableSorting: false,
     },
     {
-      id: "carrier",
-      accessorKey: "carrier",
-      header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+      id: "eta",
+      accessorKey: "eta",
+      header: () => <TableHeadCustom>Expected Resolution Date</TableHeadCustom>,
       cell: ({ row }) => {
-        const carrier = row.original.value.carrier;
-        return <TableCellCustom>{carrier ? carrier : "-"}</TableCellCustom>;
+        return <TableCellCustom>{format(row.original.value.expectedResolutionDate, "do MMM, yyyy")}</TableCellCustom>;
       },
       enableSorting: false,
     },
@@ -92,19 +113,6 @@ export function StatusTable({ ...props }) {
         );
       },
       sortingFn: sortCreatedFn,
-    },
-    {
-      id: "modified-at",
-      accessorKey: "modifiedAt",
-      header: () => <TableHeadCustom>Modified At</TableHeadCustom>,
-      cell: ({ row }) => {
-        return (
-          <TableCellCustom>
-            {format(toDate(+row.original.modified_at - 19800000), "do MMM yyyy, HH:mm:ss")}
-          </TableCellCustom>
-        );
-      },
-      sortingFn: sortModifiedFn,
     },
     {
       id: "more-detail",
@@ -132,7 +140,7 @@ export function StatusTable({ ...props }) {
             variant="outline"
             buttonTitle="Edit"
             title="Edit a status"
-            status="EDIT"
+            state="EDIT"
             tableType={props.type.toUpperCase()}
             statusKey={row.original.statusKey}
             statusValue={row.original.value}
@@ -142,8 +150,8 @@ export function StatusTable({ ...props }) {
       enableSorting: false,
     },
     {
-      id: "close-issue",
-      accessorKey: "closeIssue",
+      id: "close",
+      accessorKey: "close",
       header: () => <TableHeadCustom>Close</TableHeadCustom>,
       cell: ({ row }) => {
         return <CloseStatusForm statusKey={row.original.statusKey} carrier={row.original.value.carrier} />;
@@ -155,15 +163,21 @@ export function StatusTable({ ...props }) {
       accessorKey: "delete",
       header: () => <TableHeadCustom>Delete</TableHeadCustom>,
       cell: ({ row }) => {
-        return <DeleteStatusForm statusKey={row.original.statusKey} carrier={row.original.value.carrier} tableType={props.type.toUpperCase()} />;
+        return (
+          <DeleteStatusForm
+            statusKey={row.original.statusKey}
+            carrier={row.original.value.carrier}
+            tableType={props.type.toUpperCase()}
+          />
+        );
       },
       enableSorting: false,
     },
   ];
 
-  // if (props.type === "closed") {
-  //   columns.splice(10, 2);
-  // }
+  if (props.type === "closed") {
+    columns.splice(9, 1);
+  }
 
   const statusQuery = useStatusQuery(props.type.toUpperCase(), params);
 
@@ -185,8 +199,28 @@ export function StatusTable({ ...props }) {
 
   if (statusQuery.data && !statusQuery.data?.success) {
     return (
-      <div className="flex h-full flex-col items-center justify-center">
-        <p className="text-xl font-bold">{statusQuery.data?.data}</p>
+      <div>
+        <div className="flex justify-center p-5">
+          <Button onMouseDown={() => statusQuery.refetch()} disabled={statusQuery.isFetching}>
+            {statusQuery.isFetching ? "Fetching..." : "Refresh"}
+          </Button>
+        </div>
+        {statusQuery.isFetching ? (
+          <div className="flex h-full flex-col items-center justify-center">
+            <CgSpinnerAlt className="animate-spin text-lg" />
+          </div>
+        ) : (
+          <div className="flex h-full flex-col items-center justify-center">
+            <p
+              className={cn(
+                "text-2xl font-bold capitalize",
+                statusQuery.data?.data.includes("carriers are operational") ? "text-green-400" : "",
+              )}
+            >
+              {statusQuery.data?.data}
+            </p>
+          </div>
+        )}
       </div>
     );
   }

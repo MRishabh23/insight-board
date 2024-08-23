@@ -27,9 +27,9 @@ const MainStatusComponent = () => {
           </TabsList>
           <CreateEditStatusDrawer
             variant="secondary"
-            buttonTitle="New"
+            buttonTitle="New Status"
             title="Add a new status"
-            issue="CREATE"
+            state="CREATE"
             tableType={tabVal.toUpperCase()}
           />
         </div>

@@ -89,6 +89,7 @@ export type StatusType = {
   statusType: string;
   issue: string;
   impact: string;
+  rca: string;
   expectedResolutionDate: string;
   resolution: string;
 };
@@ -107,9 +108,25 @@ export type StatusValue = {
   statusType: string;
   issue: string;
   impact: string;
+  rca: string;
   expectedResolutionDate: string;
   resolution: string;
   closedAt: string;
+};
+
+export type StatusValueInternal = {
+  type: string;
+  env: string;
+  mode: string;
+  statusKey: string;
+  carrier: string;
+  status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  rca: string;
+  expectedResolutionDate: string;
+  resolution: string;
 };
 
 // summary related types

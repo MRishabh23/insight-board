@@ -1,9 +1,8 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IssueValueInternal, ParamType, StatusType } from "./types/common";
+import { IssueValueInternal, ParamType, StatusValueInternal } from "./types/common";
 import { format, getYear } from "date-fns";
-import React from "react";
 
 // current and previous dates
 const sD = new Date();
@@ -44,23 +43,6 @@ export const useAuthForm = () => {
     defaultValues: {
       username: "",
       password: "",
-    },
-  });
-
-  return form;
-};
-
-// status schema
-
-const closeDeleteStatusFormSchema = z.object({
-  statusKey: z.string(),
-});
-
-export const useCloseDeleteStatusForm = () => {
-  const form = useForm<z.infer<typeof closeDeleteStatusFormSchema>>({
-    resolver: zodResolver(closeDeleteStatusFormSchema),
-    defaultValues: {
-      statusKey: "",
     },
   });
 
@@ -147,16 +129,69 @@ export const useDeleteNotifyIssueForm = () => {
 
 // status
 const statusFormSchema = z.object({
+  env: z.string(),
+  mode: z.string(),
   carrier: z.string(),
   status: z.string(),
+  statusType: z.string(),
+  issue: z.string(),
+  impact: z.string(),
+  rca: z.string(),
+  expectedResolutionDate: z.date(),
+  resolution: z.string(),
 });
 
-export const useStatusForm = (item: StatusType) => {
+export const useStatusForm = (state: string, params: ParamType, statusValue: StatusValueInternal) => {
+  let defaultVal = {
+    env: params.env.toUpperCase(),
+    mode: params.mode.toUpperCase(),
+    carrier: "",
+    status: "ACTIVE",
+    statusType: "",
+    issue: "",
+    impact: "",
+    rca: "",
+    expectedResolutionDate: new Date(format(eD, "yyyy-MM-dd")),
+    resolution: "IN-PROGRESS",
+  };
+
+  if (state === "EDIT") {
+    defaultVal = {
+      ...defaultVal,
+      env: params.env.toUpperCase(),
+      mode: params.mode.toUpperCase(),
+      carrier: statusValue.carrier,
+      status: statusValue.status,
+      statusType: statusValue.statusType,
+      issue: statusValue.issue,
+      impact: statusValue.impact,
+      rca: statusValue.rca,
+      expectedResolutionDate: new Date(statusValue.expectedResolutionDate),
+      resolution: statusValue.resolution,
+    };
+  }
+
   const form = useForm<z.infer<typeof statusFormSchema>>({
     resolver: zodResolver(statusFormSchema),
+    defaultValues: defaultVal,
+  });
+
+  return form;
+};
+
+// status close delete schema
+
+const closeDeleteStatusFormSchema = z.object({
+  statusKey: z.string(),
+  rca: z.string().optional()
+});
+
+export const useCloseDeleteStatusForm = () => {
+  const form = useForm<z.infer<typeof closeDeleteStatusFormSchema>>({
+    resolver: zodResolver(closeDeleteStatusFormSchema),
     defaultValues: {
-      carrier: item.carrier,
-      status: item.status.toLowerCase(),
+      rca: "",
+      statusKey: "",
     },
   });
 

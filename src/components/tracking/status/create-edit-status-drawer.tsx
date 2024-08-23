@@ -3,16 +3,21 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CalendarIcon } from "lucide-react";
 import React from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { getCarriersList } from "@/utils/pre-define-data/data";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useIssueForm } from "@/utils/schema";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { useStatusForm } from "@/utils/schema";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useIssueCUMutation } from "@/utils/mutation";
+import { useStatusCUMutation } from "@/utils/mutation";
 import { ParamType } from "@/utils/types/common";
 import { useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 export function CreateEditStatusDrawer({ ...props }) {
   const [open, setOpen] = React.useState(false);
@@ -31,10 +36,10 @@ export function CreateEditStatusDrawer({ ...props }) {
           </SheetHeader>
           <ScrollArea className="my-scroll mt-5 w-full">
             <AddStatusForm
-              issue={props.issue}
+              state={props.state}
               tableType={props.tableType}
-              issueKey={props.issueKey}
-              issueValue={props.issueValue}
+              statusKey={props.statusKey}
+              statusValue={props.statusValue}
               setOpen={setOpen}
             />
           </ScrollArea>
@@ -45,27 +50,22 @@ export function CreateEditStatusDrawer({ ...props }) {
 }
 
 const AddStatusForm = ({ ...props }) => {
-  const form = useIssueForm(props.issue, props.issueValue);
   const params = useParams<ParamType>();
+  const form = useStatusForm(props.state, params, props.statusValue);
 
   const carrierOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
 
-  const { mutate: server_CUIssue, isPending: isPending_CUIssue } = useIssueCUMutation(
+  const { mutate: server_CUStatus, isPending: isPending_CUStatus } = useStatusCUMutation(
+    params,
     form,
-    props.issue,
-    props.issueKey,
+    props.state,
+    props.statusKey,
     props.tableType,
     props.setOpen,
   );
 
   const onSubmit = (data: any) => {
-    if (!data.mode) {
-      form.setError("mode", {
-        type: "custom",
-        message: "Please select a mode.",
-      });
-    }
-    if (data.mode !== "all" && !data.carrier) {
+    if (!data.carrier) {
       form.setError("carrier", {
         type: "custom",
         message: "Please select a carrier.",
@@ -77,31 +77,39 @@ const AddStatusForm = ({ ...props }) => {
         message: "Please select a status.",
       });
     }
-    if (!data.severity) {
-      form.setError("severity", {
+    if (!data.statusType) {
+      form.setError("statusType", {
         type: "custom",
-        message: "Please select a severity.",
+        message: "Please select a status type.",
       });
     }
-    if (data.mode && data.status && data.severity && data.issue && data.impact && data.resolution) {
+    if (
+      data.carrier &&
+      data.status &&
+      data.statusType &&
+      data.issue &&
+      data.impact &&
+      data.resolution &&
+      data.expectedResolutionDate
+    ) {
+      data.expectedResolutionDate = format(data.expectedResolutionDate, "yyyy-MM-dd");
       //console.log("submit data", data);
-      server_CUIssue(data);
+      server_CUStatus(data);
     }
   };
 
   const handleReset = () => {
     form.reset({
       env: params.env.toUpperCase(),
-      mode: "",
+      mode: params.mode.toUpperCase(),
       carrier: "",
       status: "ACTIVE",
-      severity: "",
+      statusType: "",
       issue: "",
-      description: "",
-      polling_frequency: 1,
-      default_emails: "yes",
-      emails: "",
-      additional_links: "",
+      impact: "",
+      rca: "",
+      expectedResolutionDate: new Date(),
+      resolution: "IN-PROGRESS",
     });
   };
 
@@ -147,11 +155,7 @@ const AddStatusForm = ({ ...props }) => {
                 <FormLabel className="text-base" htmlFor="carrier">
                   Carrier
                 </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={props.issue === "CREATE" ? false : true}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl id="carrier">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a carrier..." />
@@ -208,6 +212,7 @@ const AddStatusForm = ({ ...props }) => {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="DEGRADATION">DEGRADATION</SelectItem>
+                    <SelectItem value="INFORMATION">INFORMATION</SelectItem>
                     <SelectItem value="MAINTENANCE">MAINTENANCE</SelectItem>
                     <SelectItem value="OUTAGE">OUTAGE</SelectItem>
                   </SelectContent>
@@ -248,6 +253,63 @@ const AddStatusForm = ({ ...props }) => {
           />
           <FormField
             control={form.control}
+            name="rca"
+            render={({ field }) => (
+              <FormItem className="mt-4">
+                <FormLabel className="text-base" htmlFor="rca">
+                  RCA
+                </FormLabel>
+                <FormControl id="rca">
+                  <Textarea
+                    className="h-24"
+                    placeholder="rca..."
+                    required={form.watch("status") === "CLOSED" ? true : false}
+                    minLength={form.watch("status") === "CLOSED" ? 10 : 0}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="expectedResolutionDate"
+            render={({ field }) => (
+              <FormItem className="mt-4 flex flex-col">
+                <FormLabel className="text-base" htmlFor="expectedResolutionDate">
+                  Expected Resolution Date
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl id="expectedResolutionDate">
+                      <Button
+                        variant={"outline"}
+                        className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                      >
+                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="single"
+                      defaultMonth={field.value}
+                      fromDate={new Date()}
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      numberOfMonths={1}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="resolution"
             render={({ field }) => (
               <FormItem className="mt-4">
@@ -262,7 +324,6 @@ const AddStatusForm = ({ ...props }) => {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="IN-PROGRESS">IN-PROGRESS</SelectItem>
-                    <SelectItem value="TESTING">TESTING</SelectItem>
                     <SelectItem value="RESOLVED">RESOLVED</SelectItem>
                   </SelectContent>
                 </Select>
@@ -270,19 +331,19 @@ const AddStatusForm = ({ ...props }) => {
               </FormItem>
             )}
           />
-          {props.issue === "CREATE" && (
+          {props.state === "CREATE" && (
             <>
-              <Button type="submit" className="mt-4 w-full" disabled={isPending_CUIssue}>
-                {isPending_CUIssue ? "Creating..." : "Create"}
+              <Button type="submit" className="mt-4 w-full" disabled={isPending_CUStatus}>
+                {isPending_CUStatus ? "Creating..." : "Create"}
               </Button>
               <Button type="button" onMouseDown={handleReset} className="mt-4 w-full">
                 Reset
               </Button>
             </>
           )}
-          {props.issue === "EDIT" && (
-            <Button type="submit" className="mt-4 w-full" disabled={isPending_CUIssue}>
-              {isPending_CUIssue ? "Updating..." : "Update"}
+          {props.state === "EDIT" && (
+            <Button type="submit" className="mt-4 w-full" disabled={isPending_CUStatus}>
+              {isPending_CUStatus ? "Updating..." : "Update"}
             </Button>
           )}
         </form>

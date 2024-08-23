@@ -34,7 +34,7 @@ export const getStatusAction = async ({ env, mode, status }: { env: string; mode
         ? dataErr
         : dataErr.includes("history found")
           ? dataErr
-          : "Something went wrong while fetching summary.";
+          : "Something went wrong while fetching status.";
       throw new Error(errMsg);
     }
 
@@ -54,17 +54,33 @@ export const getStatusAction = async ({ env, mode, status }: { env: string; mode
   }
 };
 
-// update status action
-export const updateStatusAction = async ({
+// create update status action
+export const createUpdateStatusAction = async ({
+  type,
+  statusKey,
   env,
   mode,
   carrier,
   status,
+  statusType,
+  issue,
+  impact,
+  rca,
+  expectedResolutionDate,
+  resolution,
 }: {
+  type: string;
+  statusKey: string;
   env: string;
   mode: string;
   carrier: string;
   status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  rca: string;
+  expectedResolutionDate: string;
+  resolution: string;
 }) => {
   try {
     const { data, success } = await getUserAction();
@@ -73,14 +89,45 @@ export const updateStatusAction = async ({
       throw new Error("User not found.");
     }
 
-    const reqData = {
-      type: "UPDATE_CARRIER_STATUS",
-      username: data.username,
-      env: env.toUpperCase(),
-      mode: mode.toUpperCase(),
-      carrier: carrier,
-      status: status,
-    };
+    let state = "CREATE_CARRIER_STATUS";
+    if (type === "EDIT") {
+      state = "UPDATE_CARRIER_STATUS";
+    }
+
+    let reqData = {};
+
+    if (type === "EDIT") {
+      reqData = {
+        type: state,
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        statusKey: statusKey,
+        status: status,
+        statusType: statusType,
+        issue: issue,
+        impact: impact,
+        rca: rca,
+        expectedResolutionDate: expectedResolutionDate,
+        resolution: resolution,
+      };
+    } else {
+      reqData = {
+        type: state,
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        status: status,
+        statusType: statusType,
+        issue: issue,
+        impact: impact,
+        rca: rca,
+        expectedResolutionDate: expectedResolutionDate,
+        resolution: resolution,
+      };
+    }
 
     const res: any = await mainRequestAction(reqData);
 
@@ -89,7 +136,11 @@ export const updateStatusAction = async ({
     }
 
     if (!res?.success) {
-      throw new Error("Something went wrong while updating carrier status.");
+      if (type === "EDIT") {
+        throw new Error("While updating status.");
+      } else {
+        throw new Error("While creating status.");
+      }
     }
 
     return {
@@ -109,11 +160,13 @@ export const closeStatusAction = async ({
   env,
   mode,
   carrier,
+  rca,
   statusKey,
 }: {
   env: string;
   mode: string;
   carrier: string;
+  rca: string;
   statusKey: string;
 }) => {
   try {
@@ -129,6 +182,7 @@ export const closeStatusAction = async ({
       env: env.toUpperCase(),
       mode: mode.toUpperCase(),
       carrier: carrier.toUpperCase(),
+      rca: rca,
       statusKey: statusKey,
     };
 
@@ -139,7 +193,13 @@ export const closeStatusAction = async ({
     }
 
     if (!res?.success) {
-      throw new Error("While closing status.");
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("status doesn't")
+        ? dataErr
+        : dataErr.includes("closed without an RCA")
+          ? dataErr
+          : "Something went wrong while closing status.";
+      throw new Error(errMsg);
     }
 
     return {
