@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AuthType, StatusType, ParamType, IssueValueInternal } from "./types/common";
+import { AuthType, ParamType, IssueValueInternal, StatusValueInternal } from "./types/common";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { resetAction, signInAction, signUpAction } from "@/actions/auth-actions";
-import { updateStatusAction } from "@/actions/status-summary-actions";
+import { closeStatusAction, createUpdateStatusAction, deleteStatusAction } from "@/actions/status-summary-actions";
 import { closeIssueAction, createUpdateIssueAction, deleteNotifyIssueAction } from "@/actions/issue-actions";
 
 // auth mutations
@@ -207,32 +207,130 @@ export const useDeleteNotifyIssueMutation = (mutateType: string, form: any, tabl
 // dashboard mutations
 
 // status mutation
-export const useStatusMutation = (params: ParamType, setOpen: any) => {
+
+// create/update issue mutation
+export const useStatusCUMutation = (
+  params: ParamType,
+  form: any,
+  state: string,
+  statusKey: string,
+  tableType: string,
+  setOpen: any,
+) => {
   const queryClient = useQueryClient();
   const submit = useMutation({
-    mutationFn: async (data: StatusType) =>
-      await updateStatusAction({
-        env: params.env,
-        mode: params.mode,
-        carrier: data.carrier,
-        status: data.status,
+    mutationFn: async (data: StatusValueInternal) =>
+      await createUpdateStatusAction({
+        ...data,
+        type: state,
+        statusKey: statusKey,
       }),
-
     onSuccess: async (data) => {
       if (!data.success) {
-        toast.error(`Uh oh! Something went wrong, while updating status.`, {
+        toast.error(`Uh oh! Something went wrong.`, {
+          description: data.data,
+        });
+      } else {
+        if (state === "CREATE") {
+          await queryClient.invalidateQueries({
+            queryKey: ["status", params.env, params.mode, tableType],
+          });
+          toast.success("Status created successfully.");
+          form.reset({
+            env: params.env.toUpperCase(),
+            mode: params.mode.toUpperCase(),
+            carrier: "",
+            status: "ACTIVE",
+            statusType: "",
+            issue: "",
+            impact: "",
+            jiraLink: "",
+            expectedResolutionDate: new Date(),
+            resolution: "IN-PROGRESS",
+          });
+          setOpen(false);
+        } else {
+          await queryClient.invalidateQueries({
+            queryKey: ["status", params.env, params.mode, tableType],
+          });
+          toast.success("Status updated Successfully.");
+          setOpen(false);
+        }
+      }
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong.`, {
+        description: error.message,
+      });
+    },
+  });
+
+  return submit;
+};
+
+// close status mutation
+export const useCloseStatusMutation = (form: any, setOpen: any, params: ParamType, carrier: string) => {
+  const queryClient = useQueryClient();
+  const submit = useMutation({
+    mutationFn: async (d: any) =>
+      await closeStatusAction({
+        env: params.env,
+        mode: params.mode,
+        carrier: carrier,
+        statusKey: d.statusKey,
+      }),
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong.`, {
           description: data.data,
         });
       } else {
         await queryClient.invalidateQueries({
-          queryKey: ["status", `${params.mode}`, `${params.env}`],
+          queryKey: ["status", params.env, params.mode, "ACTIVE"],
         });
-        toast.success("Carrier status updated successfully!");
+        toast.success("Status closed successfully.");
+        form.reset({ statusKey: "" });
         setOpen(false);
       }
     },
     onError: (error: any) => {
-      toast.error(`Uh oh! Something went wrong, while updating status.`, {
+      toast.error(`Uh oh! Something went wrong.`, {
+        description: error.message,
+      });
+    },
+  });
+
+  return submit;
+};
+
+// delete status mutation
+export const useDeleteStatusMutation = (
+  form: any,
+  setOpen: any,
+  params: ParamType,
+  carrier: string,
+  tableType: string,
+) => {
+  const queryClient = useQueryClient();
+  const submit = useMutation({
+    mutationFn: async (statusKey: string) =>
+      await deleteStatusAction({ env: params.env, mode: params.mode, carrier: carrier, statusKey: statusKey }),
+    onSuccess: async (data) => {
+      if (!data.success) {
+        toast.error(`Uh oh! Something went wrong.`, {
+          description: data.data,
+        });
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["status", params.env, params.mode, tableType],
+        });
+        toast.success("Status deleted successfully.");
+        form.reset({ statusKey: "" });
+        setOpen(false);
+      }
+    },
+    onError: (error: any) => {
+      toast.error(`Uh oh! Something went wrong.`, {
         description: error.message,
       });
     },

@@ -82,8 +82,51 @@ export type IssueValueInternal = {
 // status related types
 
 export type StatusType = {
+  env: string;
+  mode: string;
   carrier: string;
   status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  jiraLink: string;
+  expectedResolutionDate: string;
+  resolution: string;
+};
+
+export type StatusColumnType = {
+  statusKey: string;
+  value: StatusValue;
+  created_at: string | number;
+  modified_at: string | number;
+};
+
+export type StatusValue = {
+  statusKey: string;
+  carrier: string;
+  status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  jiraLink: string;
+  expectedResolutionDate: string;
+  resolution: string;
+  closedAt: string;
+};
+
+export type StatusValueInternal = {
+  type: string;
+  env: string;
+  mode: string;
+  statusKey: string;
+  carrier: string;
+  status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  jiraLink: string;
+  expectedResolutionDate: string;
+  resolution: string;
 };
 
 // summary related types

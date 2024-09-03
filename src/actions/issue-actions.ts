@@ -3,7 +3,7 @@
 import { getUserAction } from "./auth-actions";
 import { mainRequestAction } from "./main-actions";
 
-// get status action
+// get issue action
 export const getIssueAction = async ({ status }: { status: string }) => {
   try {
     const { data, success } = await getUserAction();
@@ -43,7 +43,7 @@ export const getIssueAction = async ({ status }: { status: string }) => {
   }
 };
 
-// create update status action
+// create update issue action
 export const createUpdateIssueAction = async ({
   type,
   issueKey,

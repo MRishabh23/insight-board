@@ -31,15 +31,19 @@ export const useIssueQuery = (status: string) => {
 };
 
 // status query
-export const useStatusQuery = (params: ParamType) => {
+export const useStatusQuery = (status: string, params: ParamType) => {
   const query = useQuery({
-    queryKey: ["status", `${params.mode}`, `${params.env}`],
+    queryKey: ["status", params.env, params.mode, status],
     queryFn: async () => {
-      const response = await getStatusAction(params);
+      const response = await getStatusAction({
+        env: params.env,
+        mode: params.mode,
+        status: status,
+      });
       return response;
     },
-    gcTime: 1000 * 60 * 60 * 6,
-    staleTime: 1000 * 60 * 60 * 6,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;

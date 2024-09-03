@@ -6,7 +6,7 @@ import { mainRequestAction } from "./main-actions";
 // tracking actions
 
 // get status action
-export const getStatusAction = async ({ env, mode }: { env: string; mode: string }) => {
+export const getStatusAction = async ({ env, mode, status }: { env: string; mode: string; status: string }) => {
   try {
     const { data, success } = await getUserAction();
 
@@ -19,6 +19,7 @@ export const getStatusAction = async ({ env, mode }: { env: string; mode: string
       username: data.username,
       env: env.toUpperCase(),
       mode: mode.toUpperCase(),
+      status: status.toUpperCase(),
     };
 
     const res: any = await mainRequestAction(reqData);
@@ -28,11 +29,118 @@ export const getStatusAction = async ({ env, mode }: { env: string; mode: string
     }
 
     if (!res?.success) {
-      throw new Error("Something went wrong while fetching carrier status.");
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("operational")
+        ? dataErr
+        : dataErr.includes("history found")
+          ? dataErr
+          : "Something went wrong while fetching status.";
+      throw new Error(errMsg);
     }
 
-    if (res?.success && res?.data?.includes("data not present")) {
-      throw new Error("Sufficient data not present.");
+    // if (res?.success && res?.data?.includes("data not present")) {
+    //   throw new Error("Sufficient data not present.");
+    // }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// create update status action
+export const createUpdateStatusAction = async ({
+  type,
+  statusKey,
+  env,
+  mode,
+  carrier,
+  status,
+  statusType,
+  issue,
+  impact,
+  jiraLink,
+  expectedResolutionDate,
+  resolution,
+}: {
+  type: string;
+  statusKey: string;
+  env: string;
+  mode: string;
+  carrier: string;
+  status: string;
+  statusType: string;
+  issue: string;
+  impact: string;
+  jiraLink: string;
+  expectedResolutionDate: string;
+  resolution: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    let state = "CREATE_CARRIER_STATUS";
+    if (type === "EDIT") {
+      state = "UPDATE_CARRIER_STATUS";
+    }
+
+    let reqData = {};
+
+    if (type === "EDIT") {
+      reqData = {
+        type: state,
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        statusKey: statusKey,
+        status: status,
+        statusType: statusType,
+        issue: issue,
+        impact: impact,
+        jiraLink: jiraLink,
+        expectedResolutionDate: expectedResolutionDate,
+        resolution: resolution,
+      };
+    } else {
+      reqData = {
+        type: state,
+        username: data.username,
+        env: env.toUpperCase(),
+        mode: mode,
+        carrier: carrier,
+        status: status,
+        statusType: statusType,
+        issue: issue,
+        impact: impact,
+        jiraLink: jiraLink,
+        expectedResolutionDate: expectedResolutionDate,
+        resolution: resolution,
+      };
+    }
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      if (type === "EDIT") {
+        throw new Error("While updating status.");
+      } else {
+        throw new Error("While creating status.");
+      }
     }
 
     return {
@@ -47,17 +155,17 @@ export const getStatusAction = async ({ env, mode }: { env: string; mode: string
   }
 };
 
-// update status action
-export const updateStatusAction = async ({
+// close status action
+export const closeStatusAction = async ({
   env,
   mode,
   carrier,
-  status,
+  statusKey,
 }: {
   env: string;
   mode: string;
   carrier: string;
-  status: string;
+  statusKey: string;
 }) => {
   try {
     const { data, success } = await getUserAction();
@@ -67,12 +175,12 @@ export const updateStatusAction = async ({
     }
 
     const reqData = {
-      type: "UPDATE_CARRIER_STATUS",
+      type: "CLOSE_CARRIER_STATUS",
       username: data.username,
       env: env.toUpperCase(),
       mode: mode.toUpperCase(),
-      carrier: carrier,
-      status: status,
+      carrier: carrier.toUpperCase(),
+      statusKey: statusKey,
     };
 
     const res: any = await mainRequestAction(reqData);
@@ -82,7 +190,59 @@ export const updateStatusAction = async ({
     }
 
     if (!res?.success) {
-      throw new Error("Something went wrong while updating carrier status.");
+      const dataErr = res?.data;
+      const errMsg = dataErr.includes("status doesn't") ? dataErr : "Something went wrong while closing status.";
+      throw new Error(errMsg);
+    }
+
+    return {
+      data: res?.data,
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      data: error.message,
+      success: false,
+    };
+  }
+};
+
+// delete status action
+export const deleteStatusAction = async ({
+  env,
+  mode,
+  carrier,
+  statusKey,
+}: {
+  env: string;
+  mode: string;
+  carrier: string;
+  statusKey: string;
+}) => {
+  try {
+    const { data, success } = await getUserAction();
+
+    if (!success) {
+      throw new Error("User not found.");
+    }
+
+    const reqData = {
+      type: "DELETE_CARRIER_STATUS",
+      username: data.username,
+      env: env.toUpperCase(),
+      mode: mode.toUpperCase(),
+      carrier: carrier.toUpperCase(),
+      statusKey: statusKey,
+    };
+
+    const res: any = await mainRequestAction(reqData);
+
+    if (!res?.success && (res?.data.includes("timed") || res?.data.includes("trusted"))) {
+      throw new Error(res.data);
+    }
+
+    if (!res?.success) {
+      throw new Error("While deleting status.");
     }
 
     return {

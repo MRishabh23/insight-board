@@ -70,6 +70,7 @@ export function TableDataStaticStateComponent({ ...props }) {
     },
     [propData],
   );
+
   const columns = React.useMemo(() => props.columns, [props.columns]);
 
   const table = useReactTable({

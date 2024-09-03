@@ -41,13 +41,12 @@ export function IssueAccordion() {
 export function StatusAccordion() {
   return (
     <CommonAccordion>
-      <li>Initially status will be fetched automatically.</li>
+      <li>Initially current status and status history will be fetched automatically.</li>
+      <li>In case there is a issue with any carrier. You can create a new status.</li>
       <li>The data will cached for sometime. In case you want latest data hit the refresh button.</li>
-      <li>For each carrier status a edit button is present to update it&apos;s status in case of any issue.</li>
-      <li>By clicking the edit button you can update the issue.</li>
       <li>
-        After successfully updating the status, the data will be fetched automatically in the background and will be
-        shown on the page.
+        Upon creating, updating, closing, and deleting the status, if the process is successful the latest
+        data will be fetched automatically in the background and will be shown on the page.
       </li>
     </CommonAccordion>
   );
@@ -88,6 +87,7 @@ export function InducedAccordion() {
     <CommonAccordion>
       <li>Select a carrier the see induced latency.</li>
       <li>You can select multiple carriers at max 3.</li>
+      <li>We have data from 16th August 2024 onwards, as all the previous data is removed because there are some discrepancies in that data.</li>
     </CommonAccordion>
   );
 }
