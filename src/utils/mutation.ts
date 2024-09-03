@@ -244,7 +244,7 @@ export const useStatusCUMutation = (
             statusType: "",
             issue: "",
             impact: "",
-            rca: "",
+            jiraLink: "",
             expectedResolutionDate: new Date(),
             resolution: "IN-PROGRESS",
           });
@@ -277,7 +277,6 @@ export const useCloseStatusMutation = (form: any, setOpen: any, params: ParamTyp
         env: params.env,
         mode: params.mode,
         carrier: carrier,
-        rca: d.rca,
         statusKey: d.statusKey,
       }),
     onSuccess: async (data) => {

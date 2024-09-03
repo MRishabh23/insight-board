@@ -65,7 +65,7 @@ export const createUpdateStatusAction = async ({
   statusType,
   issue,
   impact,
-  rca,
+  jiraLink,
   expectedResolutionDate,
   resolution,
 }: {
@@ -78,7 +78,7 @@ export const createUpdateStatusAction = async ({
   statusType: string;
   issue: string;
   impact: string;
-  rca: string;
+  jiraLink: string;
   expectedResolutionDate: string;
   resolution: string;
 }) => {
@@ -108,7 +108,7 @@ export const createUpdateStatusAction = async ({
         statusType: statusType,
         issue: issue,
         impact: impact,
-        rca: rca,
+        jiraLink: jiraLink,
         expectedResolutionDate: expectedResolutionDate,
         resolution: resolution,
       };
@@ -123,7 +123,7 @@ export const createUpdateStatusAction = async ({
         statusType: statusType,
         issue: issue,
         impact: impact,
-        rca: rca,
+        jiraLink: jiraLink,
         expectedResolutionDate: expectedResolutionDate,
         resolution: resolution,
       };
@@ -160,13 +160,11 @@ export const closeStatusAction = async ({
   env,
   mode,
   carrier,
-  rca,
   statusKey,
 }: {
   env: string;
   mode: string;
   carrier: string;
-  rca: string;
   statusKey: string;
 }) => {
   try {
@@ -182,7 +180,6 @@ export const closeStatusAction = async ({
       env: env.toUpperCase(),
       mode: mode.toUpperCase(),
       carrier: carrier.toUpperCase(),
-      rca: rca,
       statusKey: statusKey,
     };
 
@@ -194,11 +191,7 @@ export const closeStatusAction = async ({
 
     if (!res?.success) {
       const dataErr = res?.data;
-      const errMsg = dataErr.includes("status doesn't")
-        ? dataErr
-        : dataErr.includes("closed without an RCA")
-          ? dataErr
-          : "Something went wrong while closing status.";
+      const errMsg = dataErr.includes("status doesn't") ? dataErr : "Something went wrong while closing status.";
       throw new Error(errMsg);
     }
 

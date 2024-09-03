@@ -62,11 +62,9 @@ const InducedData = ({ ...props }) => {
     );
   }
 
-  return <ChartDataTwo data={inducedQuery.data?.data} />;
+  return <ChartDataTwo data={inducedQuery.data} carriers={props.carriers} />;
 };
 
 const ChartDataTwo = ({ ...props }) => {
-  return props.data.map((item: any, index: number) => {
-    return <ChartComponent key={index} chartData={item.value} carrier={item.carrier} strokeColor={"#8884d8"} />;
-  });
+  return <ChartComponent chartData={props.data?.data} carriers={props.carriers} />;
 };

@@ -89,7 +89,7 @@ export type StatusType = {
   statusType: string;
   issue: string;
   impact: string;
-  rca: string;
+  jiraLink: string;
   expectedResolutionDate: string;
   resolution: string;
 };
@@ -108,7 +108,7 @@ export type StatusValue = {
   statusType: string;
   issue: string;
   impact: string;
-  rca: string;
+  jiraLink: string;
   expectedResolutionDate: string;
   resolution: string;
   closedAt: string;
@@ -124,7 +124,7 @@ export type StatusValueInternal = {
   statusType: string;
   issue: string;
   impact: string;
-  rca: string;
+  jiraLink: string;
   expectedResolutionDate: string;
   resolution: string;
 };

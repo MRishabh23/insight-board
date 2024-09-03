@@ -15,7 +15,6 @@ import { useCloseDeleteStatusForm } from "@/utils/schema";
 import { useCloseStatusMutation } from "@/utils/mutation";
 import { useParams } from "next/navigation";
 import { ParamType } from "@/utils/types/common";
-import { Textarea } from "@/components/ui/textarea";
 
 export const CloseStatusForm = ({ ...props }) => {
   const [open, setOpen] = React.useState(false);
@@ -30,13 +29,6 @@ export const CloseStatusForm = ({ ...props }) => {
   );
 
   const onSubmit = (data: any) => {
-    if (!data.rca) {
-      form.setError("rca", {
-        type: "custom",
-        message: "Please enter a proper RCA.",
-      });
-    }
-
     if (data.statusKey === props.statusKey) {
       //console.log("onSubmit", data);
       server_close(data);
@@ -62,7 +54,6 @@ export const CloseStatusForm = ({ ...props }) => {
           <DialogHeader>
             <DialogTitle>Close Status</DialogTitle>
             <DialogDescription>
-              <strong>Before entering the status key, Please make sure that the RCA is filled out. </strong>
               Please enter the status key <span className="font-bold text-black">{props.statusKey}</span> to close the
               status.
             </DialogDescription>
@@ -73,21 +64,6 @@ export const CloseStatusForm = ({ ...props }) => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={cn("mt-5 space-y-5 rounded-md border border-gray-200 p-3")}
               >
-                <FormField
-                  control={form.control}
-                  name="rca"
-                  render={({ field }) => (
-                    <FormItem className="mt-4">
-                      <FormLabel className="text-base" htmlFor="rca">
-                        RCA
-                      </FormLabel>
-                      <FormControl id="rca">
-                        <Textarea className="h-24" placeholder="rca..." required minLength={10} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
                 <FormField
                   control={form.control}
                   name="statusKey"

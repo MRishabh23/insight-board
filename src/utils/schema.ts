@@ -136,7 +136,7 @@ const statusFormSchema = z.object({
   statusType: z.string(),
   issue: z.string(),
   impact: z.string(),
-  rca: z.string(),
+  jiraLink: z.string(),
   expectedResolutionDate: z.date(),
   resolution: z.string(),
 });
@@ -150,7 +150,7 @@ export const useStatusForm = (state: string, params: ParamType, statusValue: Sta
     statusType: "",
     issue: "",
     impact: "",
-    rca: "",
+    jiraLink: "",
     expectedResolutionDate: new Date(format(eD, "yyyy-MM-dd")),
     resolution: "IN-PROGRESS",
   };
@@ -165,7 +165,7 @@ export const useStatusForm = (state: string, params: ParamType, statusValue: Sta
       statusType: statusValue.statusType,
       issue: statusValue.issue,
       impact: statusValue.impact,
-      rca: statusValue.rca,
+      jiraLink: statusValue.jiraLink,
       expectedResolutionDate: new Date(statusValue.expectedResolutionDate),
       resolution: statusValue.resolution,
     };
@@ -183,14 +183,12 @@ export const useStatusForm = (state: string, params: ParamType, statusValue: Sta
 
 const closeDeleteStatusFormSchema = z.object({
   statusKey: z.string(),
-  rca: z.string().optional()
 });
 
 export const useCloseDeleteStatusForm = () => {
   const form = useForm<z.infer<typeof closeDeleteStatusFormSchema>>({
     resolver: zodResolver(closeDeleteStatusFormSchema),
     defaultValues: {
-      rca: "",
       statusKey: "",
     },
   });
@@ -302,7 +300,13 @@ export const useReferenceAllForm = (params: ParamType, searchParams: any) => {
     defaultValues: {
       carrier: searchParams.get("carrier") || "",
       queue: searchParams.get("queue") || "NORMAL",
-      refType: searchParams.get("refType") ? searchParams.get("refType") : params.mode === "ocean" ? "BOOKING" : params.mode === "air" ? "AWB" : "CONTAINER",
+      refType: searchParams.get("refType")
+        ? searchParams.get("refType")
+        : params.mode === "ocean"
+          ? "BOOKING"
+          : params.mode === "air"
+            ? "AWB"
+            : "CONTAINER",
       refStatus: searchParams.get("refStatus") || "ACTIVE",
     },
   });

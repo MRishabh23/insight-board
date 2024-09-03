@@ -42,8 +42,8 @@ export const useStatusQuery = (status: string, params: ParamType) => {
       });
       return response;
     },
-    gcTime: 1000 * 60 * 60 * 8,
-    staleTime: 1000 * 60 * 60 * 8,
+    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60,
   });
 
   return query;

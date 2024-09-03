@@ -107,7 +107,7 @@ const AddStatusForm = ({ ...props }) => {
       statusType: "",
       issue: "",
       impact: "",
-      rca: "",
+      jiraLink: "",
       expectedResolutionDate: new Date(),
       resolution: "IN-PROGRESS",
     });
@@ -155,7 +155,7 @@ const AddStatusForm = ({ ...props }) => {
                 <FormLabel className="text-base" htmlFor="carrier">
                   Carrier
                 </FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value} disabled={props.state === "EDIT"}>
                   <FormControl id="carrier">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a carrier..." />
@@ -253,20 +253,14 @@ const AddStatusForm = ({ ...props }) => {
           />
           <FormField
             control={form.control}
-            name="rca"
+            name="jiraLink"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel className="text-base" htmlFor="rca">
-                  RCA
+                <FormLabel className="text-base" htmlFor="jiraLink">
+                  Jira Link
                 </FormLabel>
-                <FormControl id="rca">
-                  <Textarea
-                    className="h-24"
-                    placeholder="rca..."
-                    required={form.watch("status") === "CLOSED" ? true : false}
-                    minLength={form.watch("status") === "CLOSED" ? 10 : 0}
-                    {...field}
-                  />
+                <FormControl id="jiraLink">
+                  <Input type="text" placeholder="Enter jira link..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

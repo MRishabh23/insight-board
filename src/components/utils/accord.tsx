@@ -87,6 +87,7 @@ export function InducedAccordion() {
     <CommonAccordion>
       <li>Select a carrier the see induced latency.</li>
       <li>You can select multiple carriers at max 3.</li>
+      <li>We have data from 16th August 2024 onwards, as all the previous data is removed because there are some discrepancies in that data.</li>
     </CommonAccordion>
   );
 }
