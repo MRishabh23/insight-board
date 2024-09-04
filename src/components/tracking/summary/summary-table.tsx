@@ -230,7 +230,8 @@ export function SummaryTable() {
       accessorKey: "crawlFrequency",
       header: () => <TableHeadCustom>Crawl Frequency</TableHeadCustom>,
       cell: ({ row }) => {
-        return <TableCellCustom>{row.original.crawlFrequency}</TableCellCustom>;
+        const freq = row.original.crawlFrequency ? row.original.crawlFrequency : "-";
+        return <TableCellCustom>{freq}</TableCellCustom>;
       },
       enableSorting: false,
     },

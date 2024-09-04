@@ -162,6 +162,7 @@ const AddStatusForm = ({ ...props }) => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="ALL">ALL</SelectItem>
                     {carrierOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
@@ -213,7 +214,8 @@ const AddStatusForm = ({ ...props }) => {
                   <SelectContent>
                     <SelectItem value="DEGRADATION">DEGRADATION</SelectItem>
                     <SelectItem value="INFORMATION">INFORMATION</SelectItem>
-                    <SelectItem value="MAINTENANCE">MAINTENANCE</SelectItem>
+                    <SelectItem value="WEBSITE MAINTENANCE">WEBSITE MAINTENANCE</SelectItem>
+                    <SelectItem value="SYSTEM MAINTENANCE">SYSTEM MAINTENANCE</SelectItem>
                     <SelectItem value="OUTAGE">OUTAGE</SelectItem>
                   </SelectContent>
                 </Select>

@@ -86,7 +86,8 @@ export function StatusTable({ ...props }) {
         const commonClass = "border p-[5px] rounded-sm";
         let typeColor = commonClass + " bg-red-50 border-red-500 text-red-500";
         if (type === "INFORMATION") typeColor = commonClass + " bg-blue-50 border-blue-500 text-blue-500";
-        if (type === "MAINTENANCE") typeColor = commonClass + " bg-yellow-50 border-yellow-500 text-yellow-500";
+        if (type === "WEBSITE MAINTENANCE") typeColor = commonClass + " bg-teal-50 border-teal-500 text-teal-500";
+        if (type === "SYSTEM MAINTENANCE") typeColor = commonClass + " bg-yellow-50 border-yellow-500 text-yellow-500";
         if (type === "DEGRADATION") typeColor = commonClass + " bg-orange-50 border-orange-500 text-orange-500";
         return <TableCellCustom className={typeColor}>{type}</TableCellCustom>;
       },
