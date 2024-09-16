@@ -3,20 +3,20 @@ import TrackingEnvHeader from "@/components/tracking-env-header";
 import { cn } from "@/lib/utils";
 
 interface EnvProps {
-  children: React.ReactNode;
-  params: {
-    mode: string;
-    env: string;
-    dash: string;
-  };
+	children: React.ReactNode;
+	params: {
+		mode: string;
+		env: string;
+		dash: string;
+	};
 }
 
 export default function DashLayout({ children, params }: EnvProps) {
-  return (
-    <div className={cn("flex h-full flex-col")}>
-      <TrackingEnvHeader params={params} />
-      <TrackingDashHeader params={params} />
-      <div className={cn("flex-1 py-10")}>{children}</div>
-    </div>
-  );
+	return (
+		<div className={cn("flex h-full flex-col")}>
+			<TrackingEnvHeader params={params} />
+			<TrackingDashHeader params={params} />
+			<div className={cn("flex-1 py-10")}>{children}</div>
+		</div>
+	);
 }
