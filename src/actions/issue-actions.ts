@@ -131,11 +131,7 @@ export const createUpdateIssueAction = async ({
 		}
 
 		if (!res?.success) {
-			if (type === "EDIT") {
-				throw new Error("While updating issue.");
-			} else {
-				throw new Error("While creating issue.");
-			}
+			throw new Error(`${type === "EDIT" ? "While updating issue." : "While creating issue."}`);
 		}
 
 		return {
@@ -218,12 +214,7 @@ export const deleteNotifyIssueAction = async ({ type, issueKey }: { type: string
 
 		if (!res?.success) {
 			const dataErr = res?.data;
-			if (type === "DELETE") {
-				throw new Error("While deleting issue.");
-			} else {
-				const errMsg = dataErr.includes("no emails are found") ? dataErr : "While sending notification.";
-				throw new Error(errMsg);
-			}
+			throw new Error(`${type === "DELETE" ? "While deleting issue." : dataErr.includes("no emails are found") ? dataErr : "While sending notification."}`);
 		}
 
 		return {

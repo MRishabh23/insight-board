@@ -23,11 +23,25 @@ export const ReferenceForm = () => {
 	const onSubmit = (data: any) => {
 		//console.log("submit data", data);
 		setBtnLoad(true);
-		setTimeout(() => {
-			const q = createQueryString(data);
-			router.push(pathname + "?" + q);
+		if (!data.carrier) {
+			form.setError("carrier", {
+				type: "custom",
+				message: "Select a carrier",
+			});
 			setBtnLoad(false);
-		}, 700);
+		}else if(!data.reference){
+			form.setError("reference", {
+				type: "custom",
+				message: "Input a reference",
+			});
+			setBtnLoad(false);
+		} else {
+			setTimeout(() => {
+				const q = createQueryString(data);
+				router.push(pathname + "?" + q);
+				setBtnLoad(false);
+			}, 300);
+		}
 	};
 
 	const createQueryString = React.useCallback(
@@ -51,11 +65,19 @@ export const ReferenceForm = () => {
 						name="carrier"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel htmlFor="carrier">Carrier</FormLabel>
+								<FormLabel htmlFor="carrier">
+									{params.mode === "terminal" ? "Terminal" : "Carrier"}
+								</FormLabel>
 								<Select onValueChange={field.onChange} defaultValue={field.value} required>
 									<FormControl id="carrier">
 										<SelectTrigger>
-											<SelectValue placeholder="Select a carrier..." />
+											<SelectValue
+												placeholder={
+													params.mode === "terminal"
+														? "Select a terminal..."
+														: "Select a carrier..."
+												}
+											/>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>

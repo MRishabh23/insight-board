@@ -8,7 +8,7 @@ import React from "react";
 
 const TrackingEnvHeader = ({ params }: { params: { mode: string; env: string; dash: string } }) => {
 	let row1 = [];
-	if (params.mode === "terminal") {
+	if (params.mode === "road") {
 		row1 = ["DEV"];
 	} else {
 		row1 = ["PROD", "DEV"];

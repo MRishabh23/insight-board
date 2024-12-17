@@ -1,5 +1,6 @@
 const oceanCarriers = [
 	{ value: "ACL", label: "ACL" },
+	{ value: "ALIANCA", label: "ALIANCA" },
 	{ value: "ARKAS", label: "ARKAS" },
 	{ value: "CARRIERLESS", label: "CARRIERLESS" },
 	{ value: "CMA-CGM", label: "CMA-CGM" },
@@ -10,8 +11,8 @@ const oceanCarriers = [
 	{ value: "GOLDSTAR", label: "GOLDSTAR" },
 	{ value: "HAMBURG-SUD", label: "HAMBURG-SUD" },
 	{ value: "HAPAG", label: "HAPAG" },
-	{ value: "HEUNGA", label: "HEUNGA" },
 	{ value: "HELLMANN", label: "HELLMANN" },
+	{ value: "HEUNGA", label: "HEUNGA" },
 	{ value: "HYUNDAI", label: "HYUNDAI" },
 	{ value: "INTERASIA", label: "INTERASIA" },
 	{ value: "JINJIANG", label: "JINJIANG" },
@@ -29,8 +30,8 @@ const oceanCarriers = [
 	{ value: "SAMUDERA", label: "SAMUDERA" },
 	{ value: "SINOKOR", label: "SINOKOR" },
 	{ value: "SINOTRANS", label: "SINOTRANS" },
-	{ value: "SM-LINE", label: "SM-LINE" },
 	{ value: "SITC", label: "SITC" },
+	{ value: "SM-LINE", label: "SM-LINE" },
 	{ value: "SWIRE", label: "SWIRE" },
 	{ value: "TOTE", label: "TOTE" },
 	{ value: "TROPICAL", label: "TROPICAL" },
@@ -43,18 +44,26 @@ const oceanCarriers = [
 ];
 
 const airCarriers = [
+	{ value: "AEROMEXICOCARGO", label: "AEROMEXICOCARGO" },
+	{ value: "AIRALGERIE", label: "AIRALGERIE" },
 	{ value: "AIRCANADA", label: "AIRCANADA" },
 	{ value: "AIRCHINAAIRLINES", label: "AIRCHINAAIRLINES" },
 	{ value: "AIRFRANCE", label: "AIRFRANCE" },
+	{ value: "AIRSERBIA", label: "AIRSERBIA" },
+	{ value: "AAIRTAHITINUI", label: "AIRTAHITINUI" },
+	{ value: "ALASKAAIRLINES", label: "ALASKAAIRLINES" },
+	{ value: "ALITALIA", label: "ALITALIA" },
 	{ value: "ALLNIPPONAIRWAYS", label: "ALLNIPPONAIRWAYS" },
 	{ value: "AMERICANAIRLINES", label: "AMERICANAIRLINES" },
 	{ value: "AMERJEETAIRLINES", label: "AMERJEETAIRLINES" },
 	{ value: "ASIANAAIRLINES", label: "ASIANAAIRLINES" },
 	{ value: "ATLASAIR", label: "ATLASAIR" },
 	{ value: "AVIANCA", label: "AVIANCA" },
+	{ value: "AZULBRAZILIAN", label: "AZULBRAZILIAN" },
 	{ value: "BELGIUMAIRWAYS", label: "BELGIUMAIRWAYS" },
 	{ value: "BRITISHAIRWAYS", label: "BRITISHAIRWAYS" },
 	{ value: "CARGOLUX", label: "CARGOLUX" },
+	{ value: "CARGOLUXITALIA", label: "CARGOLUXITALIA" },
 	{ value: "CATHAY", label: "CATHAY" },
 	{ value: "CHINAAIRLINES", label: "CHINAAIRLINES" },
 	{ value: "CHINACARGO", label: "CHINACARGO" },
@@ -62,26 +71,40 @@ const airCarriers = [
 	{ value: "DELTAAIRLINES", label: "DELTAAIRLINES" },
 	{ value: "DHLAVIATION", label: "DHLAVIATION" },
 	{ value: "EMIRATESCARGO", label: "EMIRATESCARGO" },
+	{ value: "ETHIOPIANAIRLINES", label: "ETHIOPIANAIRLINES" },
+	{ value: "ETIHAD", label: "ETIHAD" },
 	{ value: "EVAAIRWAYS", label: "EVAAIRWAYS" },
+	{ value: "FEDEX", label: "FEDEX" },
 	{ value: "FINNAIR", label: "FINNAIR" },
-	{ value: "ICELANDAIR", label: "ICELANDAIR" },
+	{ value: "GULF", label: "GULF" },
+	{ value: "HONGKONGAIRLINES", label: "HONGKONGAIRLINES" },
+	{ value: "HONGKONGCARGOLTD", label: "HONGKONGCARGOLTD" },
 	{ value: "IBERIAAIR", label: "IBERIAAIR" },
+	{ value: "ICELANDAIR", label: "ICELANDAIR" },
 	{ value: "ISRAELAIRLINES", label: "ISRAELAIRLINES" },
 	{ value: "JAPANAIRLINES", label: "JAPANAIRLINES" },
 	{ value: "KALITTAAIRLINES", label: "KALITTAAIRLINES" },
 	{ value: "KLMCARGO", label: "KLMCARGO" },
 	{ value: "KOREANAIRLINES", label: "KOREANAIRLINES" },
+	{ value: "KUWAITAIRWAYS", label: "KUWAITAIRWAYS" },
 	{ value: "LATAMAIRLINES", label: "LATAMAIRLINES" },
+	{ value: "LOTPOLISHAIRLINES", label: "LOTPOLISHAIRLINES" },
 	{ value: "MASAIR", label: "MASAIR" },
 	{ value: "NIPPONAIRLINES", label: "NIPPONAIRLINES" },
 	{ value: "POLARCARGO", label: "POLARCARGO" },
 	{ value: "QANTASAIRWAYS", label: "QANTASAIRWAYS" },
 	{ value: "QATAR", label: "QATAR" },
+	{ value: "SAUDIARABIAN", label: "SAUDIARABIAN" },
 	{ value: "SCANDINAVIANAIRLINES", label: "SCANDINAVIANAIRLINES" },
 	{ value: "SILKAIRLINES", label: "SILKAIRLINES" },
 	{ value: "SINGAPOREAIRLINES", label: "SINGAPOREAIRLINES" },
+	{ value: "SWISS", label: "SWISS" },
+	{ value: "TAMPA", label: "TAMPA" },
+	{ value: "TAPAIRPORTUGAL", label: "TAPAIRPORTUGAL" },
 	{ value: "UNITEDAIRLINES", label: "UNITEDAIRLINES" },
 	{ value: "UPS", label: "UPS" },
+	{ value: "UZBEKISTAN", label: "UZBEKISTAN" },
+	{ value: "VIETNAM", label: "VIETNAM" },
 	{ value: "VIRGINATLANTIC", label: "VIRGINATLANTIC" },
 ];
 
@@ -101,6 +124,10 @@ const terminalCarriers = [
 	{ value: "EVERPORTANGELES", label: "EVERPORTANGELES" },
 	{ value: "FENIX", label: "FENIX" },
 	{ value: "FLORIDAINTERNATIONAL", label: "FLORIDAINTERNATIONAL" },
+	{ value: "FRASERSURREY", label: "FRASERSURREY"},
+	{ value: "GARDENCITY", label: "GARDENCITY"},
+	{ value: "GCTBAYONNE", label: "GCTBAYONNE"},
+	{ value: "GCTNEWYORK", label: "GCTNEWYORK"},
 	{ value: "HUSKY", label: "HUSKY" },
 	{ value: "ITSLONGBEACH", label: "ITSLONGBEACH" },
 	{ value: "LONGBEACH", label: "LONGBEACH" },
@@ -129,6 +156,8 @@ const terminalCarriers = [
 	{ value: "WASHINGTON", label: "WASHINGTON" },
 	{ value: "WBCT", label: "WBCT" },
 ];
+
+const roadCarriers = [{ value: "NTG-CPKELCO", label: "NTG-CPKELCO" }];
 
 const oceanQueue = [
 	{
@@ -180,8 +209,19 @@ const airRefType = [
 
 const terminalRefType = [
 	{
-		label: "Container",
-		value: "CONTAINER",
+		label: "Import",
+		value: "IMPORT",
+	},
+	{
+		label: "Export",
+		value: "EXPORT",
+	},
+];
+
+const roadRefType = [
+	{
+		label: "LTL",
+		value: "LTL",
 	},
 ];
 
@@ -265,7 +305,9 @@ export const getCarriersList = (mode: string) => {
 			? oceanCarriers
 			: mode === "terminal"
 				? terminalCarriers
-				: [];
+				: mode === "road"
+					? roadCarriers
+					: [];
 };
 
 export const getQueueList = (mode: string) => {
@@ -277,7 +319,7 @@ export const getHistoryType = () => {
 };
 
 export const getRefList = (mode: string) => {
-	return mode === "air" ? airRefType : mode === "ocean" ? oceanRefType : terminalRefType;
+	return mode === "air" ? airRefType : mode === "ocean" ? oceanRefType : mode === "terminal" ? terminalRefType : roadRefType;
 };
 
 export const getMonthList = (year: string) => {

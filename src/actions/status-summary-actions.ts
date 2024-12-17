@@ -136,11 +136,7 @@ export const createUpdateStatusAction = async ({
 		}
 
 		if (!res?.success) {
-			if (type === "EDIT") {
-				throw new Error("While updating status.");
-			} else {
-				throw new Error("While creating status.");
-			}
+			throw new Error(`${type === "EDIT" ? "While updating status." : "While creating status."}`);
 		}
 
 		return {
@@ -281,7 +277,7 @@ export const getSummaryAction = async ({
 		}
 
 		let reqData = {};
-		if (startTime != "" && endTime != "") {
+		if (startTime !== "" && endTime !== "") {
 			reqData = {
 				type: "GET_SUMMARY",
 				username: data.username,

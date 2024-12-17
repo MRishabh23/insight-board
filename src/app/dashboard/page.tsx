@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link";
 import { LiaLongArrowAltRightSolid, LiaShipSolid, LiaShippingFastSolid } from "react-icons/lia";
 import { PiAirplaneTilt } from "react-icons/pi";
+import { GoContainer } from "react-icons/go";
 
 const Dashboard = () => {
 	const modeList = [
@@ -15,6 +16,10 @@ const Dashboard = () => {
 		},
 		{
 			mode: "terminal",
+			env: "prod",
+		},
+		{
+			mode: "road",
 			env: "dev",
 		},
 	];
@@ -45,8 +50,10 @@ const Dashboard = () => {
 										<LiaShipSolid className="text-xl" />
 									) : item.mode === "air" ? (
 										<PiAirplaneTilt className="text-xl" />
-									) : (
+									) : item.mode === "road" ? (
 										<LiaShippingFastSolid className="text-xl" />
+									) : (
+										<GoContainer className="text-xl" />
 									)}
 									<p className="ml-2 text-lg">{item.mode.toUpperCase()}</p>
 								</div>

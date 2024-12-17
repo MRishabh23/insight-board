@@ -214,7 +214,9 @@ export const getReferenceSubscriptionAction = async ({
 			const dataErr = res?.data;
 			const errMsg = dataErr.includes("created for next container journey")
 				? dataErr
-				: "Something went wrong while fetching references.";
+				: dataErr.includes("subscription doesn't exists")
+					? dataErr
+					: "Something went wrong while fetching references.";
 			throw new Error(errMsg);
 		}
 

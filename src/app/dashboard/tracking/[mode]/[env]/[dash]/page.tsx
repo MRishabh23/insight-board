@@ -10,12 +10,8 @@ const SlugPage = ({
 }: {
 	params: { mode: string; env: string; dash: string };
 }) => {
-	// if (params.mode === "terminal") {
-	//   return <div className="mt-10 flex items-center justify-center text-xl font-semibold">Coming soon...</div>;
-	// }
-
-	if ((params.mode === "air" || params.mode === "terminal") && params.dash === "induced") {
-		return <div className="mt-10 flex items-center justify-center font-semibold text-xl">Coming soon...</div>;
+	if ((params.mode === "air" || params.mode === "terminal" || params.mode === "road") && params.dash === "induced") {
+		return <div className="mt-10 flex items-center justify-center font-semibold text-xl">Not available for AIR, TERMINAL, ROAD.</div>;
 	}
 
 	return (

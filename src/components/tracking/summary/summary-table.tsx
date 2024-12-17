@@ -30,9 +30,9 @@ export function SummaryTable() {
 
 	const columns: ColumnDef<SummaryType>[] = [
 		{
-			id: "carrier",
+			id: params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "jtCarrierCode",
-			header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+			header: () => <TableHeadCustom>{params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
 			cell: ({ row }) => (
 				<TableCellCustom className="font-semibold text-[15px]">{row.original.jtCarrierCode}</TableCellCustom>
 			),

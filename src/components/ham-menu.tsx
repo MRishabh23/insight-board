@@ -19,8 +19,12 @@ export function HamburgerMenuComponent() {
 		},
 		{
 			title: "Terminal Dashboard",
-			path: "/dashboard/tracking/terminal/dev/summary",
+			path: "/dashboard/tracking/terminal/prod/summary",
 		},
+		{
+			title: "Road Dashboard",
+			path: "/dashboard/tracking/road/dev/summary",
+		}
 	];
 	return (
 		<Sheet>
