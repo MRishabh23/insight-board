@@ -43,9 +43,9 @@ const LatencyData = ({ ...props }) => {
 
 	const columns: ColumnDef<LatencyTableType>[] = [
 		{
-			id: "carrier",
+			id: props.params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+			header: () => <TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
 			cell: ({ row }) => (
 				<TableCellCustom className="font-semibold text-[15px]">{row.original.carrier}</TableCellCustom>
 			),
@@ -69,6 +69,8 @@ const LatencyData = ({ ...props }) => {
 				if (ref.includes("BILL")) refColor = commonClass + " bg-orange-50 border-orange-500 text-orange-500";
 				if (ref.includes("CONTAINER")) refColor = commonClass + " bg-green-50 border-green-500 text-green-500";
 				if (ref.includes("AWB")) refColor = commonClass + " bg-blue-50 border-blue-500 text-blue-500";
+				if (ref.includes("IMPORT")) refColor = commonClass + " bg-yellow-50 border-yellow-500 text-yellow-500";
+				if (ref.includes("EXPORT")) refColor = commonClass + " bg-lime-50 border-lime-500 text-lime-500";
 
 				return <TableCellCustom className={refColor}>{ref}</TableCellCustom>;
 			},

@@ -306,7 +306,9 @@ export const useReferenceAllForm = (params: ParamType, searchParams: any) => {
 					? "BOOKING"
 					: params.mode === "air"
 						? "AWB"
-						: "CONTAINER",
+						: params.mode === "road"
+							? "LTL"
+							: "IMPORT",
 			refStatus: searchParams.get("refStatus") || "ACTIVE",
 		},
 	});

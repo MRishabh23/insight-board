@@ -57,7 +57,7 @@ export const SummaryForm = () => {
 				const q = createQueryString(data);
 				router.push(pathname + "?" + q);
 				setBtnLoad(false);
-			}, 300);
+			}, 400);
 		}
 	};
 

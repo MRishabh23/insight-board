@@ -35,7 +35,7 @@ export const ReferenceAllForm = () => {
 				const q = createQueryString(data);
 				router.push(pathname + "?" + q);
 				setBtnLoad(false);
-			}, 700);
+			}, 400);
 		}
 	};
 
@@ -67,11 +67,11 @@ export const ReferenceAllForm = () => {
 						name="carrier"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel htmlFor="carrier">Carrier</FormLabel>
+								<FormLabel htmlFor="carrier">{params.mode === "terminal" ? "Terminals" : "Carriers"}</FormLabel>
 								<Select onValueChange={field.onChange} defaultValue={field.value} required>
 									<FormControl id="carrier">
 										<SelectTrigger>
-											<SelectValue placeholder="Select a carrier..." />
+											<SelectValue placeholder={params.mode === "terminal" ? "Select a terminal..." : "Select a carrier..."} />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
