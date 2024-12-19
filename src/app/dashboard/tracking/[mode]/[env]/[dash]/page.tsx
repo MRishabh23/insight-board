@@ -11,7 +11,11 @@ const SlugPage = ({
 	params: { mode: string; env: string; dash: string };
 }) => {
 	if ((params.mode === "air" || params.mode === "terminal" || params.mode === "road") && params.dash === "induced") {
-		return <div className="mt-10 flex items-center justify-center font-semibold text-xl">Not available for AIR, TERMINAL, ROAD.</div>;
+		return (
+			<div className="mt-10 flex items-center justify-center font-semibold text-xl">
+				Not available for AIR, TERMINAL, ROAD.
+			</div>
+		);
 	}
 
 	return (
@@ -23,7 +27,7 @@ const SlugPage = ({
 			) : params.dash === "history" ? (
 				<MainHistoryComponent />
 			) : params.dash === "latency" ? (
-				<MainLatencyComponent />
+				<MainLatencyComponent mode={params.mode} />
 			) : params.dash === "references" ? (
 				<MainReferenceComponent />
 			) : params.dash === "induced" ? (

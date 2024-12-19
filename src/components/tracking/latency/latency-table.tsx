@@ -45,7 +45,9 @@ const LatencyData = ({ ...props }) => {
 		{
 			id: props.params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
+			header: () => (
+				<TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>
+			),
 			cell: ({ row }) => (
 				<TableCellCustom className="font-semibold text-[15px]">{row.original.carrier}</TableCellCustom>
 			),

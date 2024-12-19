@@ -67,11 +67,19 @@ export const ReferenceAllForm = () => {
 						name="carrier"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel htmlFor="carrier">{params.mode === "terminal" ? "Terminals" : "Carriers"}</FormLabel>
+								<FormLabel htmlFor="carrier">
+									{params.mode === "terminal" ? "Terminals" : "Carriers"}
+								</FormLabel>
 								<Select onValueChange={field.onChange} defaultValue={field.value} required>
 									<FormControl id="carrier">
 										<SelectTrigger>
-											<SelectValue placeholder={params.mode === "terminal" ? "Select a terminal..." : "Select a carrier..."} />
+											<SelectValue
+												placeholder={
+													params.mode === "terminal"
+														? "Select a terminal..."
+														: "Select a carrier..."
+												}
+											/>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>

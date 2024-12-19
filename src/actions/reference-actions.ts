@@ -52,7 +52,9 @@ export const getReferenceAllAction = async ({
 			const dataErr = res?.data;
 			const errMsg = dataErr.includes("pass one carrier")
 				? dataErr
-				: "Something went wrong while fetching references.";
+				: dataErr.includes("No data exists for this query")
+					? dataErr
+					: "Something went wrong while fetching references.";
 			throw new Error(errMsg);
 		}
 
@@ -112,7 +114,9 @@ export const getReferenceInfoAction = async ({
 			const dataErr = res?.data;
 			const errMsg = dataErr.includes("Wrong reference")
 				? dataErr
-				: "Something went wrong while fetching reference data.";
+				: dataErr.includes("No data exists for this query")
+					? dataErr
+					: "Something went wrong while fetching reference data.";
 			throw new Error(errMsg);
 		}
 
@@ -163,7 +167,9 @@ export const getReferenceAction = async ({
 			const dataErr = res?.data;
 			const errMsg = dataErr.includes("pass one carrier")
 				? dataErr
-				: "Something went wrong while fetching references.";
+				: dataErr.includes("No data exists for this query")
+					? dataErr
+					: "Something went wrong while fetching references.";
 			throw new Error(errMsg);
 		}
 

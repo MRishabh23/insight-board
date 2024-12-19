@@ -124,10 +124,10 @@ const terminalCarriers = [
 	{ value: "EVERPORTANGELES", label: "EVERPORTANGELES" },
 	{ value: "FENIX", label: "FENIX" },
 	{ value: "FLORIDAINTERNATIONAL", label: "FLORIDAINTERNATIONAL" },
-	{ value: "FRASERSURREY", label: "FRASERSURREY"},
-	{ value: "GARDENCITY", label: "GARDENCITY"},
-	{ value: "GCTBAYONNE", label: "GCTBAYONNE"},
-	{ value: "GCTNEWYORK", label: "GCTNEWYORK"},
+	{ value: "FRASERSURREY", label: "FRASERSURREY" },
+	{ value: "GARDENCITY", label: "GARDENCITY" },
+	{ value: "GCTBAYONNE", label: "GCTBAYONNE" },
+	{ value: "GCTNEWYORK", label: "GCTNEWYORK" },
 	{ value: "HUSKY", label: "HUSKY" },
 	{ value: "ITSLONGBEACH", label: "ITSLONGBEACH" },
 	{ value: "LONGBEACH", label: "LONGBEACH" },
@@ -319,7 +319,13 @@ export const getHistoryType = () => {
 };
 
 export const getRefList = (mode: string) => {
-	return mode === "air" ? airRefType : mode === "ocean" ? oceanRefType : mode === "terminal" ? terminalRefType : roadRefType;
+	return mode === "air"
+		? airRefType
+		: mode === "ocean"
+			? oceanRefType
+			: mode === "terminal"
+				? terminalRefType
+				: roadRefType;
 };
 
 export const getMonthList = (year: string) => {

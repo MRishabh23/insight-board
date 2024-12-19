@@ -24,7 +24,7 @@ export function HamburgerMenuComponent() {
 		{
 			title: "Road Dashboard",
 			path: "/dashboard/tracking/road/dev/summary",
-		}
+		},
 	];
 	return (
 		<Sheet>

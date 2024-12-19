@@ -29,7 +29,7 @@ export const ReferenceForm = () => {
 				message: "Select a carrier",
 			});
 			setBtnLoad(false);
-		}else if(!data.reference){
+		} else if (!data.reference) {
 			form.setError("reference", {
 				type: "custom",
 				message: "Input a reference",

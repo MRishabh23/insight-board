@@ -43,7 +43,6 @@ export function ReferenceTable() {
 }
 
 const ReferenceData = ({ ...props }) => {
-	
 	const referenceId = React.useMemo(
 		() => `${props.searchParams.get("refCarrier")}_${props.searchParams.get("reference")}`,
 		[props.searchParams],
@@ -54,7 +53,9 @@ const ReferenceData = ({ ...props }) => {
 			id: "subscription-id",
 			accessorKey: "subscriptionId",
 			header: () => <TableHeadCustom>Subscription Id</TableHeadCustom>,
-			cell: ({ row }) => <TableCellCustom className="font-semibold">{row.original.subscriptionId}</TableCellCustom>,
+			cell: ({ row }) => (
+				<TableCellCustom className="font-semibold">{row.original.subscriptionId}</TableCellCustom>
+			),
 			meta: {
 				className: "sticky left-0 bg-white",
 			},
@@ -63,7 +64,9 @@ const ReferenceData = ({ ...props }) => {
 		{
 			id: props.params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
+			header: () => (
+				<TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>
+			),
 			cell: ({ row }) => {
 				return <TableCellCustom>{row.original.carrier}</TableCellCustom>;
 			},
@@ -83,7 +86,7 @@ const ReferenceData = ({ ...props }) => {
 							? "green"
 							: "blue";
 				rType = "bg-" + rType + "-500";
-	
+
 				return (
 					<TableCellCustom>
 						<Badge className={`${rType}`}>{ref}</Badge>
@@ -123,7 +126,7 @@ const ReferenceData = ({ ...props }) => {
 						: queue.includes("RNF")
 							? "RNF"
 							: "";
-	
+
 				return <TableCellCustom>{qType}</TableCellCustom>;
 			},
 			enableSorting: false,

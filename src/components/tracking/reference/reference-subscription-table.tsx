@@ -41,7 +41,9 @@ export function ReferenceSubscriptionData({ ...props }) {
 		{
 			id: props.params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
+			header: () => (
+				<TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>
+			),
 			cell: ({ row }) => {
 				return <TableCellCustom>{row.original.carrier}</TableCellCustom>;
 			},

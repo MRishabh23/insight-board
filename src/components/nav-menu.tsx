@@ -36,7 +36,7 @@ export function NavigationMenuComponent() {
 			title: "ROAD",
 			path: "/dashboard/tracking/road/dev/summary",
 			description: "Visit road dashboard to view metrics.",
-		}
+		},
 	];
 
 	return (
