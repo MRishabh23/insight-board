@@ -59,7 +59,9 @@ export const getLatencyAction = async ({
 			const dataErr = res?.data;
 			const errMsg = dataErr.includes("pass one carrier")
 				? dataErr
-				: "Something went wrong while fetching latency.";
+				: dataErr.includes("No data exists for this query")
+					? dataErr
+					: "Something went wrong while fetching latency.";
 			throw new Error(errMsg);
 		}
 

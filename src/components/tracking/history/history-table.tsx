@@ -122,7 +122,7 @@ const HistoryData = ({ ...props }) => {
 					? row.original.v.latestFKMappedJsonResourceId
 					: "No data";
 				const error = row.original.v.error;
-				if (error) {
+				if (error && response === "No data" && latestRes === "No data") {
 					return (
 						<TableCellCustom>
 							<TableCellTooltipScroll
@@ -171,7 +171,7 @@ const HistoryData = ({ ...props }) => {
 					return <TableCellCustom>SAME PAYLOAD</TableCellCustom>;
 				}
 				if (response === "No data" || response === "null") {
-					return <TableCellCustom>PAYLOAD</TableCellCustom>;
+					return <TableCellCustom>NO PAYLOAD</TableCellCustom>;
 				}
 				return <TableCellCustom>Unhandled</TableCellCustom>;
 			},
@@ -189,7 +189,7 @@ const HistoryData = ({ ...props }) => {
 					? row.original.v.crawledJsonResourceId
 					: "No data";
 				const error = row.original.v.error;
-				if (error) {
+				if (error && response === "No data") {
 					return (
 						<TableCellCustom>
 							<TableCellTooltipScroll

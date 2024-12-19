@@ -41,9 +41,11 @@ const ReferenceAllData = ({ ...props }) => {
 			enableSorting: false,
 		},
 		{
-			id: "carrier",
+			id: props.params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+			header: () => (
+				<TableHeadCustom>{props.params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>
+			),
 			cell: ({ row }) => {
 				return <TableCellCustom>{props.searchParams.get("carrier")}</TableCellCustom>;
 			},
@@ -61,7 +63,13 @@ const ReferenceAllData = ({ ...props }) => {
 						? "BillOfLading"
 						: ref.includes("CONTAINER")
 							? "Container"
-							: "AWB";
+							: ref.includes("AWB")
+								? "AWB"
+								: ref.includes("EXPORT")
+									? "EXPORT"
+									: ref.includes("LTL")
+										? "LTL"
+										: "IMPORT";
 
 				let rType = ref.includes("Booking")
 					? "amber"

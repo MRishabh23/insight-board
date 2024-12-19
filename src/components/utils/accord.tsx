@@ -74,11 +74,18 @@ export function HistoryAccordion() {
 	);
 }
 
-export function LatencyAccordion() {
+export function LatencyAccordion({ mode }: { mode: string }) {
 	return (
 		<CommonAccordion>
 			<li>Select a carrier to check latency.</li>
 			<li>At max you can select 5 carriers.</li>
+			{mode === "terminal" && (
+				<li>
+					If reference type <strong>"EXPORT"</strong> is selected than it will only work for these carriers:
+					APMCONTAINERTERMINAL, APMTERMINALELIZABETH, APMTERMINALSMOBILE, BARBOURSCUT, BAYPORT, LONGBEACH,
+					MAHER, NAPOLEONAVENUE, NORFOLK, SEAGIRTMARINE, TOTALTERMINALS, TRAPACLOSANGELES, TRAPACOAKLAND.
+				</li>
+			)}
 		</CommonAccordion>
 	);
 }

@@ -25,9 +25,9 @@ export function StatusTable({ ...props }) {
 
 	const columns: ColumnDef<StatusColumnType>[] = [
 		{
-			id: "carrier",
+			id: params.mode === "terminal" ? "terminal" : "carrier",
 			accessorKey: "carrier",
-			header: () => <TableHeadCustom>Carrier</TableHeadCustom>,
+			header: () => <TableHeadCustom>{params.mode === "terminal" ? "Terminal" : "Carrier"}</TableHeadCustom>,
 			cell: ({ row }) => {
 				const carrier = row.original.value.carrier;
 				return <TableCellCustom>{carrier ? carrier : "-"}</TableCellCustom>;

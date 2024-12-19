@@ -29,8 +29,13 @@ export function NavigationMenuComponent() {
 		},
 		{
 			title: "TERMINAL",
-			path: "/dashboard/tracking/terminal/dev/summary",
+			path: "/dashboard/tracking/terminal/prod/summary",
 			description: "Visit terminal dashboard to view metrics.",
+		},
+		{
+			title: "ROAD",
+			path: "/dashboard/tracking/road/dev/summary",
+			description: "Visit road dashboard to view metrics.",
 		},
 	];
 

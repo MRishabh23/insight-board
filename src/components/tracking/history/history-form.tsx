@@ -7,15 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { getHistoryType } from "@/utils/pre-define-data/data";
+import { getCarriersList, getHistoryType } from "@/utils/pre-define-data/data";
 import { useHistoryForm } from "@/utils/schema";
-import type { HistoryFormType } from "@/utils/types/common";
+import type { HistoryFormType, ParamType } from "@/utils/types/common";
 import { format, millisecondsToHours, startOfDay, subDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 export const HistoryForm = () => {
+	const params = useParams<ParamType>();
+	const carriersOptions = React.useMemo(() => getCarriersList(params.mode), [params.mode]);
 	const historyOptions = getHistoryType();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -36,6 +38,24 @@ export const HistoryForm = () => {
 			return;
 		}
 
+		if (data.subId) {
+			let carrierCheck = data.subId.split("_")[0];
+			if (data.subId.includes("EXPORT") || data.subId.includes("IMPORT")) {
+				carrierCheck = data.subId.split("_")[1];
+			}
+
+			const isCarrierValid = carriersOptions.some((option) => option.value === carrierCheck);
+
+			if (!isCarrierValid) {
+				form.setError("subId", {
+					type: "custom",
+					message: "Invalid carrier present in subscription id.",
+				});
+				setBtnLoad(false);
+				return;
+			}
+		}
+
 		const subTract = data.range.to - data.range.from;
 
 		if (millisecondsToHours(subTract) > 360) {
@@ -49,7 +69,7 @@ export const HistoryForm = () => {
 				const q = createQueryString(data);
 				router.push(pathname + "?" + q);
 				setBtnLoad(false);
-			}, 700);
+			}, 400);
 		}
 	};
 

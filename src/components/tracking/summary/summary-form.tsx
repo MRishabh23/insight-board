@@ -57,7 +57,7 @@ export const SummaryForm = () => {
 				const q = createQueryString(data);
 				router.push(pathname + "?" + q);
 				setBtnLoad(false);
-			}, 700);
+			}, 400);
 		}
 	};
 
@@ -102,13 +102,19 @@ export const SummaryForm = () => {
 						name="carriers"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel htmlFor="carriers">Carriers</FormLabel>
+								<FormLabel htmlFor="carriers">
+									{params.mode === "terminal" ? "Terminals" : "Carriers"}
+								</FormLabel>
 								<FormControl id="carriers">
 									<MultipleSelector
 										value={field.value}
 										onChange={field.onChange}
 										defaultOptions={carriersOptions}
-										placeholder="Select Carriers you like..."
+										placeholder={
+											params.mode === "terminal"
+												? "Select Terminals you like..."
+												: "Select Carriers you like..."
+										}
 										hidePlaceholderWhenSelected
 										maxSelected={5}
 										emptyIndicator={

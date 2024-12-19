@@ -405,7 +405,8 @@ export function TableDataStaticComponent({ ...props }) {
 			<div className="flex items-start justify-end space-x-2 py-4">
 				<div className="flex-1 text-muted-foreground text-sm">Total Items: {data.length}</div>
 				<div>
-					<MultiSelectPage />
+					{/* <MultiSelectPage /> */}
+					<SelectPage/>
 				</div>
 				<div className="flex items-center justify-center space-x-2">
 					<Button

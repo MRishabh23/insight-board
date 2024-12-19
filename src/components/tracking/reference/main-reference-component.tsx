@@ -26,7 +26,14 @@ export default function MainReferenceComponent() {
 				category: "all",
 				carrier: "",
 				queue: "NORMAL",
-				refType: params.mode === "ocean" ? "BOOKING" : params.mode === "air" ? "AWB" : "CONTAINER",
+				refType:
+					params.mode === "ocean"
+						? "BOOKING"
+						: params.mode === "air"
+							? "AWB"
+							: params.mode === "road"
+								? "LTL"
+								: "IMPORT",
 				refStatus: "ACTIVE",
 				bucket: "",
 			},

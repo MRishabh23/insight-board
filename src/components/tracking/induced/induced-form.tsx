@@ -53,7 +53,7 @@ export const InducedForm = () => {
 				const q = createQueryString(data);
 				router.push(pathname + "?" + q);
 				setBtnLoad(false);
-			}, 700);
+			}, 400);
 		}
 	};
 
