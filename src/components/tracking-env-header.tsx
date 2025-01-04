@@ -7,12 +7,12 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 
 const TrackingEnvHeader = ({ params }: { params: { mode: string; env: string; dash: string } }) => {
-	let row1 = [];
-	if (params.mode === "road") {
-		row1 = ["DEV"];
-	} else {
-		row1 = ["PROD", "DEV"];
-	}
+	const row1 = ["PROD", "DEV"];
+	// if (params.mode === "road") {
+	// 	row1 = ["DEV"];
+	// } else {
+	// 	row1 = ["PROD", "DEV"];
+	// }
 	const searchParams = useSearchParams();
 	const [tabVal, setTabVal] = React.useState(params.env);
 

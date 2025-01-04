@@ -157,7 +157,10 @@ const terminalCarriers = [
 	{ value: "WBCT", label: "WBCT" },
 ];
 
-const roadCarriers = [{ value: "NTG-CPKELCO", label: "NTG-CPKELCO" }];
+const roadCarriers = [
+	{ value: "NTG-CPKELCO", label: "NTG-CPKELCO" },
+	{ value: "CEVA", label: "CEVA" },
+];
 
 const oceanQueue = [
 	{

@@ -39,7 +39,9 @@ export const mainRequestAction = async (reqBody: any) => {
 				? "Request timed out. Please try again."
 				: error.message.includes("trusted")
 					? "Request is not from trusted source."
-					: error.message,
+					: error.response?.status === 504
+						? "Gateway timed out, Please try again in a few minutes."
+						: error.message,
 			success: false,
 		};
 	}

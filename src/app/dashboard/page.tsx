@@ -20,7 +20,7 @@ const Dashboard = () => {
 		},
 		{
 			mode: "road",
-			env: "dev",
+			env: "prod",
 		},
 	];
 	return (
